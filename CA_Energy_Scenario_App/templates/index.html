@@ -3,7 +3,11 @@
 <title>Renewable Energy Generation Scenario Builder</title>
 
 <script>
+    initialize=0
+    initialTableSelectionPerformed=false
     var static_url="{{STATIC_URL}}"
+    reporting_units_label_singular="county"
+    reporting_units_label_plural="counties"
 </script>
 
 <!-- A Dictionary containing Image Overlay Name to Data Basin ID Lookup for the Data Basin link-->
@@ -61,6 +65,11 @@
 <!-- My JS -->
 <script src="{{STATIC_URL}}js/general_js.js"></script>
 
+<!-- JQuery Slider -->
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
 
 <script>
 
@@ -72,216 +81,28 @@
     var center_lon={{initial_lon}}
     var zoomLevel={{zoomLevel}}
     var last_poly="{{WKT_SelectedPolys}}"
+    var selection_area_poly="{{WKT_SelectionArea}}"
     var last_reporting_units="{{reporting_units}}"
     var selectedChartVariable="{{selectedChartVariable}}"
     columnChartColors="{{columnChartColors}}"
-    //var fieldAliases="{{fieldAliases}}"
 
-    if (typeof user_wkt == 'undefined' ) { user_wkt="POLYGON((-118.85009765625 32.58384932565662,-118.85009765625 37.31775185163688,-114.071044921875 37.31775185163688,-114.071044921875 32.58384932565662,-118.85009765625 32.58384932565662))"}
-
-
-</script>
-
-<script>
-
-     $(document).ready(function(){
-        //Prepare Near Term Forecast
-
-        //Initialize Selected Climate Division
-        selectedClimateDivision='94'
-        //Initialize Selected Time Frame
-        selectedNearTermClimatePeriod=1
-
-        acquireNearTermClimate();
-        createDynamicMonthlyRadioButtons()
-        generateNearTermClimateResults(selectedNearTermClimatePeriod,selectedClimateDivision)
-
-        //Check the top radio buttons
-         $('.neartermclimateform').each(function(){
-            $('input[type=radio]', this).get(0).checked = true;
-        });
-
-         $('#nearTermMapForm').each(function(){
-             $('input[type=radio]', this).get(0).checked = true;
-         });
-
-        $(document).ajaxStart(function(){
-            $("#view1").css("opacity", ".1");
-            $("#view2").css("opacity", ".1");
-            $(".wait").css("display", "block");
-        });
-
-        $(document).ajaxComplete(function(){
-            $("#view1").css("opacity", "1");
-            $("#view2").css("opacity", "1");
-            $(".wait").css("display", "none");
-            //map.removeLayer(layer)
-        });
-
-    });
+    //For searches performed without a reporting unit selected
+    if (typeof user_wkt == 'undefined' ) {
+        user_wkt="POLYGON((-118.85 32.58,-118.850 37.317,-114.071 37.31,-114.07 32.58, -118.85 32.58))"
+    }
 
 </script>
-
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-  <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-
-  <script>
-
-    //initialize default values
-    ti_slider=-1
-    cv_slider=-1
-    species_count_slider_value=0
-    corridor_avoidance_slider_value=-1
-    chat_slider_value=0
-    cdfw_slider_value=0
-    solar_slider_value=5
-
-  $(function() {
-    $( "#slider-range-max_ti" ).slider({
-      range: "max",
-      value: ti_slider,
-      min: -1,
-      max: 1,
-      step:.01,
-      slide: function( event, ui ) {
-         /*$( "#amount_ti" ).val(ui.value);*/
-         ti_slider=ui.value
-         ti_label=update_slider_label(ui.value);
-         $( "#amount_ti_label" ).val( ti_label + " (" + ui.value + ")");
-      }
-    });
-    /*$( "#amount_ti" ).val( "" + $( "#slider-range-max_ti" ).slider( "value" ) );*/
-  });
-
-  $(function() {
-      $( "#slider-range-max_cv" ).slider({
-          range: "max",
-          value: cv_slider,
-          min: -1,
-          max: 1,
-          step:.01,
-          slide: function( event, ui ) {
-              cv_slider=ui.value
-              cv_label=update_slider_label(ui.value)
-              $( "#amount_cv_label" ).val( cv_label + " (" + ui.value + ")");
-          }
-      });
-      /*
-      $( "#amount_cv" ).val( "" + $( "#slider-range-max_cv" ).slider( "value" ) );
-      */
-  });
-
-  $(function() {
-      $( "#slider-range-max_species_count" ).slider({
-          range: "max",
-          value: 0,
-          min: 0,
-          max: 17,
-          step:1,
-          slide: function( event, ui ) {
-              species_count_slider_value=ui.value
-              $( "#amount_species_count" ).val( "" + ui.value );
-          }
-      });
-       /*
-      $( "#amount_species_count" ).val( "" + $( "#slider-range-max_species_count" ).slider( "value" ) );
-      */
-  });
-
-    $(function() {
-        $( "#slider-range-max_corridor_avoidance" ).slider({
-            range: "max",
-            value: -1,
-            min: -1,
-            max: 1,
-            step:.01,
-            slide: function( event, ui ) {
-              corridor_avoidance_slider_value=ui.value
-              corridor_avoidance_label=update_slider_label(ui.value)
-              $( "#amount_corridor_avoidance_label" ).val( corridor_avoidance_label + " (" + ui.value + ")");
-            }
-        });
-        /*
-         $( "#amount_species_count" ).val( "" + $( "#slider-range-max_species_count" ).slider( "value" ) );
-         */
-    });
-
-    $(function() {
-        $( "#slider-range-max_chat" ).slider({
-            range: "max",
-            value: 0,
-            min: 1,
-            max: 7,
-            step:1,
-            slide: function( event, ui ) {
-                chat_slider_value=(8-ui.value)
-                chat_label=update_slider_label(ui.value)
-                $( "#amount_chat_label" ).val(8-ui.value);
-            }
-        });
-        /*
-         $( "#amount_species_count" ).val( "" + $( "#slider-range-max_species_count" ).slider( "value" ) );
-         */
-    });
-
-    $(function() {
-        $( "#slider-range-max_cdfw_aceII" ).slider({
-            range: "max",
-            value: 0,
-            min: 0,
-            max: 5,
-            step:1,
-            slide: function( event, ui ) {
-                cdfw_slider_value=ui.value
-                cdfw_label=update_slider_label(ui.value)
-
-                $( "#amount_cdfw_aceII_label" ).val(ui.value);
-            }
-        });
-        /*
-         $( "#amount_species_count" ).val( "" + $( "#slider-range-max_species_count" ).slider( "value" ) );
-         */
-    });
-
-    $(function() {
-        $( "#slider-range-max_solar" ).slider({
-            range: "max",
-            value: 0,
-            min: 6.5,
-            max: 8.3,
-            step:.01,
-            slide: function( event, ui ) {
-                solar_slider_value=(ui.value * 1000)
-                solar_label=update_slider_label(ui.value)
-
-                $( "#amount_solar_label" ).val(ui.value + " (kWh/m2/day)");
-            }
-        });
-        /*
-         $( "#amount_species_count" ).val( "" + $( "#slider-range-max_species_count" ).slider( "value" ) );
-         */
-    });
-
-  </script>
 
 </head>
 
 <body onload="acquireNearTermClimate();">
-<!--
-<span id="version">BETA</span>
--->
+
 <div id="header">
     <div id="title">Renewable Energy Generation <span style="color:white"></span><br>
       <span id="sub_title">Scenario Builder </span>
     </div>
-    <!--
-    <div style="float:left"><img id="leftImage" src="{{STATIC_URL}}img/solar_fade.png"></div>
-    -->
     <div style="float:left; z-index:-99"><img id="leftImage" src="{{STATIC_URL}}img/power_lines_fade_l1.png"></div>
-    <!--
-    <div style="float:left"><img style="height:90px; position:absolute; bottom:0px" src="{{STATIC_URL}}img/poppy.png"></div>
-    --><div style="color:white; z-index:9999; float:right; font-size:13px; position:absolute; top:75px; right:25px">BETA 0.14</div>
+    <div style="color:white; z-index:9999; float:right; font-size:13px; position:absolute; top:75px; right:25px">BETA 0.16</div>
 </div>
 
 <span id="DataBasinLinkBox">
@@ -316,9 +137,12 @@
 
     <div id="tab_container">
         <ul class="tabs" data-persist="true">
-            <li><a href="#view1" onclick="activateMapForDefault();">Charts</a></li>
-            <li><a href="#view2">Current Selection</a></li>
+            <!--<li><a href="#view1" onclick="activateMapForDefault();">2. Define Search Criteria</a></li>-->
+            <li><a href="#view1">2. Define Search Criteria</a></li>
+            <!--
+            <li><a href="#view2">Search Area</a></li>
             <li><a href="#view4" onclick="activateMapForClimateForecast()" >Near-Term Forecast</a></li>
+            -->
             <li><a href="#view3"><img src="{{STATIC_URL}}img/info.png"> About</a></li>
         </ul>
 

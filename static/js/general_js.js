@@ -1,3 +1,180 @@
+/******************************************* On Document Ready *******************************************************/
+
+ $(document).ready(function(){
+    //Prepare Near Term Forecast
+
+    //Initialize Selected Climate Division
+    selectedClimateDivision='94'
+    //Initialize Selected Time Frame
+    selectedNearTermClimatePeriod=1
+
+    acquireNearTermClimate();
+    createDynamicMonthlyRadioButtons()
+    generateNearTermClimateResults(selectedNearTermClimatePeriod,selectedClimateDivision)
+
+    //Check the top radio buttons
+     $('.neartermclimateform').each(function(){
+        $('input[type=radio]', this).get(0).checked = true;
+    });
+
+     $('#nearTermMapForm').each(function(){
+         $('input[type=radio]', this).get(0).checked = true;
+     });
+
+    /*
+    $(document).ajaxStart(function(){
+        $("#view1").css("opacity", ".1");
+        $("#view2").css("opacity", ".1");
+        $(".wait").css("display", "block");
+    });
+
+    $(document).ajaxComplete(function(){
+        $("#view1").css("opacity", "1");
+        $("#view2").css("opacity", "1");
+        $(".wait").css("display", "none");
+        //map.removeLayer(layer)
+    });
+    */
+
+});
+
+/*************************************************** Slider bars  ****************************************************/
+
+//initialize default values
+ti_slider=-9999
+cv_slider=-9999
+species_count_slider_value=-9999
+corridor_avoidance_slider_value=-9999
+chat_slider_value=-9999
+cdfw_slider_value=-9999
+solar_slider_value=-9999
+
+$(function() {
+$( "#slider-range-max_ti" ).slider({
+  range: "max",
+  value: ti_slider,
+  min: -1,
+  max: 1,
+  step:.01,
+  slide: function( event, ui ) {
+     /*$( "#amount_ti" ).val(ui.value);*/
+     ti_slider=ui.value
+     ti_label=update_slider_label(ui.value);
+     $( "#amount_ti_label" ).val( ti_label + " (" + ui.value + ")");
+  }
+});
+/*$( "#amount_ti" ).val( "" + $( "#slider-range-max_ti" ).slider( "value" ) );*/
+});
+
+$(function() {
+  $( "#slider-range-max_cv" ).slider({
+      range: "max",
+      value: cv_slider,
+      min: -1,
+      max: 1,
+      step:.01,
+      slide: function( event, ui ) {
+          cv_slider=ui.value
+          cv_label=update_slider_label(ui.value)
+          $( "#amount_cv_label" ).val( cv_label + " (" + ui.value + ")");
+      }
+  });
+  /*
+  $( "#amount_cv" ).val( "" + $( "#slider-range-max_cv" ).slider( "value" ) );
+  */
+});
+
+$(function() {
+  $( "#slider-range-max_species_count" ).slider({
+      range: "max",
+      value: species_count_slider_value,
+      min: 0,
+      max: 17,
+      step:1,
+      slide: function( event, ui ) {
+          species_count_slider_value=ui.value
+          $( "#amount_species_count" ).val( "" + ui.value );
+      }
+  });
+   /*
+  $( "#amount_species_count" ).val( "" + $( "#slider-range-max_species_count" ).slider( "value" ) );
+  */
+});
+
+$(function() {
+    $( "#slider-range-max_corridor_avoidance" ).slider({
+        range: "max",
+        value: -1,
+        min: -1,
+        max: 1,
+        step:.01,
+        slide: function( event, ui ) {
+          corridor_avoidance_slider_value=ui.value
+          corridor_avoidance_label=update_slider_label(ui.value)
+          $( "#amount_corridor_avoidance_label" ).val( corridor_avoidance_label + " (" + ui.value + ")");
+        }
+    });
+    /*
+     $( "#amount_species_count" ).val( "" + $( "#slider-range-max_species_count" ).slider( "value" ) );
+     */
+});
+
+$(function() {
+    $( "#slider-range-max_chat" ).slider({
+        range: "max",
+        value: chat_slider_value,
+        min: 1,
+        max: 7,
+        step:1,
+        slide: function( event, ui ) {
+            chat_slider_value=(8-ui.value)
+            chat_label=update_slider_label(ui.value)
+            $( "#amount_chat_label" ).val(8-ui.value);
+        }
+    });
+    /*
+     $( "#amount_species_count" ).val( "" + $( "#slider-range-max_species_count" ).slider( "value" ) );
+     */
+});
+
+$(function() {
+    $( "#slider-range-max_cdfw_aceII" ).slider({
+        range: "max",
+        value: 0,
+        min: 0,
+        max: 5,
+        step:1,
+        slide: function( event, ui ) {
+            cdfw_slider_value=ui.value
+            cdfw_label=update_slider_label(ui.value)
+
+            $( "#amount_cdfw_aceII_label" ).val(ui.value);
+        }
+    });
+    /*
+     $( "#amount_species_count" ).val( "" + $( "#slider-range-max_species_count" ).slider( "value" ) );
+     */
+});
+
+$(function() {
+    $( "#slider-range-max_solar" ).slider({
+        range: "max",
+        value: solar_slider_value,
+        min: 6.5,
+        max: 8.3,
+        step:.01,
+        slide: function( event, ui ) {
+            solar_slider_value=(ui.value * 1000)
+            solar_label=update_slider_label(ui.value)
+
+            $( "#amount_solar_label" ).val(ui.value + " (kWh/m2/day)");
+        }
+    });
+    /*
+     $( "#amount_species_count" ).val( "" + $( "#slider-range-max_species_count" ).slider( "value" ) );
+     */
+});
+
 /************************************************ TABLE TAB FUNCTIONS *************************************************/
 
 /* Selected Features Table */
@@ -640,14 +817,9 @@ function aspatial_query(){
     min_area_units=document.getElementById("min_area_units").value
     */
 
-    if (typeof user_wkt == 'undefined' ) { user_wkt="POLYGON((-118.85009765625 32.58384932565662,-118.85009765625 37.31775185163688,-114.071044921875 37.31775185163688,-114.071044921875 32.58384932565662,-118.85009765625 32.58384932565662))"}
-    create_post(user_wkt,reporting_units)
-
-    $(document).ajaxStart(function(){
-        $("#view1").css("opacity", ".1");
-        $("#view2").css("opacity", ".1");
-        $(".wait").css("display", "block");
-    });
+    $("#view1").css("opacity", ".1");
+    $("#view2").css("opacity", ".1");
+    $(".wait").css("display", "block");
 
     $(document).ajaxComplete(function(){
         $("#view1").css("opacity", "1");
@@ -655,6 +827,15 @@ function aspatial_query(){
         $(".wait").css("display", "none");
         //map.removeLayer(layer)
     });
+
+
+
+    if (typeof user_wkt == 'undefined' ) { user_wkt="POLYGON((-118.85009765625 32.58384932565662,-118.85009765625 37.31775185163688,-114.071044921875 37.31775185163688,-114.071044921875 32.58384932565662,-118.85009765625 32.58384932565662))"}
+
+    initialTableSelectionPerformed=true
+
+    create_post(user_wkt,reporting_units)
+
 }
 
 function update_slider_label(value){

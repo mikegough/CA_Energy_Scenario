@@ -304,13 +304,13 @@ map.on('baselayerchange', function (event) {
     if (event.name == "Counties") { remember_reporting_units=counties; reporting_units="counties"; reporting_units_label_singular="county"; reporting_units_label_plural="counties"; map.removeLayer(study_area_boundary)}
     if (event.name == "BLM Field Offices") { remember_reporting_units=blm_field_offices; reporting_units="blm_field_offices"; reporting_units_label_singular="BLM field office"; reporting_units_label_plural="BLM field offices"; map.removeLayer(study_area_boundary)}
     if (event.name == "HUC5 Watersheds") { remember_reporting_units=huc5_watersheds; reporting_units="huc5_watersheds"; reporting_units_label_singular="watershed"; reporting_units_label_plural="watersheds"; reporting_units_singular="watershed"; map.removeLayer(study_area_boundary)}
-    if (event.name == "User Defined") { remember_reporting_units=onekm;reporting_units="onekm";reporting_units_label_singular="polygon"; reporting_units_label_plural=" polygons"; map.addLayer(study_area_boundary)}
+    if (event.name == "User Defined") { remember_reporting_units=onekm;reporting_units="onekm";reporting_units_label_singular="polygon"; reporting_units_label_plural=" polygons to define your own search area"; map.addLayer(study_area_boundary)}
 
     if (event.name == "User Defined") {
         $("#selectionInstructions").html("Use the tools below to define a custom search area.");
     }
     else {
-        $("#selectionInstructions").html("Click on the map to select a single " + reporting_units_label_singular + " or use the tools below to select multiple " + reporting_units_label_plural + ".");
+        $("#selectionInstructions").html("Click on the map to pick a single " + reporting_units_label_singular + " or use the tools below to select multiple " + reporting_units_label_plural + ".");
     }
 
 
@@ -355,7 +355,7 @@ function create_post(newWKT) {
         type : "POST", // http method
         //data sent to django view with the post request
         //data : { the_post : $('#post-text').val() },
-        data: {wktPOST: newWKT, reporting_units: reporting_units, ti_slider:ti_slider, cv_slider:cv_slider, min_area:min_area, min_area_units:min_area_units, species_count_slider_value: species_count_slider_value, corridor_avoidance_slider_value:corridor_avoidance_slider_value, chat_slider_value:chat_slider_value, cdfw_slider_value:cdfw_slider_value, ownership_values:ownership_values, solar_slider_value:solar_slider_value},
+        data: {wktPOST: newWKT, reporting_units: reporting_units, ti_slider:ti_slider, cv_slider:cv_slider, min_area:min_area, min_area_units:min_area_units, species_count_slider_value: species_count_slider_value, corridor_avoidance_slider_value:corridor_avoidance_slider_value, chat_slider_value:chat_slider_value, cdfw_slider_value:cdfw_slider_value, ownership_values:ownership_values, solar_slider_value:solar_slider_value, first_map_click:first_map_click},
 
         // handle a successful response
         success : function(json) {
@@ -369,61 +369,67 @@ function create_post(newWKT) {
             response=JSON.parse(json)
 
             //Selection Area
+            if (first_map_click == 1){
 
-             map.removeLayer(selection_area_poly)
-             layerControl.removeLayer(selection_area_poly)
+                 /*
+                 map.removeLayer(selection_area_poly)
+                 layerControl.removeLayer(selection_area_poly)
+                 */
 
-             selection_area=response.WKT_SelectionArea
-             selection_area_poly = omnivore.wkt.parse(selection_area)
+                 selection_area=response.WKT_SelectionArea
+                 selection_area_poly = omnivore.wkt.parse(selection_area)
 
-             //Allows for clicking reporting units that are beneath the selected feature(s).
-             selection_area_poly.on('click',function(e){selectFeature(e) })
-             selection_area_poly.addTo(map)
-             selection_area_poly.setStyle(hoverStyle)
-             selection_area_poly.bringToFront()
+                 //Allows for clicking reporting units that are beneath the selected feature(s).
+                 selection_area_poly.on('click',function(e){selectFeature(e) })
+                 selection_area_poly.addTo(map)
+                 selection_area_poly.setStyle(hoverStyle)
+                 selection_area_poly.bringToFront()
+            }
 
-            //map.removeLayer(selection_area_poly)
+            first_map_click=0;
 
-            //Selected (Results) Polygons
-            map.removeLayer(results_poly)
-            layerControl.removeLayer(results_poly)
+            if (response.WKT_SelectedPolys != 0){
 
-            last_poly=response.WKT_SelectedPolys
-            results_poly = omnivore.wkt.parse(last_poly)
+                map.removeLayer(selection_area_poly)
 
-            //Allows for clicking reporting units that are beneath the selected feature(s).
-            results_poly.on('click',function(e){selectFeature(e) })
-            results_poly.addTo(map)
-            results_poly.setStyle({color:'#00FFFF', weight: 5, dashArray: 0, fillOpacity:.7, opacity:1})
-            results_poly.bringToFront()
+                //Selected (Results) Polygons
+                map.removeLayer(results_poly)
+                layerControl.removeLayer(results_poly)
 
-            layerControl.addOverlay(results_poly, "Search Results <div id='resultsSquare'></div>");
+                last_poly=response.WKT_SelectedPolys
+                results_poly = omnivore.wkt.parse(last_poly)
 
-             $(document).ajaxStart(function(){
-                $("#view1").css("opacity", ".1");
-                $("#view2").css("opacity", ".1");
-                $(".wait").css("display", "block");
-            });
+                //Allows for clicking reporting units that are beneath the selected feature(s).
+                results_poly.on('click',function(e){selectFeature(e) })
+                results_poly.addTo(map)
+                results_poly.setStyle({color:'#00FFFF', weight: 5, dashArray: 0, fillOpacity:.7, opacity:1})
+                results_poly.bringToFront()
 
-            $(document).ajaxComplete(function(){
-                $("#view1").css("opacity", "1");
-                $("#view2").css("opacity", "1");
-                $(".wait").css("display", "none");
-            });
+                layerControl.addOverlay(results_poly, "Search Results <div id='resultsSquare'></div>");
 
-            if (typeof selectedFeature != 'undefined') {
-                counties.resetStyle(selectedFeature)
-                blm_field_offices.resetStyle(selectedFeature)
-                huc5_watersheds.resetStyle(selectedFeature)
+                 $(document).ajaxStart(function(){
+                    $("#view1").css("opacity", ".1");
+                    $("#view2").css("opacity", ".1");
+                    $(".wait").css("display", "block");
+                });
+
+                $(document).ajaxComplete(function(){
+                    $("#view1").css("opacity", "1");
+                    $("#view2").css("opacity", "1");
+                    $(".wait").css("display", "none");
+                });
+
             }
 
 
-
-            layerControl.addOverlay(selection_area_poly, "Search Area <div id='searchSquare'></div>");
+            //layerControl.addOverlay(selection_area_poly, "Selection Area");
 
             //Hide the initialization container upon successful response and show the tabs.
             //document.getElementById('initialization_container').style.display="none";
             document.getElementById('tab_container').style.display="block";
+
+            //refreshSelectedFeaturesTab()
+            //createDynamicDataTable()
 
             //Populate the list of selected features in the bottom left hand corner.
             if (reporting_units != "onekm"){
@@ -432,6 +438,24 @@ function create_post(newWKT) {
             else {
                 $('.info2').html("")
             }
+
+            //column chart colors.
+            //columnChartColorsCSV=response['columnChartColors']
+
+            //create the charts.
+            /*
+            if (showChartOnMapSelect=="PointChart"){
+                createChart(document.getElementById("variable_selection_form").value,document.getElementById("statistic_selection_form").value, document.getElementById("season_selection_form").value)
+            }
+            else if(showChartOnMapSelect=="BoxPlot"){
+                createBoxPlot(document.getElementById("variable_selection_form").value,document.getElementById("statistic_selection_form").value, document.getElementById("season_selection_form").value)
+            }
+            else {
+               createChart('tmax', 'avg', 's0')
+            }
+            createColumnChart()
+            */
+
 
         },
 
@@ -458,72 +482,61 @@ function onEachFeature(feature, layer) {
 
 function selectFeature(e){
 
-    //counties.eachLayer(function(l){counties.resetStyle(l);});
-
-    drawnItems.clearLayers();
-
     user_wkt="POINT(" + e.latlng.lng + " " + e.latlng.lat + ")";
-
-    if ( initialTableSelectionPerformed == false) {
-
-        if (typeof selectedFeature  != 'undefined'){
-            selectedFeature.on='No'
-
-            counties.resetStyle(selectedFeature)
-            blm_field_offices.resetStyle(selectedFeature)
-            huc5_watersheds.resetStyle(selectedFeature)
-        }
-
-        selectedFeature = e.target;
-
-        selectedFeature.setStyle(hoverStyle);
-
-        if (!L.Browser.ie && !L.Browser.opera) {
-            selectedFeature.bringToFront();
-        }
-
-        info2.update(selectedFeature.feature.properties);
-
-        if (selectedFeature.on == 'Yes'){
-
-            selectedFeature.on='No'
-        }
-
-        else {
-
-            selectedFeature.on='Yes'
-        }
-
-    }
-
-    //AJAX REQUEST
-    else {
-
-        selectedFeature.on='No'
-        counties.resetStyle(selectedFeature)
-        blm_field_offices.resetStyle(selectedFeature)
-        huc5_watersheds.resetStyle(selectedFeature)
-
-        create_post(user_wkt,reporting_units)
-    }
-}
-
-function highlightFeature(e) {
 
     var layer = e.target;
 
+    $(document).ajaxStart(function(){
+        $("#initialization_wait").css("display", "block");
+    });
+
     layer.setStyle(hoverStyle);
+    	if (!L.Browser.ie && !L.Browser.opera) {
+		layer.bringToFront();
+	}
+
+	info2.update(layer.feature.properties);
+
+    // if it's already selected, deselect it (i.e., set it back to the original styling)
+	if (layer.on == 'Yes'){
+
+		layer.on='No'
+
+		resetSelect(e);
+	}
+
+	else {
+
+	layer.on='Yes'
+
+	}
+
+    //AJAX REQUEST
+    create_post(user_wkt,reporting_units)
+}
+
+function highlightFeature(e) {
+    var layer = e.target;
+
+    if (layer.on != 'Yes'){
+
+		layer.setStyle(hoverStyle);
+
+	}
 
 	//info.update(layer.feature.properties);
 
 
+	if (!L.Browser.ie && !L.Browser.opera) {
+		layer.bringToFront();
+	}
+
+
+
     if (!L.Browser.ie && !L.Browser.opera) {
         layer.bringToFront();
-        if (typeof selection_area_poly != 'undefined' && selection_area_poly != '') {
-            selection_area_poly.bringToFront();
-        }
+        selection_area_poly.bringToFront();
     }
-
     //this.openPopup();
     //document.getElementById("test").innerHTML = layer.feature.properties.NAME
     info2.update(layer.feature.properties);
@@ -531,28 +544,20 @@ function highlightFeature(e) {
 
 function resetHighlight(e) {
 
-    //This handles the case where a query hasn't been performed yet, a feature is selected and then
-    //a mouse over is performed on another feature. It brings the selected feature back to the top.
-    if (typeof selectedFeature != 'undefined' && initialTableSelectionPerformed==false ) {
-        selectedFeature.bringToFront();
-    }
-
     var layer = e.target;
 
 	if (layer.on !='Yes') {
 
-        counties.resetStyle(e.target)
-        blm_field_offices.resetStyle(e.target)
-        huc5_watersheds.resetStyle(e.target)
-        //geojson.resetStyle(e.target);
-        //info2.update();
+    counties.resetStyle(e.target)
+	//geojson.resetStyle(e.target);
+	info.update();
 	}
 
 	//Put the state bondaries layer back on top after mouse out event.
-    /*
 	if (!L.Browser.ie && !L.Browser.opera) {
 		boundariesjson.bringToFront();
 	}
+    /*
     counties.eachLayer(function(l){counties.resetStyle(l);});
     jepson_ecoregions.eachLayer(function(l){jepson_ecoregions.resetStyle(l);});
     blm_field_offices.eachLayer(function(l){blm_field_offices.resetStyle(l);});
@@ -561,23 +566,20 @@ function resetHighlight(e) {
     near_term_climate_divisions.eachLayer(function(l){near_term_climate_divisions.resetStyle(l);});
     //info2.update('');
     */
-
-    /*
     if (initialize==0 && reporting_units != "onekm") {
-        $('.info2').html("<b><span style='color:#5083B0'>Current Search Area: "+response['categoricalValues']+"</span>")
+        $('.info2').html("<b><span style='color:#5083B0'>Currently Selected: "+response['categoricalValues']+"</span>")
     }
     else {
         info2.update('');
     }
-    */
     results_poly.bringToFront()
 
-    /*
-    if (typeof selection_area_poly != 'undefined'){
-        selection_area_poly.bringToFront()
-    }
-    */
+}
 
+//Deselect function (set the feature back to the original styling)
+function resetSelect(e) {
+	counties.resetStyle(1);
+	info.update();
 }
 
 function mouseOverTextChangeColor(hovername) {
@@ -634,21 +636,10 @@ function toWKT(layer) {
 }
 
 map.on('draw:created', function (e) {
-
-
-
-    if (typeof selectedFeature != 'undefined') {
-        counties.resetStyle(selectedFeature)
-        blm_field_offices.resetStyle(selectedFeature)
-        huc5_watersheds.resetStyle(selectedFeature)
-    }
-
     //Show Loading Bars on Draw
-    /*
     $(document).ajaxStart(function(){
         $("#initialization_wait").css("display", "block");
     });
-   */
 
     $(document).ajaxComplete(function(){
         $("#view1").css("opacity", "1");
@@ -678,9 +669,7 @@ map.on('draw:created', function (e) {
         if (! confirm("Warning: This selection may require a significant amount of processing time. \n\n Click \"Ok\" to proceed with the selection, or \"Cancel\" to cancel the selection." )){drawnItems.clearLayers(); return}
     }
 
-    if  (initialTableSelectionPerformed){
-        create_post(user_wkt,reporting_units)
-    }
+    create_post(user_wkt,reporting_units)
 
     //Don't show on Select Features
     /*
@@ -746,7 +735,7 @@ var toolTitle = L.Control.extend({
 
     onAdd: function (map) {
         this._div = L.DomUtil.create('div', 'toolTitle2');
-        this._div.innerHTML = "<div class='info2Subtitle'><div id='selectionInstructions'> Click on the map to select a single " + reporting_units_label_singular + " or use the tools below to select multiple " + reporting_units_label_plural + ".</div></div>";
+        this._div.innerHTML = "<div class='info2Subtitle'><div id='selectionInstructions'> Click on the map to pick a single " + reporting_units_label_singular + " or use the tools below to select multiple " + reporting_units_label_plural + ".</div></div>";
         return this._div;
     },
 });
@@ -782,11 +771,6 @@ var drawButtons = new L.Control.Draw({
 map.addControl(drawButtons)
 
 map.on('draw:created', function(event) {
-
-    //clear the previous drawing
-    drawnItems.clearLayers();
-
-    map.addLayer(drawnItems)
     var layer = event.layer;
     drawnItems.addLayer(layer);
 })

@@ -411,13 +411,9 @@ function create_post(newWKT) {
                 $(".wait").css("display", "none");
             });
 
-            if (typeof selectedFeature != 'undefined') {
-                counties.resetStyle(selectedFeature)
-                blm_field_offices.resetStyle(selectedFeature)
-                huc5_watersheds.resetStyle(selectedFeature)
-            }
-
-
+            counties.resetStyle(selectedFeature)
+            blm_field_offices.resetStyle(selectedFeature)
+            huc5_watersheds.resetStyle(selectedFeature)
 
             layerControl.addOverlay(selection_area_poly, "Search Area <div id='searchSquare'></div>");
 
@@ -459,8 +455,6 @@ function onEachFeature(feature, layer) {
 function selectFeature(e){
 
     //counties.eachLayer(function(l){counties.resetStyle(l);});
-
-    drawnItems.clearLayers();
 
     user_wkt="POINT(" + e.latlng.lng + " " + e.latlng.lat + ")";
 
@@ -516,14 +510,16 @@ function highlightFeature(e) {
 
 	//info.update(layer.feature.properties);
 
+	if (!L.Browser.ie && !L.Browser.opera) {
+		layer.bringToFront();
+	}
 
+    /*
     if (!L.Browser.ie && !L.Browser.opera) {
         layer.bringToFront();
-        if (typeof selection_area_poly != 'undefined' && selection_area_poly != '') {
-            selection_area_poly.bringToFront();
-        }
+        selection_area_poly.bringToFront();
     }
-
+    */
     //this.openPopup();
     //document.getElementById("test").innerHTML = layer.feature.properties.NAME
     info2.update(layer.feature.properties);
@@ -562,21 +558,14 @@ function resetHighlight(e) {
     //info2.update('');
     */
 
-    /*
     if (initialize==0 && reporting_units != "onekm") {
         $('.info2').html("<b><span style='color:#5083B0'>Current Search Area: "+response['categoricalValues']+"</span>")
     }
     else {
         info2.update('');
     }
-    */
     results_poly.bringToFront()
-
-    /*
-    if (typeof selection_area_poly != 'undefined'){
-        selection_area_poly.bringToFront()
-    }
-    */
+    selection_area_poly.bringToFront()
 
 }
 
@@ -635,20 +624,14 @@ function toWKT(layer) {
 
 map.on('draw:created', function (e) {
 
-
-
-    if (typeof selectedFeature != 'undefined') {
-        counties.resetStyle(selectedFeature)
-        blm_field_offices.resetStyle(selectedFeature)
-        huc5_watersheds.resetStyle(selectedFeature)
-    }
+    counties.resetStyle(selectedFeature)
+    blm_field_offices.resetStyle(selectedFeature)
+    huc5_watersheds.resetStyle(selectedFeature)
 
     //Show Loading Bars on Draw
-    /*
     $(document).ajaxStart(function(){
         $("#initialization_wait").css("display", "block");
     });
-   */
 
     $(document).ajaxComplete(function(){
         $("#view1").css("opacity", "1");
@@ -678,9 +661,7 @@ map.on('draw:created', function (e) {
         if (! confirm("Warning: This selection may require a significant amount of processing time. \n\n Click \"Ok\" to proceed with the selection, or \"Cancel\" to cancel the selection." )){drawnItems.clearLayers(); return}
     }
 
-    if  (initialTableSelectionPerformed){
-        create_post(user_wkt,reporting_units)
-    }
+    create_post(user_wkt,reporting_units)
 
     //Don't show on Select Features
     /*
@@ -782,11 +763,6 @@ var drawButtons = new L.Control.Draw({
 map.addControl(drawButtons)
 
 map.on('draw:created', function(event) {
-
-    //clear the previous drawing
-    drawnItems.clearLayers();
-
-    map.addLayer(drawnItems)
     var layer = event.layer;
     drawnItems.addLayer(layer);
 })

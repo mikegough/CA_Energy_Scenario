@@ -159,6 +159,8 @@ ul.tabs li a{
     border-left: 1px solid #444444;
     padding-left:10px;
     padding-right:10px;
+    font-size:19px;
+    font-family: Book Antiqua,Palatino,Palatino Linotype,Palatino LT STD,Georgia,serif
 }
 
 .select_container{
@@ -375,19 +377,13 @@ div#point_chart_description a:hover, div#box_plot_description a:hover{
 }
 
 #view1{
-    height:95%;
-    overflow-y:auto;
-    overflow-x:hidden;
-}
-
-
-#view1{
     cursor: default !important;
     height:95%;
-    margin-top:20px;
+    margin-top:10px;
     margin-left:20px;
     padding-right:20px;
     overflow-y:auto;
+    overflow-x:hidden;
 }
 
 #general_table1{
@@ -955,7 +951,7 @@ ul#mainNav a {
 .toolTitle {
     background-color:#444444;
     color:#F8981D;
-    width:155px;
+    width:210px;
     height:32px;
     font-size:21px;
     font-weight:bold;
@@ -966,20 +962,51 @@ ul#mainNav a {
 
 }
 
+#resultsSquare{
+    float:right;
+    position:relative;
+    top:5px;
+    width:15px;
+    height:10px;
+    right:-5px;
+    margin-right:0px;
+    background:#00FFFF;
+    border-radius:50%;
+    border:1px solid #444444;
+}
+
+#searchSquare{
+    float:right;
+    position:relative;
+    top:5px;
+    width:10px;
+    height:8px;
+    right:-4px;
+    margin-right:0px;
+    border-size:2px;
+    border-color: #5083B0;
+    border-style:dotted;
+
+}
+
 .toolTitle2 {
     background-color:#444444;
     color:#F8981D;
-    width:250px;
-    height:42px;
-    font-size:21px;
+    width:220px;
+    font-size:26px;
     font-weight:bold;
     line-height:20px;
     margin-left:5px;
     padding:10px;
     padding-right:0px;
-    margin-right:0px;
-    left:-8px
+    left:-8px;
+    display: inline-block
 
+}
+
+#selectionInstructions{
+    max-width:210px;
+    font-weight:normal;
 }
 
 .leaflet-control-layers-expanded{
@@ -1345,6 +1372,17 @@ background:#595959;
     font-size:12px;
     font-family: "Lucida Grande","Lucida Sans Unicode",Arial,Helvetica,sans-serif;
 }
+
+.legendLabels {
+    white-space:nowrap;
+    font-family: "Lucida Grande","Lucida Sans Unicode",Arial,Helvetica,sans-serif;
+    position:relative;
+    left:5px;
+    margin-right:30px;
+    font-size:12px;
+}
+
+
 .legendTable {
     text-align: left;
     line-height: 13px;
