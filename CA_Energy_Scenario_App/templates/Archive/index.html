@@ -81,7 +81,7 @@
     var center_lon={{initial_lon}}
     var zoomLevel={{zoomLevel}}
     var last_poly="{{WKT_SelectedPolys}}"
-    var selection_area_poly="{{WKT_SearchArea}}"
+    var selection_area_poly="{{WKT_SelectionArea}}"
     var last_reporting_units="{{reporting_units}}"
     var selectedChartVariable="{{selectedChartVariable}}"
     columnChartColors="{{columnChartColors}}"
@@ -139,11 +139,11 @@
         <ul class="tabs" data-persist="true">
             <!--<li><a href="#view1" onclick="activateMapForDefault();">2. Define Search Criteria</a></li>-->
             <li><a href="#view1">2. Define Search Criteria</a></li>
-            <li><a href="#view3"><img src="{{STATIC_URL}}img/info.png"> About</a></li>
             <!--
             <li><a href="#view2">Search Area</a></li>
             <li><a href="#view4" onclick="activateMapForClimateForecast()" >Near-Term Forecast</a></li>
             -->
+            <li><a href="#view3"><img src="{{STATIC_URL}}img/info.png"> About</a></li>
         </ul>
 
         <div class="tabcontents">
@@ -152,12 +152,6 @@
                 <div class="loading_contents">
                     <img class="loading_image" src='{{STATIC_URL}}img/loader_circular.gif'><br>
                     <div class="loading_text"><br>&nbsp Processing Request...</div>
-                    <p>
-                    <button type="button" class="stop my-button my-button-cancel" id="my-cancel">Cancel</button>
-                    <div id="areaWarning">Large search areas may take up to a minute to process. Push the cancel button at any time to cancel the request.</div>
-                    <script>
-                    $(".stop").click(function(){ jqXHR.abort(); });
-                    </script>
                 </div>
             </div>
 
@@ -341,7 +335,7 @@
                     <p>
 
 
-                    <input style="float:right; position:relative; right:33px; cursor:pointer" type="submit" value="Search" class="my-button my-button-ok" id="my-ok"  onClick="create_post(user_wkt,reporting_units)">
+                    <input style="float:right; position:relative; right:33px; cursor:pointer" type="submit" value="Search" onClick="create_post(user_wkt,reporting_units)">
 
                 </form>
 
@@ -349,23 +343,83 @@
 
             </div>
 
-            <!--
             <div id="view2"></div>
-            -->
 
             <div id="view3">
 
                 <h3>Summary:</h3>
-                The <span style="font-weight:bold;">Renewable Energy Generation Scenario Builder</span> is a web mapping application designed to assist with the siting process for renewable energy development projects by identifying places within a search area meeting a specified set of requirements.
+                The <span style="font-weight:bold;">California Climate Console</span> is a web mapping application designed for exploring climate projections and fuzzy logic (EEMS) model results for the State of California.
+                <p>
+                A total of 460 climate datasets have been incorporated into the system, as well as 6 EEMS model results (<i>Terrestrial Intactness, Site Sensitivity, Climate Exposure (2016-2045), Climate Exposure (2046-2075), Potential Impact (2016-2045), Potential Impact (2046-2075)</i>).
+                <p>
+                The zonal mean for each of these datasets was calculated for five separate reporting units (<i>Counties, Ecoregion Subareas, BLM Field Offices, HUC5 Watersheds, and Desert Tortoise Recovery Units</i>) and stored in a spatial database which can then be queried against using the tools provided on the left hand side of the map. This allows the user to examine the future climate predictions and potential for climate change impact within one or more administrative units or ecological boundaries of interest.
+                <p>
 
                 <h3>Instructions for Use: </h3>
 
                <ol>
-                    <li>Define a search area by selecting from one of the ecological or administrative boundaries provided in the upper left hand side of the map. Selecting "<i>User Defined</i>" will allow you to define an arbitrary area of interest.</li>
-                    <li>Select a feature (polygon) or set of features (polygons) using the selection tools provided, or simply click on a feature of interest.</li>
-                    <li>Specify your search criteria using the slider bars and input fields on the right hand side of the screen</li>
-                    <li>Click the search button to identify areas meeting your criteria.</li>
+                    <li>Select a reporting units layer from the list provided in the upper left hand side of the map. Selecting "<i>User Defined (1km)</i>" will allow you to define an arbitrary area based on a 1km grid.</li>
+                    <li>Select a feature or set of features using the selection tools provided, or simply click on a feature of interest.</li>
+                    <li>The area weighted averages for the climate variables and EEMS model outputs for the selected area will appear in the charts on the right hand side of the screen. You can choose to plot a different climate variable by selecting the variable from the dropdown menu.</li>
+                    <li>Click a data point on the chart to display the corresponding dataset used to generate the plotted value. </li>
+                    <li>Click the "variability" link in the point chart description to view box plots of the data.
+
                </ol>
+
+                <h3>Interpreting the Box Plots: </h3>
+                <br>
+                <img style="margin-left:20px" src="{{STATIC_URL}}img/boxPlot.png">
+                <div class="footnote">
+                <sup>1</sup>The upper quartile (Q3) represents the middle value between the maximum and the median. 75% of the data fall below this line. 25% of the data fall above it.
+                <p>
+                <sup>2</sup>The lower quartile (Q1) represents the middle value between the minimum and the median. 75% of the data fall above this line. 25% of the data fall below it.
+                </div>
+
+                <h3>Climate: </h3>
+                The time series climate data used to represent the historical period (1971-2000) were obtained from the LT71m PRISM 30 arc-second spatial climate dataset for the Conterminous United States (Daly et al., 2008). We evaluated ten of the 34 CMIP5 General Circulation Models (GCMs) that have been shown to reproduce several observed climate metrics such as the Pacific Decadal Oscillation (PDO) and El Niño Southern Oscillation (ENSO) over the study area (Wang et al., 2011; Wang et al., 2014). Four models were selected that captured the full range of projected change for both annual average temperature and annual precipitation under the representative concentration pathway 8.5 (RCP8.5; Meinshausen et al., 2011; van Vuuren et al., 2011). We then obtained downscaled time series climate projections for the selected GCMs from the NASA Earth Exchange (NEX) U.S. Downscaled Climate Projections (NEX US-DCP30) dataset (Thrasher et al., 2013) for the entire spatial extent of the study area and for the period 2016-2075 time. The multi-model ensemble mean of the four downscaled climate models was calculated for each of the climate variables.
+
+                <h3>Terrestrial Intactness:</h3>
+                Terrestrial intactness is an estimate of current condition based on the extent to which human impacts such as agriculture, urban development, natural resource extraction, and invasive species have disrupted the landscape across the DRECP study area. Terrestrial intactness values will be high in areas where these impacts are low.
+                <p>
+
+                This dataset provides an estimate of current terrestrial intactness, based on an EEMS fuzzy logic model that integrates multiple measures of landscape development and vegetation intactness.
+                <p>
+
+                This model integrates agriculture development (from LANDFIRE EVT v1.1), urban development (from LANDFIRE EVT v1.1 and NLCD Impervious Surfaces), linear development (from Tiger 2012 Roads, utility lines, and pipelines), OHV recreation areas, energy and mining development (from state mine and USGS national mines datasets as well as geothermal wells, oil/gas wells, wind turbines, and power plant footprints), vegetation departure (from LANDFIRE VDEP),  invasive vegetation (multiple sources combined for invasives analyses), and measures of natural vegetation fragmentation calculated using FRAGSTATS. In this version, Maxent modeled Sahara Mustard was included in the Invasive's branch as well as in the Fragstats model run.
+                <p>
+
+                Caution is warranted in interpreting this dataset because it provides a single estimate of terrestrial intactness based on available data. The degree of terrestrial intactness likely varies for a particular species or conservation element, and may depend on additional factors or thresholds not included in this model. Instead, this model should be taken as a general measure of intactness that can serve as a template for evaluating across many species at the ecoregion scale, and provides a framework within which species-specific parameters can be incorporated for more detailed analyses.
+
+                <p>
+                <a href="http://databasin.org/datasets/958719f2359e40b99ca683d1a473ba8d" target="_blank">View or Download this dataset on Data Basin</a>
+
+                <h3> Site Sensitivity</h3>
+                The Site Sensitivity Model evaluates the study area for factors that make the landscape sensitive to climate change. These factors fall into two main branches of the model: soil sensitivity and water retention potential. As a final step in the model, we defined barren areas as having the lowest possible sensitivity since many of these areas will not be further degraded by climate change.
+                <p>
+                <a href="http://databasin.org/datasets/7478dab889544d66a3e0fe3d7644f1ad" target="_blank">View or Download this dataset on Data Basin</a>
+
+                <h3> Climate Exposure</h3>
+                The Climate Exposure Model is based on aridity and climate. Climate factors include maximum temperature, minimum temperature, and precipitation on a seasonal basis and an annual basis. Change was calculated for two future time periods, 2016-2045 and 2046-2075, compared to the historical period, 1971-2000. Projections for three climate futures were used along with the ensemble mean values from those models. Temperature and precipitation differences were normalized using the standard deviation over the historical period via the following formula:
+                <br>
+                <div style="width:100%; text-align:center; margin-left:auto; margin-right:auto"> <img style="width:150px;" src="{{STATIC_URL}}img/ce_equation.png"></div>
+                <br>
+                <br>
+
+                where d is the difference, x<sub>f</sub> is the mean of the variable in the future period, x<sub>h</sub> is the mean of the variable in the historical period, and σ<sub>x<sub>h</sub></sub> is standard deviation of the variable in the historical period. Change in aridity was calculated as the percent change from the historical period. Projected future change is very high for temperatures and aridity. In order to capture both the differences across the region as well as the severity of change, nonlinear conversions were used to convert input data into fuzzy space:
+
+                <img src="{{STATIC_URL}}img/climate_chart1.png"><img src="{{STATIC_URL}}img/climate_chart2.png">
+
+                <div class="footnote" style="margin-left:40px">Original value to fuzzy value conversion curves for a) climate variables and b) aridity.</div>
+                <br>
+                <p>
+                <a href="http://databasin.org/datasets/c55b0a726487406bba0e17f4fe1b2cbb" target="_blank">View or Download this dataset on Data Basin (2016-2045)</a> <br>
+                <a href="http://databasin.org/datasets/d0e9905271294cd293160cff7115ce8f" target="_blank">View or Download this dataset on Data Basin (2046-2075)</a>
+
+                <h3> Potential Climate Impact</h3>
+                EEMS model of potential climate impacts generated using data from STATSGO soils data and climate model results. Results from the Site Sensitivity and Climate Exposure models contribute equally to the results of the Potential Climate Impact model. As with the Climate Exposure Model, the Climate Impacts Model was run for each climate future (full results available on Data Basin). The results from the run with ensemble climate data are used in the Climate Console.
+                <p>
+                <a href="http://databasin.org/datasets/238aad251e784e4386620a4c51ef272a" target="_blank">View or Download this dataset on Data Basin (2016-2045)</a> <br>
+                <a href="http://databasin.org/datasets/022ab9e3565a4b11a08b94a3f69695b5" target="_blank">View or Download this dataset on Data Basin (2046-2075)</a>
 
             </div>
 
@@ -479,11 +533,4 @@
 </div>
 
 </body>
-
-<!-- Alertify -->
-<script src="{{STATIC_URL}}deps/js/alertify.js-0.3.11/src/alertify.js"></script>
-<link rel="stylesheet" href="{{STATIC_URL}}deps/js/alertify.js-0.3.11/themes/alertify.core.css">
-<!-- include a theme, can be included into the core instead of 2 separate files -->
-<link rel="stylesheet" href="{{STATIC_URL}}deps/js/alertify.js-0.3.11/themes/alertify.default.css">
-
 </html>

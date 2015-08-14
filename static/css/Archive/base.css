@@ -31,61 +31,6 @@ body{
     margin-right:auto;
 }
 
-.stop{
-    cursor: pointer;
-
-}
-
-.my-text {
-    border: 1px solid #CCC;
-    padding: 10px;
-    border-radius: 4px;
-}
-.my-button {
-    box-shadow: 0 0 15px #2B72D5;
-    border-radius: 4px;
-    color: #FFF;
-    font-weight: bold;
-    padding: 6px 15px;
-    text-decoration: none;
-    text-shadow: 1px 1px 0 rgba(0,0,0,.5);
-    box-shadow: inset 0 1px 0 0 rgba(255,255,255,.5);
-    background-image: -webkit-linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,0));
-    background-image:    -moz-linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,0));
-    background-image:     -ms-linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,0));
-    background-image:      -o-linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,0));
-    background-image:         linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,0));
-}
-.my-button:hover,
-.my-button:focus {
-    outline: none;
-    background-image: -webkit-linear-gradient(top, rgba(0,0,0,.1), rgba(0,0,0,0));
-    background-image:    -moz-linear-gradient(top, rgba(0,0,0,.1), rgba(0,0,0,0));
-    background-image:     -ms-linear-gradient(top, rgba(0,0,0,.1), rgba(0,0,0,0));
-    background-image:      -o-linear-gradient(top, rgba(0,0,0,.1), rgba(0,0,0,0));
-    background-image:         linear-gradient(top, rgba(0,0,0,.1), rgba(0,0,0,0));
-}
-.my-button:focus {
-    /*box-shadow: 0 0 15px #2B72D5;*/
-}
-.my-button:active {
-    position: relative;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
-}
-
-.my-button-cancel,
-.my-button-cancel:hover,
-.my-button-cancel:focus {
-    background-color: #FE1A00;
-    border: 1px solid #D83526;
-}
-.my-button-ok,
-.my-button-ok:hover,
-.my-button-ok:focus {
-    background-color: #5CB811;
-    border: 1px solid #3B7808;
-}
-
 .loading_contents {
     position:absolute;
     display:block;
@@ -197,8 +142,8 @@ body{
 .imageOverlayLink:hover {
     cursor:pointer;
     color:#4D79B3;
-    text-decoration:underline;  /* mouse over link */
-    title:"Click to Map"
+    text-decoration:underline  /* mouse over link */
+    title="Click to Map"
 }
 
 #tab_container{
@@ -415,6 +360,22 @@ div#point_chart_description a:hover, div#box_plot_description a:hover{
     background-repeat:no-repeat;
 }
 
+
+.gradientDivisionLine{
+    height:10px;
+    position:relative;
+    width:100%;
+    border-bottom:1px solid #D0CFD4;
+    background: rgba(255,255,255,1);
+    background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(246,246,246,1) 47%, rgba(237,237,237,1) 100%);
+    background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(255,255,255,1)), color-stop(47%, rgba(246,246,246,1)), color-stop(100%, rgba(237,237,237,1)));
+    background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(246,246,246,1) 47%, rgba(237,237,237,1) 100%);
+    background: -o-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(246,246,246,1) 47%, rgba(237,237,237,1) 100%);
+    background: -ms-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(246,246,246,1) 47%, rgba(237,237,237,1) 100%);
+    background: linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(246,246,246,1) 47%, rgba(237,237,237,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ededed', GradientType=0 )
+}
+
 #view1{
     cursor: default !important;
     height:95%;
@@ -436,7 +397,7 @@ div#point_chart_description a:hover, div#box_plot_description a:hover{
 #general_table1 td{
     padding-left:10px;
     vertical-align:middle;
-    padding:8px;
+    padding:10px;
 }
 
 #general_table1 input,select{
@@ -1129,22 +1090,7 @@ div.callout {
     font-family: Verdana,Geneva,sans-serif;
     font-size:16px;
     font-weight:bold !important;
-    color:#595959;
-    padding-bottom:8px;
-}
-
-#areaWarning{
-    background-color:white;
-    font-family: Verdana,Geneva,sans-serif;
-    font-size:14px;
-    color:#595959;
-    width:90%;
-    height:100px;
-    display:none;
-    margin-left:1px;
-    padding-left:30px;
-    padding-right:60px;
-
+    color:#F18C2E;
 }
 
 
@@ -1209,17 +1155,8 @@ background:#595959;
 
 #non_clickable_layer{
     cursor: default !important
-}
 
-/* Change cursor when mousing over clickable layer */
-.leaflet-clickable {
-  cursor: pointer !important;
 }
-/* Change cursor when over entire map */
-.leaflet-container {
-  cursor: hand !important;
-}
-
 /* Thermometer column and text */
  .thermometer {
     /*margin:10px 0 0 1px;
@@ -1482,23 +1419,6 @@ background:#595959;
     border-left: 2px solid #444444;
     background-color:#EEEEEE;
 }
-
-.alertify{
-    top:150px !important;
-}
-.alertify-message{
-    font-size:16px;
-}
-
-
-#alertify-cover{
-    background-color:#EEEEEE;
-    background:rgba(0, 0, 0, 0.6) none repeat scroll 0% 0%;
-    opacity:.8;
-}
-
-
-
 
 .footnote{
     padding-left:20px;

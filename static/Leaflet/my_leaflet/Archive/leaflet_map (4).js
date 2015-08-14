@@ -183,14 +183,12 @@ var study_area_boundary = omnivore.topojson(static_url+'Leaflet/myJSON/DRECP_Bdy
             dist.setStyle({color:'orange', weight:2, fillOpacity:0, opacity:.8 })
             //dist.setStyle(styleBLM Admin Units(dist.toGeoJSON().properties.FMNAME_PC))
             //dist.bindPopup(dist.toGeoJSON().properties.FMNAME_PC);
-            //For making non clickable and getting rid of the pointer icon.
-            dist.setStyle({clickable: false});
         })
     })//.addTo(map)
 
 // Getting rid of the fill opacity above and adding the "on" function below allows the user click anywhere in the map
-// Enable click on user defined (because the study area boundary turns on when the 1km reporting units are selected.)
-//study_area_boundary.on('click',function(e){selectFeature(e) })
+// when the 1km reporting units are selected because the study area boundary turns on when the 1km reporting units are selected.
+study_area_boundary.on('click',function(e){selectFeature(e) })
 
 //Counties
 var counties = L.geoJson(null, {
@@ -413,7 +411,6 @@ function create_post(newWKT) {
                 $("#view1").css("opacity", "1");
                 $("#view2").css("opacity", "1");
                 $(".wait").css("display", "none");
-                $('#areaWarning').hide()
             });
 
             if (typeof selectedFeature != 'undefined') {
@@ -421,6 +418,7 @@ function create_post(newWKT) {
                 blm_field_offices.resetStyle(selectedFeature)
                 huc5_watersheds.resetStyle(selectedFeature)
             }
+
 
 
             layerControl.addOverlay(selection_area_poly, "Search Area <div id='searchSquare'></div>");
@@ -445,9 +443,7 @@ function create_post(newWKT) {
 
             //Unless the cancel button has been pushed, throw an error.
             if (errmsg != "abort") {
-                //Without this, you have to click twice.
-                $('[id^=alertify]').remove();
-                alertify.alert('No results. Select a new area or modify your search criteria.')
+                alert('No results. Select a new area or modify your search criteria.')
                 $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
                     " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
                 console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
@@ -510,12 +506,10 @@ function selectFeature(e){
     //AJAX REQUEST
     else {
 
-        if (typeof selectedFeature != 'undefined'){
-            selectedFeature.on='No'
-            counties.resetStyle(selectedFeature)
-            blm_field_offices.resetStyle(selectedFeature)
-            huc5_watersheds.resetStyle(selectedFeature)
-        }
+        selectedFeature.on='No'
+        counties.resetStyle(selectedFeature)
+        blm_field_offices.resetStyle(selectedFeature)
+        huc5_watersheds.resetStyle(selectedFeature)
 
         create_post(user_wkt,reporting_units)
     }
@@ -575,13 +569,14 @@ function resetHighlight(e) {
     //info2.update('');
     */
 
-    if (typeof response!= 'undefined' && reporting_units != "onekm") {
+    /*
+    if (initialize==0 && reporting_units != "onekm") {
         $('.info2').html("<b><span style='color:#5083B0'>Current Search Area: "+response['categoricalValues']+"</span>")
     }
     else {
         info2.update('');
     }
-
+    */
     results_poly.bringToFront()
 
     /*
@@ -647,6 +642,8 @@ function toWKT(layer) {
 
 map.on('draw:created', function (e) {
 
+
+
     if (typeof selectedFeature != 'undefined') {
         counties.resetStyle(selectedFeature)
         blm_field_offices.resetStyle(selectedFeature)
@@ -660,20 +657,12 @@ map.on('draw:created', function (e) {
     });
    */
 
-    /*
-    $(document).ajaxStart(function(){
-        $("#view1").css("opacity", ".1");
-        $("#view2").css("opacity", ".1");
-        $(".wait").css("display", "block");
-    });
-
     $(document).ajaxComplete(function(){
         $("#view1").css("opacity", "1");
         $("#view2").css("opacity", "1");
         $(".wait").css("display", "none");
         map.removeLayer(layer)
     });
-    */
 
     //map.removeLayer(layer)
     if(map.hasLayer(results_poly)){
@@ -687,15 +676,13 @@ map.on('draw:created', function (e) {
     user_wkt=toWKT(layer);
 
     //Check for area selections that may take a long time. Ask for confirmation.
-    //May be too many dialogs. User can click cancel now.
     if (e.layerType=='rectangle' || e.layerType=='polygon'){
         area=L.GeometryUtil.geodesicArea(layer.getLatLngs());
     } else{
         area=0
     }
     if ((reporting_units == 'onekm') & (e.layerType=='rectangle' || e.layerType=='polygon') & area > 10000000000 ){
-        //if (! confirm("Warning: This selection may require a significant amount of processing time. \n\n Click \"Ok\" to proceed with the selection, or \"Cancel\" to cancel the selection." )){drawnItems.clearLayers(); return}
-        $('#areaWarning').show()
+        if (! confirm("Warning: This selection may require a significant amount of processing time. \n\n Click \"Ok\" to proceed with the selection, or \"Cancel\" to cancel the selection." )){drawnItems.clearLayers(); return}
     }
 
     if  (initialTableSelectionPerformed){
@@ -1061,6 +1048,5 @@ function getNearTermColor(d) {
     }
 
 }
-
 
 //************************************ End Near-Term Forecast ********************************************************//
