@@ -1,6 +1,10 @@
-/******************************************* On Document Ready *******************************************************/
 
+/******************************************* On Document Ready *******************************************************/
  $(document).ready(function(){
+
+     $("#backgroundImage").bind("load", function () { $(this).fadeIn(10000).removeClass('hidden'); });
+     $('#header').animate({backgroundColor: 'black'}, 10000);
+
     //Prepare Near Term Forecast
 
     //Initialize Selected Climate Division

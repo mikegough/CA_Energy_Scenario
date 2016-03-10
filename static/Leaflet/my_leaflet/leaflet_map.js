@@ -17,7 +17,7 @@ var toolTitle = L.Control.extend({
 
     onAdd: function (map) {
         this._div = L.DomUtil.create('div', 'toolTitle');
-        this._div.innerHTML = "1. Define Search Area";
+        this._div.innerHTML = "1. Select Reporting Units";
         return this._div;
     }
 });
@@ -766,7 +766,7 @@ var toolTitle = L.Control.extend({
 
     onAdd: function (map) {
         this._div = L.DomUtil.create('div', 'toolTitle2');
-        this._div.innerHTML = "<div class='info2Subtitle'><div id='selectionInstructions'> Click on the map to select a single " + reporting_units_label_singular + " or use the tools below to select multiple " + reporting_units_label_plural + ".</div></div>";
+        this._div.innerHTML = "2. Define Search Area<br><div class='info2Subtitle'><div id='selectionInstructions'> Click on the map to select a single " + reporting_units_label_singular + " or use the tools below to select multiple " + reporting_units_label_plural + ".</div></div>";
         return this._div;
     },
 });

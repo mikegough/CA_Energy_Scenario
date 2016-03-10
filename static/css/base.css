@@ -125,13 +125,18 @@ body{
     height:115px;
     width:101%;
     /*background-color:#CAC2B7;*/
-    background-color:#1B6186;
+    background-color:#444444;
+    background-color:#B5A699;
+    background-color:#527696;
+    background-color:black;
+    background-color:#294562;
     border-bottom:2px solid #444444;
     text-align:center;
     margin-left:auto;
     margin-right:auto;
     background-size:100%;
     /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#0d2f42+1,12425b+10,1b6186+29,1b6186+100 */
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#6d0019+0,8f0222+56,a90329+100 */
 }
 
 #title{
@@ -141,8 +146,8 @@ body{
     margin-left:auto;
     margin-right:auto;
     text-align: center;
-    color:#FEAF23;
-    font-size:34px;
+    color:#F8981D;
+    font-size:35px;
     z-index:99999;
     font-weight:bold;
     font-family: Verdana,Geneva,sans-serif;
@@ -152,26 +157,41 @@ body{
     text-shadow: 1px 1px 2px black;
 }
 
+#sub_title{
+    font-size:24px;
+    font-style:normal;
+    color:wheat;
+    text-align: center;
+    letter-spacing:5px;
+    text-shadow: 1px 1px 0px black;
+}
+
+
+#version{
+	color: gray;
+	z-index: 9999;
+	font-size: 13px;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	width: 100%;
+}
+
 #leftImage{
-    height:100%;
+    width:400px;
     position:absolute;
-    left:-85px;
+    left:0px;
     top:0px;
 }
 
 #rightImage{
-    height:100%;
     position:absolute;
     right:0px;
     top:0px;
 }
-
-#sub_title{
-    font-size:30px;
-    color:white;
-    text-align: center;
-    letter-spacing:5px;
-    text-shadow: 1px 1px 0px black;
+#backgroundImage{
+    display:none;
+    opacity: .5;
 }
 
 
@@ -214,7 +234,7 @@ ul.tabs li a{
     border-left: 1px solid #444444;
     padding-left:10px;
     padding-right:10px;
-    font-size:19px;
+    font-size:18px;
     font-family: Book Antiqua,Palatino,Palatino Linotype,Palatino LT STD,Georgia,serif
 }
 
@@ -975,24 +995,43 @@ ul#mainNav a {
 	box-shadow: 0 0 15px rgba(0,0,0,0.2);
 	border-radius: 5px;
     max-width:700px;
+
 }
 
 .info2Subtitle {
-    width:140%;
-    padding-top:2px;
-    font-size:.6em
+	width: 140%;
+	padding-top: 2px;
+	font-size: .75em;
+	margin-top: 6px;
+	margin-left: 21px;
+	color: #9A9A9A;
 }
+
 .info h4 {
 	margin: 0 0 5px;
 	color: #777;
 }
 
+.toolTitle2 {
+    width:245px;
+    background-color:#444444;
+    color:#F8981D;
+    font-size:19px;
+    font-weight:bold;
+    line-height:20px;
+    margin-left:5px;
+    padding:10px;
+    padding-right:0px;
+    left:-8px;
+    display: inline-block
+}
+
 .toolTitle {
     background-color:#444444;
     color:#F8981D;
-    width:210px;
+    width:245px;
     height:32px;
-    font-size:21px;
+    font-size:19px;
     font-weight:bold;
     line-height:32px;
     margin-left:5px;
@@ -1000,6 +1039,8 @@ ul#mainNav a {
     left:-8px
 
 }
+
+
 
 #resultsSquare{
     float:right;
@@ -1028,24 +1069,10 @@ ul#mainNav a {
 
 }
 
-.toolTitle2 {
-    background-color:#444444;
-    color:#F8981D;
-    width:220px;
-    font-size:26px;
-    font-weight:bold;
-    line-height:20px;
-    margin-left:5px;
-    padding:10px;
-    padding-right:0px;
-    left:-8px;
-    display: inline-block
-
-}
-
 #selectionInstructions{
     max-width:210px;
     font-weight:normal;
+    color:#a19683;
 }
 
 .leaflet-control-layers-expanded{
