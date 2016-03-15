@@ -2,8 +2,8 @@
 /******************************************* On Document Ready *******************************************************/
  $(document).ready(function(){
 
-     $("#backgroundImage").bind("load", function () { $(this).fadeIn(10000).removeClass('hidden'); });
-     $('#header').animate({backgroundColor: 'black'}, 10000);
+     $('#selectionInstructions').html("Click in the map to select a single " + reporting_units_label_singular + " or use the drawing tools to select multiple " + reporting_units_label_plural + ".");
+
 
     //Prepare Near Term Forecast
 
@@ -25,7 +25,6 @@
          $('input[type=radio]', this).get(0).checked = true;
      });
 
-    /*
     $(document).ajaxStart(function(){
         $("#view1").css("opacity", ".1");
         $("#view2").css("opacity", ".1");
@@ -38,16 +37,46 @@
         $(".wait").css("display", "none");
         //map.removeLayer(layer)
     });
-    */
 
-});
+    $(function() {
+      $(".child").on("click",function() {
+          $parent = $(this).prevAll(".parent");
+          if ($(this).is(":checked")) $parent.prop("checked",true);
+          else {
+             var len = $(this).parent().find(".child:checked").length;
+             $parent.prop("checked",len>0);
+          }
+      });
+      $(".parent").on("click",function() {
+          $(this).parent().find(".child").prop("checked",this.checked);
+      });
+    });
+
+    $("#enable_environment_settings_checkbox").prop('checked',false)
+
+    $("#enable_environment_settings_checkbox").change(function(){
+         var $this = $(this);
+         // $this will contain a reference to the checkbox
+         if ($this.is(':checked')) {
+             enable_environment_settings=1
+         } else {
+             enable_environment_settings=0
+         }
+    });
+
+     $( "#amount_ti_label" ).val("Moderately Low \(0\)");
+     $( "#amount_cv_label" ).val("Moderately Low \(0\)");
+     $( "#amount_species_count").val("8");
+
+ });
 
 /*************************************************** Slider bars  ****************************************************/
 
-//initialize default values
-ti_slider=-9999
-cv_slider=-9999
-species_count_slider_value=-9999
+//initialize default values. Change the default labels above as well.
+enable_environment_settings=0
+ti_slider=0
+cv_slider=0
+species_count_slider_value=8
 corridor_avoidance_slider_value=-9999
 chat_slider_value=-9999
 cdfw_slider_value=-9999

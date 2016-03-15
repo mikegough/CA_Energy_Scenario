@@ -12,6 +12,7 @@ var map = L.map("map", {
 L.control.scale({maxWidth:200}).addTo(map);
 
 //BEGIN TEXT UPPER LEFT ("Selection Tools")
+/*
 var toolTitle = L.Control.extend({
     options: {position: 'topleft'},
 
@@ -21,8 +22,9 @@ var toolTitle = L.Control.extend({
         return this._div;
     }
 });
+ map.addControl(new toolTitle());
+*/
 
-map.addControl(new toolTitle());
 
 //DYNAMIC LEGEND
 var dynamic_legend = L.control({position: 'bottomright'});
@@ -309,10 +311,10 @@ map.on('baselayerchange', function (event) {
     if (event.name == "User Defined") { remember_reporting_units=onekm;reporting_units="onekm";reporting_units_label_singular="polygon"; reporting_units_label_plural=" polygons"; map.addLayer(study_area_boundary)}
 
     if (event.name == "User Defined") {
-        $("#selectionInstructions").html("Use the tools below to define a custom search area.");
+        $("#selectionInstructions").html("Use the selection tools to define a custom search area.");
     }
     else {
-        $("#selectionInstructions").html("Click on the map to select a single " + reporting_units_label_singular + " or use the tools below to select multiple " + reporting_units_label_plural + ".");
+        $("#selectionInstructions").html("Click in the map to select a single " + reporting_units_label_singular + " or use the drawing tools to select multiple " + reporting_units_label_plural + ".");
     }
 
 
@@ -329,7 +331,10 @@ var defaultStyle = {
 };
 
 var hoverStyle = {
+    /*
     color:'#5083B0',
+    */
+    color:'#00C600',
     fillColor:'#5083B0',
     fillOpacity:0,
     weight:3,
@@ -341,6 +346,10 @@ var jqXHR;
 
 // AJAX for posting
 function create_post(newWKT) {
+
+    $("#step1Indicator").hide()
+    $("#step2Indicator").hide()
+
     initialize=0
     min_area=document.getElementById("min_area").value
     min_area_units=document.getElementById("min_area_units").value
@@ -351,7 +360,6 @@ function create_post(newWKT) {
     ownership_values=ownership_array.join(", ");
     //console.log("create post is working!")
 
-
     jqXHR=$.ajax({
         url : "", // the endpoint
         //Webfactional
@@ -359,7 +367,8 @@ function create_post(newWKT) {
         type : "POST", // http method
         //data sent to django view with the post request
         //data : { the_post : $('#post-text').val() },
-        data: {wktPOST: newWKT, reporting_units: reporting_units, ti_slider:ti_slider, cv_slider:cv_slider, min_area:min_area, min_area_units:min_area_units, species_count_slider_value: species_count_slider_value, corridor_avoidance_slider_value:corridor_avoidance_slider_value, chat_slider_value:chat_slider_value, cdfw_slider_value:cdfw_slider_value, ownership_values:ownership_values, solar_slider_value:solar_slider_value},
+
+        data: {wktPOST: newWKT, reporting_units: reporting_units, ti_slider:ti_slider, cv_slider:cv_slider, min_area:min_area, min_area_units:min_area_units, species_count_slider_value: species_count_slider_value, corridor_avoidance_slider_value:corridor_avoidance_slider_value, chat_slider_value:chat_slider_value, cdfw_slider_value:cdfw_slider_value, ownership_values:ownership_values, solar_slider_value:solar_slider_value, enable_environment_settings:enable_environment_settings},
 
         // handle a successful response
         success : function(json) {
@@ -403,6 +412,7 @@ function create_post(newWKT) {
 
             layerControl.addOverlay(results_poly, "Search Results <div id='resultsSquare'></div>");
 
+            /*
              $(document).ajaxStart(function(){
                 $("#view1").css("opacity", ".1");
                 $("#view2").css("opacity", ".1");
@@ -415,6 +425,7 @@ function create_post(newWKT) {
                 $(".wait").css("display", "none");
                 $('#areaWarning').hide()
             });
+            */
 
             if (typeof selectedFeature != 'undefined') {
                 counties.resetStyle(selectedFeature)
@@ -422,6 +433,11 @@ function create_post(newWKT) {
                 huc5_watersheds.resetStyle(selectedFeature)
             }
 
+            //This is the drawn shape
+
+            if (typeof layer != 'undefined' && map.hasLayer(layer)){
+                map.removeLayer(layer)
+            }
 
             layerControl.addOverlay(selection_area_poly, "Search Area <div id='searchSquare'></div>");
 
@@ -453,6 +469,18 @@ function create_post(newWKT) {
                 console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
             }
             $("#initialization_wait").css("display", "None");
+            $(document).ajaxStart(function(){
+                $("#view1").css("opacity", ".1");
+                $("#view2").css("opacity", ".1");
+                $(".wait").css("display", "block");
+            });
+
+            $(document).ajaxComplete(function(){
+                $("#view1").css("opacity", "1");
+                $("#view2").css("opacity", "1");
+                $(".wait").css("display", "none");
+                $('#areaWarning').hide()
+            });
         }
     });
 }
@@ -476,6 +504,9 @@ function selectFeature(e){
     user_wkt="POINT(" + e.latlng.lng + " " + e.latlng.lat + ")";
 
     if ( initialTableSelectionPerformed == false) {
+
+        $("#step1Indicator").hide()
+        $("#step2Indicator").show()
 
         if (typeof selectedFeature  != 'undefined'){
             selectedFeature.on='No'
@@ -681,7 +712,7 @@ map.on('draw:created', function (e) {
     }
 
     var type = e.layerType;
-    var layer = e.layer;
+    layer = e.layer;
     drawnItems.addLayer(layer);
     console.log(toWKT(layer));
     user_wkt=toWKT(layer);
@@ -761,6 +792,7 @@ L.control.zoom({
 //BEGIN TEXT UPPER LEFT ("Selection Tools")
 
 
+/*
 var toolTitle = L.Control.extend({
     options: {position: 'topleft'},
 
@@ -770,8 +802,9 @@ var toolTitle = L.Control.extend({
         return this._div;
     },
 });
+ map.addControl(new toolTitle());
+*/
 
-map.addControl(new toolTitle());
 
 //END TEXT UPPER LEFT
 

@@ -20,12 +20,22 @@ def index(request):
     if request.method == 'POST':
         WKT = request.POST.get('wktPOST')
         reporting_units=request.POST.get('reporting_units')
-        ti_slider = request.POST.get('ti_slider')
-        cv_slider = request.POST.get('cv_slider')
-        species_count_slider_value = request.POST.get('species_count_slider_value')
-        chat_slider_value = request.POST.get('chat_slider_value')
         solar_slider_value = request.POST.get('solar_slider_value')
         ownership_values = request.POST.get('ownership_values')
+
+        enable_environment_settings = request.POST.get('enable_environment_settings')
+
+        if enable_environment_settings == '0':
+            ti_slider='99999999'
+            cv_slider='99999999'
+            species_count_slider_value='99999999'
+            chat_slider_value = '-99999999'
+
+        else:
+            ti_slider = request.POST.get('ti_slider')
+            cv_slider = request.POST.get('cv_slider')
+            species_count_slider_value = request.POST.get('species_count_slider_value')
+            chat_slider_value = request.POST.get('chat_slider_value')
 
         if ownership_values == '':
             ownership_values='BLM,Military,Native American,Other,Private,State Land,USFS'

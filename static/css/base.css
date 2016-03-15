@@ -20,9 +20,9 @@ body{
 .wait {
     border: 0px solid gray;
     display:none;
-    float:right;
+    float:left;
     position:absolute;
-    right:0px;
+    left:0px;
     width:30%;
     height:75%;
     z-index:9999999;
@@ -90,6 +90,7 @@ body{
     position:absolute;
     display:block;
     top:50%;
+    top:500px;
     height:200px;
     width:100%;
     margin-top:-25%;
@@ -128,8 +129,8 @@ body{
     background-color:#444444;
     background-color:#B5A699;
     background-color:#527696;
-    background-color:black;
     background-color:#294562;
+    background-color:black;
     border-bottom:2px solid #444444;
     text-align:center;
     margin-left:auto;
@@ -190,7 +191,6 @@ body{
     top:0px;
 }
 #backgroundImage{
-    display:none;
     opacity: .5;
 }
 
@@ -206,12 +206,16 @@ body{
 }
 
 #map{
-    float:left;
+    float:right;
     height:100%;
     /* width:70%; */
     width: -moz-calc(100% - 481px);
     width: -webkit-calc(100% - 481px);
     width: calc(100% - 481px);
+}
+
+.imageOverlayLink {
+    font-weight:bold
 }
 
 .imageOverlayLink:hover {
@@ -222,22 +226,35 @@ body{
 }
 
 #tab_container{
-    float:right;
+    float:left;
     height:100%;
     width:479px;
     /* width: 29.8%; */
-    border-left: 2px solid #444444;
+    /*border-left: 2px solid #444444;*/
 }
 
+div.tabcontents {
+	border-top: 0px solid #444444;
+	border-bottom: 0px;
+	padding: 0px;
+	background-color: #FFF;
+}
+
+/*
 ul.tabs li a{
     border-right: 1px solid #444444;
     border-left: 1px solid #444444;
     padding-left:10px;
     padding-right:10px;
-    font-size:18px;
-    font-family: Book Antiqua,Palatino,Palatino Linotype,Palatino LT STD,Georgia,serif
+    font-size:14px;
 }
 
+*/
+
+ul.tabs {
+    border-bottom: 1px solid #AAAAAA;
+    margin-bottom: 10px;
+}
 .select_container{
     position:relative;
     height:18px;
@@ -435,15 +452,29 @@ div#point_chart_description a:hover, div#box_plot_description a:hover{
     background-repeat:no-repeat;
 }
 
-#view1{
+#mainContainer{
     cursor: default !important;
-    height:95%;
+    height:92%;
     margin-top:10px;
     margin-left:20px;
     padding-right:20px;
     overflow-y:auto;
     overflow-x:hidden;
 }
+
+#mainContainer td{
+    cursor: default !important;
+    font-size:13px;
+    color:#454545;
+}
+
+#mainContainer th{
+    cursor: default !important;
+    font-size:13px;
+    text-align:left;
+    color:#454545;
+}
+
 
 #general_table1{
     width:100%;
@@ -457,6 +488,7 @@ div#point_chart_description a:hover, div#box_plot_description a:hover{
     padding-left:10px;
     vertical-align:middle;
     padding:8px;
+
 }
 
 #general_table1 input,select{
@@ -465,6 +497,9 @@ div#point_chart_description a:hover, div#box_plot_description a:hover{
 
 #sliderTable td{
     padding-bottom:10px;
+}
+
+.current_slider_setting{
 }
 
 .map_icon {
@@ -476,19 +511,6 @@ div#point_chart_description a:hover, div#box_plot_description a:hover{
     float:right;
 
 }
-
-
-#view1 td{
-    cursor: default !important;
-    font-size:13px;
-}
-
-#view1 th{
-    cursor: default !important;
-    font-size:13px;
-    text-align:left;
-}
-
 
 .ui-slider-handle{
     /*
@@ -618,7 +640,6 @@ div#point_chart_description a:hover, div#box_plot_description a:hover{
 
 
 #view2{
-    height:93%;
     overflow-y:auto;
     margin-top:10px;
     margin-bottom:10px;
@@ -985,17 +1006,48 @@ ul#mainNav a {
     color: inherit;
 }
 
-.info, .info2, .toolTitle,.toolTitle2, .RU_Dropdown, .queryTool {
-    color: #464646;
-	padding: 6px 8px;
-	font: 14px/16px Arial, Helvetica, sans-serif;
-    font: 17px/19px Book Antiqua,Palatino,Palatino Linotype,Palatino LT STD,Georgia,serif;
-	background: white;
-	background: rgba(255,255,255,0.8);
-	box-shadow: 0 0 15px rgba(0,0,0,0.2);
-	border-radius: 5px;
-    max-width:700px;
 
+.stepIndicator {
+    box-shadow: inset 0 1px 0 0 rgba(255,255,255,.5);
+    background-image: -webkit-linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,0));
+    background-image: -moz-linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,0));
+    background-image: -ms-linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,0));
+    background-image: -o-linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,0));
+    background-image: linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,0));
+}
+
+#step2Indicator{
+
+}
+
+#searchDiv {
+	position: absolute;
+	left: 16px;
+	bottom: 45px;
+	width: 400px;
+    height: 100px;
+	z-index: 2;
+}
+
+#searchButton {
+    cursor: pointer;
+    position: absolute;
+    top:20px;
+    width: 310px;
+    float: right;
+    left: 57px;
+    padding: 2px;
+    font-size: 20px;
+    border-radius: 10px;
+    height:80px
+}
+
+#searchIcon {
+	float: right;
+	right: 10px;
+	position: relative;
+	top: -1px;
+	height: 35px;
 }
 
 .info2Subtitle {
@@ -1012,9 +1064,25 @@ ul#mainNav a {
 	color: #777;
 }
 
+.info, .info2, .toolTitle,.toolTitle2, .RU_Dropdown, .queryTool {
+    color: #464646;
+    padding: 6px 8px;
+    background: white;
+    background: rgba(255,255,255,0.8);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
+    max-width:700px;
+
+}
+
+.info2 {
+    font-size:18px;
+}
+
+
 .toolTitle2 {
     width:245px;
-    background-color:#444444;
+    background-color:#363636;
     color:#F8981D;
     font-size:19px;
     font-weight:bold;
@@ -1027,7 +1095,7 @@ ul#mainNav a {
 }
 
 .toolTitle {
-    background-color:#444444;
+    background-color:#363636;
     color:#F8981D;
     width:245px;
     height:32px;
@@ -1039,8 +1107,6 @@ ul#mainNav a {
     left:-8px
 
 }
-
-
 
 #resultsSquare{
     float:right;
@@ -1064,13 +1130,25 @@ ul#mainNav a {
     right:-4px;
     margin-right:0px;
     border-size:2px;
+    /*
     border-color: #5083B0;
+    */
+    border-color: #00C600;
     border-style:dotted;
 
 }
 
+/*
 #selectionInstructions{
     max-width:210px;
+    font-weight:normal;
+    color:#a19683;
+}
+*/
+#selectionInstructions{
+    height:200px;
+    max-width:400px;
+    font-size:.9em;
     font-weight:normal;
     color:#a19683;
 }
@@ -1152,7 +1230,7 @@ div.callout {
     opacity:1;
 }
 
-.loading_text {
+#loading_text {
     font-family: Verdana,Geneva,sans-serif;
     font-size:16px;
     font-weight:bold !important;
@@ -1180,7 +1258,7 @@ div.callout {
   display:none;
   background:#FFFFFF;
   position:absolute;
-  right:495px;
+  right:14;
   top:240px;
   height:150px;
   /*width:28px;*/
