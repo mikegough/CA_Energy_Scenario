@@ -41,8 +41,8 @@
 <script class="jsbin" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 
 <!-- tabs -->
-<script src="{{STATIC_URL}}deps/js/tabcontent.js" type="text/javascript"></script>
-<link href="{{STATIC_URL}}deps/css/tabcontent.css" rel="stylesheet" type="text/css" />
+<script src="{{STATIC_URL}}deps/tab-content/tabcontent.js" type="text/javascript"></script>
+<link href="{{STATIC_URL}}deps/tab-content/template6/tabcontent.css" rel="stylesheet" type="text/css" />
 
 <!-- Highcharts -->
 <!-- Latest Stable Version v4.1.5 as of 5/6/2015. Latest version at http://code.highcharts.com/highcharts.js -->
@@ -129,18 +129,11 @@
 
     <!-- needs to go below the map and the opacity handle -->
     <script src="{{STATIC_URL}}Leaflet/my_leaflet/leaflet_map.js"></script>
-    <!--
-
-    <div id="initialization_container">
-        <div id="calloutbox" class="callout right">
-            <span id="textInsideCallout"><p>3. Results will Appear Here<br><br><br> <img style="width:200px" src="{{STATIC_URL}}img/chart3.png">
-                <span id="initialization_wait"><img id="initialization_loader_image" src='{{STATIC_URL}}img/loader3.gif'></span>
-            </span>
-        </div>
-    </div>
-    -->
 
     <div id="tab_container">
+
+        {% comment %}
+
         <ul class="tabs" data-persist="true">
             <!--<li><a href="#view1" onclick="activateMapForDefault();">2. Define Search Criteria</a></li>-->
             <li><a href="#view1">3. Define Search Criteria</a></li>
@@ -150,13 +143,15 @@
             <li><a href="#view4" onclick="activateMapForClimateForecast()" >Near-Term Forecast</a></li>
             -->
         </ul>
+        {% endcomment %}
+
 
         <div class="tabcontents">
 
             <div class="wait">
                 <div class="loading_contents">
                     <img class="loading_image" src='{{STATIC_URL}}img/loader_circular.gif'><br>
-                    <div class="loading_text"><br>&nbsp Processing Request...</div>
+                    <div id="loading_text"><br>&nbsp Processing Request...</div>
                     <p>
                     <button type="button" class="stop my-button my-button-cancel" id="my-cancel">Cancel</button>
                     <div id="areaWarning">Large search areas may take up to a minute to process. Push the cancel button at any time to cancel the request.</div>
@@ -166,187 +161,232 @@
                 </div>
             </div>
 
-            <div id="view1">
-                 <form action=javascript:aspatial_query()>
+            <div id="mainContainer">
+                <form action=javascript:aspatial_query()>
 
+                    <div class="toolTitle" style="height:130px;width:400px">
+                        1. Define Your Search Area
+                        <div id="step1Indicator" class="stepIndicator" style="float:right; height:15px; width:15px; background-color:#00C600; border-radius:100px"></div>
+                        <!--
+                            <form class="reportingUnitsDropdown">
+                                <select class="reportingUnitsDropdown">
+                                    <option value="counties"> Counties</option>
+                                    <option value="blm_field_offices"> BLM Field Offices</option>
+                                    <option value="huc5_watersheds"> HUC5 Watersheds
+                                    <option value="onekm"> User Defined
+                                </select>
+                            </form>
+                          -->
+                        <div id="selectionInstructions"></div>
+                    </div>
+
+                    <p>
+                    <div class="toolTitle" style="width:400px; height:30px;">2. Define Your Search Criteria
+
+                        <div id="step2Indicator" class="stepIndicator" style="float:right; height:15px; width:15px; background-color:#00C600; border-radius:100px;display:none"></div>
+                    </div>
+                    <br>
+                    <ul class="tabs" data-persist="true">
+                        <!--<li><a href="#view1" onclick="activateMapForDefault();">2. Define Search Criteria</a></li>-->
+                        <li><a href="#view1">General Requirements</a></li>
+                        <li><a href="#view2">Environmental Settings</a></li>
+                        <!--
+                        <li ><a href="#view3"><img src="{{STATIC_URL}}img/info.png"><span style="font-size:.95em"> About</span></a></li>
+                        -->
+                        <!--
+                        <li><a href="#view2">Search Area</a></li>
+                        <li><a href="#view4" onclick="activateMapForClimateForecast()" >Near-Term Forecast</a></li>
+                        -->
+                    </ul>
+
+                    <!--
                     <div style="line-height:25px; background-color:#E2E2E2; padding-left:5px"> <h3>General Requirements</h3></div>
+                    -->
 
-                    <table border="1" id="general_table1">
-                     <tr>
-                         <td><b>Energy Source</b></td>
-                         <td>
-                             <select name="energy_source" style="width:161">
-                                 <option value="solar">Solar</option>
-                                 <option value="wind">Wind</option>
-                                 <option value="geothermal">Geothermal</option>
-                             </select>
-                         </td>
-                     </tr>
-                     <tr>
-                        <td colpan="1">
-                         <p>
-                             <label for="amount_solar"><span class="imageOverlayLink" title="Click to Map" onclick='swapImageOverlay(&quot;solar&quot;);swapLegend(&quot;solar&quot;,&quot;solar&quot;,&quot;EEMSmodel&quot;)'>Minimum Solar Resource Potential</span>
-                             </label>
-                         </td>
-                         <td>
-                                 <input type="text" id="amount_solar_label" readonly style="border:0; color:#f6931f; font-weight:bold; left:5px">
-                                 <img class="map_icon" style="top:-5px" title="Click to Map" onclick='swapImageOverlay(&quot;solar&quot;);swapLegend(&quot;solar&quot;,&quot;solar&quot;,&quot;EEMSmodel&quot;)' src="{{STATIC_URL}}img/map_icon.png">
-                             <!-- <input type="text" id="amount_ti" readonly style="border:0; color:#f6931f; font-weight:bold;"> -->
-                         </p>
 
-                         <div id="slider-range-max_solar"></div>
-                         </td>
-                     </tr>
-                     <tr>
-                        <td><b>Megawatt Target &nbsp</b></td>
-                        <td><input size="5" name="mw_target" value="0" type="text"> Megawatts </td>
-                     </tr>
-                      <tr>
-                        <td style="white-space:nowrap; width:180px"><b>Minimum Area Needed</b></td><td><input size="7" id="min_area" name="min_area" value="0" type="text">
-                          <select name="min_area_units" id="min_area_units">
-                              <option value="acres" selected>Acres</option>
-                              <option value="hectares">Hectares</option>
-                              <option value="square_km">Square km</option>
-                              <option value="square_mi">Square miles</option>
-                              <option value="square_meters">Square meters</option>
-                              <option value="square_feet">Square feet</option>
-                          </select>
-                        </td>
-                      </tr>
-                     <tr>
-                         <td><b>Minimum Parcel Size</b></td><td><input size="7" name="min_parcel_size" value="0" type="text"> <select><option>Acres</option><option>Hectares</option><option>Square km</option><option>Square miles<option>Square meters</option><option>Square feet</option></select></td>
-                     </tr>
-                     <tr>
-                        <td><b>Distance to Existing Transmission &nbsp</b></td><td><input size="7" name="distance_to_transmission" value="0" type="text"> <select><option>Miles</option><option>Yards</option><option>Feet</option><option>Km</option><option>Meters</option></select></td>
-                     </tr>
-                    </table>
+                    <div id="view1">
 
-                     <!--
-                    <p>
-                        <table>
-                            <th>Planning Designation</th>
+
+                        <table border="1" id="general_table1">
+                         <tr>
+                             <td><b>Energy Source</b></td>
+                             <td>
+                                 <select name="energy_source" style="width:161">
+                                     <option value="solar">Solar</option>
+                                     <option value="wind">Wind</option>
+                                     <option value="geothermal">Geothermal</option>
+                                 </select>
+                             </td>
+                         </tr>
+                         <tr>
+                            <td colpan="1">
+                             <p>
+                                 <label for="amount_solar"><span class="imageOverlayLink" title="Click to Map" onclick='swapImageOverlay(&quot;solar&quot;);swapLegend(&quot;solar&quot;,&quot;solar&quot;,&quot;EEMSmodel&quot;)'>Minimum Solar Resource Potential</span>
+                                 </label>
+                             </td>
+                             <td>
+                                     <input type="text" id="amount_solar_label" readonly style="border:0; color:#f6931f; font-weight:bold; left:5px">
+                                     <img class="map_icon" style="top:-5px" title="Click to Map" onclick='swapImageOverlay(&quot;solar&quot;);swapLegend(&quot;solar&quot;,&quot;solar&quot;,&quot;EEMSmodel&quot;)' src="{{STATIC_URL}}img/map_icon.png">
+                                 <!-- <input type="text" id="amount_ti" readonly style="border:0; color:#f6931f; font-weight:bold;"> -->
+                             </p>
+
+                             <div id="slider-range-max_solar"></div>
+                             </td>
+                         </tr>
+                         <tr>
+                            <td><b>Megawatt Target &nbsp</b></td>
+                            <td><input size="5" name="mw_target" value="0" type="text"> Megawatts </td>
+                         </tr>
+                          <tr>
+                            <td style="white-space:nowrap; width:180px"><b>Minimum Area Needed</b></td><td><input size="7" id="min_area" name="min_area" value="0" type="text">
+                              <select name="min_area_units" id="min_area_units">
+                                  <option value="acres" selected>Acres</option>
+                                  <option value="hectares">Hectares</option>
+                                  <option value="square_km">Square km</option>
+                                  <option value="square_mi">Square miles</option>
+                                  <option value="square_meters">Square meters</option>
+                                  <option value="square_feet">Square feet</option>
+                              </select>
+                            </td>
+                          </tr>
+                         <tr>
+                             <td><b>Minimum Parcel Size</b></td><td><input size="7" name="min_parcel_size" value="0" type="text"> <select><option>Acres</option><option>Hectares</option><option>Square km</option><option>Square miles<option>Square meters</option><option>Square feet</option></select></td>
+                         </tr>
+                         <tr>
+                            <td><b>Distance to Existing Transmission &nbsp</b></td><td><input size="7" name="distance_to_transmission" value="0" type="text"> <select><option>Miles</option><option>Yards</option><option>Feet</option><option>Km</option><option>Meters</option></select></td>
+                         </tr>
                             <tr>
-                                <td><input name="ownership" type="checkbox">Development Focus Areas (DFAs)</td>
+                                <td>
+
+                                <span class="imageOverlayLink" title="Click to Map" onclick='swapImageOverlay(&quot;ownership&quot;);swapLegend(&quot;ownership&quot;,&quot;ownership&quot;,&quot;EEMSmodel&quot;)'>Land Ownership Designations to Search</span>
+
+                                </td>
+
+                                <td>
+                                    <img class="map_icon" style="right:0px; top:0px" title="Click to Map" onclick='swapImageOverlay(&quot;ownership&quot;);swapLegend(&quot;ownership&quot;,&quot;ownership&quot;,&quot;EEMSmodel&quot;)' src="{{STATIC_URL}}img/map_icon.png">
+
+                                 <input name="ownership" class="ownership" value="Private" checked type="checkbox">Private Land</input><br>
+                                 <input name="" class="parent" value="Public Land" checked type="checkbox">Public Land</input><br>
+                                     <input name="ownership" class="ownership child" value="USFS" type="checkbox" checked style="margin-left:10px">USFS</input><br>
+                                     <input name="ownership" class="ownership child" value="BLM" style="margin-left:10px" checked type="checkbox">BLM</input><br>
+                                     <input name="ownership" class="ownership child" value="State Land" style="margin-left:10px" checked type="checkbox">State</input><br>
+                                     <input name="ownership" class="ownership child" value="Other" style="margin-left:10px" checked type="checkbox">Other</input><br>
+                                 <input name="ownership" class="ownership" value="Military" checked type="checkbox">Military</input><br>
+
+                                </td>
                             </tr>
-                            <tr>
-                                <td><input name="zoning" type="checkbox">Alternative Specific Reserve Design</td>
-                            </tr>
-                            </tr>
+
                         </table>
-                     -->
 
-                    <p>
+                    </div>
+                    <div id="view2">
 
-                    <img class="map_icon" style="right:38px; top:27px" title="Click to Map" onclick='swapImageOverlay(&quot;ownership&quot;);swapLegend(&quot;ownership&quot;,&quot;ownership&quot;,&quot;EEMSmodel&quot;)' src="{{STATIC_URL}}img/map_icon.png">
+                            <input id="enable_environment_settings_checkbox" type="checkbox">Enable</input>
+                            <p>
+                            Adjust the slider bars below to set the <b>maximum allowable values </b>for each environmental setting. Any areas that have a value greater than the specified value will be eliminated from the search results.
+                            <p> Move the sliders to the <span class="arrows">&larr;</span> left for a more constrained search (avoiding potentially environmentally sensitive areas).
+                            <p> Move the sliders to the <span class="arrows">&rarr;</span> right for a more relaxed search (potentially including more environmentally sensitive areas).
+                            <!--
+                            <p>
+                                <b>Avoid places with values greater than...</b>
+                            </p>
+                            -->
 
-                    <table id="general_table2">
-                        <th colspan="2"><span class="imageOverlayLink" title="Click to Map" onclick='swapImageOverlay(&quot;ownership&quot;);swapLegend(&quot;ownership&quot;,&quot;ownership&quot;,&quot;EEMSmodel&quot;)'>Ownership</span><br></th>
-                        <tr>
-                            <td><input name="ownership" class="ownership" value="Private" type="checkbox">Private</td>
-                            <td><input name="ownership" class="ownership" value="USFS" type="checkbox">USFS</td>
-                            <td><input name="ownership" class="ownership" value="Military" type="checkbox">Military</td>
-                        </tr>
-                        <tr>
-                            <td><input name="ownership" class="ownership" value="BLM" type="checkbox">BLM</td>
-                            <td><input name="ownership" class="ownership" value="BLM,State Land,USFS,Other" type="checkbox">All Public</td>
-                            <td><input name="ownership" class="ownership" value="State Land" type="checkbox">State</td>
-                        </tr>
-                    </table>
+                        <p>
+                         <table id="sliderTable">
+                             <tr>
+                                 <td>
+                                     <p>
+                                         <label for="amount_ti"><span class="imageOverlayLink" title="Click to Map" onclick='swapImageOverlay(&quot;intactness&quot;);swapLegend(&quot;intactness&quot;,&quot;intactness&quot;,&quot;EEMSmodel&quot;)'>Terrestrial Intactness:</span>
+                                         <input type="text" id="amount_ti_label" class="current_slider_setting" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                                         </label>
+                                         <!-- <input type="text" id="amount_ti" readonly style="border:0; color:#f6931f; font-weight:bold;"> -->
+                                     </p>
+                                        <div class="slider_bars" id="slider-range-max_ti"></div>
+                                 </td>
+                                 <td>
+                                     <img class="map_icon" title="Click to Map" onclick='swapImageOverlay(&quot;intactness&quot;);swapLegend(&quot;intactness&quot;,&quot;intactness&quot;,&quot;EEMSmodel&quot;)' src="{{STATIC_URL}}img/map_icon.png">
+                                 </td>
+                             </tr>
+                             <tr>
+                                 <td>
+                                     <p>
+                                         <label for="amount_cv"><span class="imageOverlayLink" title="Click to Map" onclick='swapImageOverlay(&quot;conservation_values&quot;);swapLegend(&quot;conservation_values&quot;,&quot;conservation_values&quot;,&quot;EEMSmodel&quot;)'>Conservation Value:</span></label>
+                                         <input type="text" id="amount_cv_label" class="current_slider_setting" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                                         <!--<input type="text" id="amount_cv" readonly style="border:0; color:#f6931f; font-weight:bold;">-->
+                                     </p>
 
-                    <div style="line-height:25px; background-color:#E2E2E2; padding-left:5px"> <h3>Environmental Settings</h3></div>
+                                     <div class="slider_bars" id="slider-range-max_cv"></div>
 
-                    <p>
-                     <table id="sliderTable">
-                     <th colspan="2">Maximum Allowable Values<br><br></th>
+                                 </td>
+                                 <td>
+                                    <img class="map_icon" title="Click to Map" onclick='swapImageOverlay(&quot;conservation_values&quot;);swapLegend(&quot;conservation_values&quot;,&quot;conservation_values&quot;,&quot;EEMSmodel&quot;)' src="{{STATIC_URL}}img/map_icon.png">
+                                 </td>
+                             </tr>
+                             <tr>
+                                 <td>
+                                     <p>
+                                         <label for="amount_species_count"><span class="imageOverlayLink" title="Click to Map" onclick='swapImageOverlay(&quot;species_count&quot;);swapLegend(&quot;species_count&quot;,&quot;species_count&quot;,&quot;EEMSmodel&quot;)'>Number of Covered Species:</label>
+                                         <input type="text" id="amount_species_count" class="current_slider_setting" readonly style="border:0; color:#f6931f; font-weight:bold; width:50px">
+                                     </p>
+
+                                     <div class="slider_bars" id="slider-range-max_species_count"></div>
+
+                                 </td>
+                                 <td>
+                                     <img class="map_icon" title="Click to Map" onclick='swapImageOverlay(&quot;species_count&quot;);swapLegend(&quot;species_count&quot;,&quot;species_count&quot;,&quot;EEMSmodel&quot;)' src="{{STATIC_URL}}img/map_icon.png">
+                                 </td>
+                             </tr>
+                         <!--
                          <tr>
                              <td>
                                  <p>
-                                     <label for="amount_ti"><span class="imageOverlayLink" title="Click to Map" onclick='swapImageOverlay(&quot;intactness&quot;);swapLegend(&quot;intactness&quot;,&quot;intactness&quot;,&quot;EEMSmodel&quot;)'>Terrestrial Intactness:</span>
-                                     <input type="text" id="amount_ti_label" readonly style="border:0; color:#f6931f; font-weight:bold;">
-                                     </label>
-                                     <!-- <input type="text" id="amount_ti" readonly style="border:0; color:#f6931f; font-weight:bold;"> -->
+                                     <label for="amount_corridor_avoidance">Corridor Condition:</label>
+                                     <input type="text" id="amount_corridor_avoidance_label" readonly style="border:0; color:#f6931f; font-weight:bold;">
                                  </p>
-                                    <div class="slider_bars" id="slider-range-max_ti"></div>
-                             </td>
-                             <td>
-                                 <img class="map_icon" title="Click to Map" onclick='swapImageOverlay(&quot;intactness&quot;);swapLegend(&quot;intactness&quot;,&quot;intactness&quot;,&quot;EEMSmodel&quot;)' src="{{STATIC_URL}}img/map_icon.png">
+
+                                 <div id="slider-range-max_corridor_avoidance"></div>
+
                              </td>
                          </tr>
+                         -->
+                        <!--
+                <tr>
+                    <td>
+                        <p>
+                            <label for="amount_chat"><span class="imageOverlayLink" title="Click to Map" onclick='swapImageOverlay(&quot;chat&quot;);swapLegend(&quot;chat&quot;,&quot;chat&quot;,&quot;EEMSmodel&quot;)'>Western Gov CHAT Score:</span></label>
+                            <input type="text" id="amount_chat_label" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                        </p>
+
+                        <div class="slider_bars" id="slider-range-max_chat"></div>
+
+                             </td>
+                             <td>
+                                 <img class="map_icon" title="Click to Map" onclick='swapImageOverlay(&quot;chat&quot;);swapLegend(&quot;chat&quot;,&quot;chat&quot;,&quot;EEMSmodel&quot;)' src="{{STATIC_URL}}img/map_icon.png">
+                             </td>
+                         </tr>
+                        -->
+                         <!--
                          <tr>
                              <td>
                                  <p>
-                                     <label for="amount_cv"><span class="imageOverlayLink" title="Click to Map" onclick='swapImageOverlay(&quot;conservation_values&quot;);swapLegend(&quot;conservation_values&quot;,&quot;conservation_values&quot;,&quot;EEMSmodel&quot;)'>Conservation Value:</span></label>
-                                     <input type="text" id="amount_cv_label" readonly style="border:0; color:#f6931f; font-weight:bold;">
-                                     <!--<input type="text" id="amount_cv" readonly style="border:0; color:#f6931f; font-weight:bold;">-->
+                                     <label for="amount_cdfw_aceII">CDFW Ace II Score:</label>
+                                     <input type="text" id="amount_cdfw_aceII_label" readonly style="border:0; color:#f6931f; font-weight:bold;">
                                  </p>
 
-                                 <div class="slider_bars" id="slider-range-max_cv"></div>
+                                 <div id="slider-range-max_cdfw_aceII"></div>
 
-                             </td>
-                             <td>
-                                <img class="map_icon" title="Click to Map" onclick='swapImageOverlay(&quot;conservation_values&quot;);swapLegend(&quot;conservation_values&quot;,&quot;conservation_values&quot;,&quot;EEMSmodel&quot;)' src="{{STATIC_URL}}img/map_icon.png">
                              </td>
                          </tr>
-                         <tr>
-                             <td>
-                                 <p>
-                                     <label for="amount_species_count"><span class="imageOverlayLink" title="Click to Map" onclick='swapImageOverlay(&quot;species_count&quot;);swapLegend(&quot;species_count&quot;,&quot;species_count&quot;,&quot;EEMSmodel&quot;)'>Number of Covered Species:</label>
-                                     <input type="text" id="amount_species_count" readonly style="border:0; color:#f6931f; font-weight:bold;">
-                                 </p>
+                         -->
+                         </table>
 
-                                 <div class="slider_bars" id="slider-range-max_species_count"></div>
+                    </div>
 
-                             </td>
-                             <td>
-                                 <img class="map_icon" title="Click to Map" onclick='swapImageOverlay(&quot;species_count&quot;);swapLegend(&quot;species_count&quot;,&quot;species_count&quot;,&quot;EEMSmodel&quot;)' src="{{STATIC_URL}}img/map_icon.png">
-                             </td>
-                         </tr>
-                     <!--
-                     <tr>
-                         <td>
-                             <p>
-                                 <label for="amount_corridor_avoidance">Corridor Condition:</label>
-                                 <input type="text" id="amount_corridor_avoidance_label" readonly style="border:0; color:#f6931f; font-weight:bold;">
-                             </p>
-
-                             <div id="slider-range-max_corridor_avoidance"></div>
-
-                         </td>
-                     </tr>
-                     -->
-                     <tr>
-                         <td>
-                             <p>
-                                 <label for="amount_chat"><span class="imageOverlayLink" title="Click to Map" onclick='swapImageOverlay(&quot;chat&quot;);swapLegend(&quot;chat&quot;,&quot;chat&quot;,&quot;EEMSmodel&quot;)'>Western Gov CHAT Score:</span></label>
-                                 <input type="text" id="amount_chat_label" readonly style="border:0; color:#f6931f; font-weight:bold;">
-                             </p>
-
-                             <div class="slider_bars" id="slider-range-max_chat"></div>
-
-                         </td>
-                         <td>
-                             <img class="map_icon" title="Click to Map" onclick='swapImageOverlay(&quot;chat&quot;);swapLegend(&quot;chat&quot;,&quot;chat&quot;,&quot;EEMSmodel&quot;)' src="{{STATIC_URL}}img/map_icon.png">
-                         </td>
-                     </tr>
-                     <!--
-                     <tr>
-                         <td>
-                             <p>
-                                 <label for="amount_cdfw_aceII">CDFW Ace II Score:</label>
-                                 <input type="text" id="amount_cdfw_aceII_label" readonly style="border:0; color:#f6931f; font-weight:bold;">
-                             </p>
-
-                             <div id="slider-range-max_cdfw_aceII"></div>
-
-                         </td>
-                     </tr>
-                     -->
-                     </table>
-
-                    <p>
-
-
-                    <input style="float:right; position:relative; right:33px; cursor:pointer" type="submit" value="Search" class="my-button my-button-ok" id="my-ok"  onClick="create_post(user_wkt,reporting_units)">
+                    <div id="searchDiv" class="toolTitle">
+                    3. <input id="searchButton" type="submit" value="Map the Results" class="my-button my-button-ok" id="my-ok"  onClick="create_post(user_wkt,reporting_units)">
+                    <!--<span style="float:right; position:relative; right:30px"><img id="searchIcon" src="{{STATIC_URL}}img/search.png"></span>-->
+                    </div>
 
                 </form>
 
@@ -357,7 +397,6 @@
             <!--
             <div id="view2"></div>
             -->
-
             <div id="view3">
 
                 <h3>Summary:</h3>
@@ -371,107 +410,6 @@
                     <li>Specify your search criteria using the slider bars and input fields on the right hand side of the screen</li>
                     <li>Click the search button to identify areas meeting your criteria.</li>
                </ol>
-
-            </div>
-
-            <div id="view4">
-                <div class="nearTermClimateFormDiv">
-
-                    <h3>Climate Division <span id="climateDivision"></span></h3>
-
-                    <!-- Table 1: Headers (Time Frame, Temperature, Precipitation -->
-                    <table class="dynamicNearTermClimateTable" style="box-shadow: 1px 1px 4px black">
-                        <tr><th>Time Frame</th><th>Temperature</th><th>Precipitation</th></tr>
-                    </table>
-
-                    <!-- Start and Stop Buttons -->
-                    <a href="#" id="start" title="Click to automatically cycle through the time steps"><button id="startDiv"></button></a>
-                    <a href="#" id="stop" title="Click to stop"><button id="stopDiv"></button></a>
-
-                    <br>
-
-                    <!-- Radio buttons generated dynamically based on dates in the text file -->
-                    <form class="nearTermClimateForm" > </form>
-
-                    <!--Thermometer-->
-                    <div style="float:left; position:relative; z-index:9999; width:20%; height:200px; vertical-align:top">
-                        <div class="thermometer">
-                            <span style="position:relative; top:4px; left:-11px; font-size:11px;color:#444444"><b>&ndash;</b> Historical Mean <b>&ndash;</b></span>
-                            <span id="thermometerAfter"></span>
-                        </div>
-                        <!--
-                        <div id="thermometerText">
-                            <span id="thermometerDegreeChange">20</span> <br><span style="color:#6F6F6F; font-size:12px; white-space:nowrap">From historical<br>average (mean)</span>
-                        </div>
-                        -->
-                    </div>
-
-                    <!--Rain Gauge -->
-                    <div style="float:left; position:relative; z-index:9999; width:20%; height:200px; vertical-align:top">
-                        <div class="rainGauge">
-                            <div class="triangleTop"></div>
-                            <span id="rainGaugeAfter"></span>
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- Table 2: Change values & "Show on Map Radio Buttons" Table -->
-                <form id="nearTermMapForm">
-                    <div id="nearTermClimateWrapper" style="clear:both">
-                        <table class="dynamicNearTermClimateTable" style="box-shadow: 1px 1px 4px black" id="nearTermChangeTable">
-                            <!-- The Show on Map Row needs to persist after after a feature click. Initialize, then save and append on click -->
-                            <tr id="mapRadioRow" style="border-top:none"><td>Show on Map</td><td><input name='nearTermMapVariable' value='temp' type='radio' checked></td><td><input name='nearTermMapVariable' value='precip' type='radio'></td></tr>
-                        </table>
-                    </div>
-                </form>
-
-
-                <!-- Table 3: Details (Historical Mean, Forecast Mean, 90% Confidence Interval)-->
-                <div id="nearTermClimateWrapper2" style="clear:both"></div>
-
-                <script>
-
-                    $(".nearTermClimateForm").change(function(){
-                        //On Time Frame Change
-                        selectedNearTermClimatePeriod=this.period.value
-                        //Update Table
-                        generateNearTermClimateResults(selectedNearTermClimatePeriod,selectedClimateDivision)
-                        //Update Map
-                        updateClimateDivisionSymbology()
-                    });
-
-                    $("#nearTermMapForm").change(function(){
-                        //Update Map
-                        updateClimateDivisionSymbology()
-                        updateNearTermForecastLegend()
-                    });
-
-                </script>
-
-                <!--
-                <div style="clear:both">
-                    <table class="dynamicNearTermClimateTable">
-                        <tr><th>Show on Map </th></tr>
-                    </table>
-
-                    <br>
-
-                    <form id="nearTermMapForm">
-                        <input name="nearTermMapVariable" value="temp" type="radio">Temperature Change Forecast<br>
-                        <input name="nearTermMapVariable" value="precip" type="radio">Precipitation Change Forecast
-                    </form>
-
-                </div>
-                -->
-
-                <div id="sources">
-                    Reference: Barnston et al., 2000, Bull. Amer. Meteor. Soc. 81:1271-1279<br>
-                    Source: <a href="http://www.cpc.ncep.noaa.gov/" target="_blank">http://www.cpc.ncep.noaa.gov/</a><br>
-                    Data Updates: These data update automatically on the third Thursday of each month.
-                </div>
-                <br>
-                <br>
 
             </div>
 
@@ -490,5 +428,30 @@
 <link rel="stylesheet" href="{{STATIC_URL}}deps/js/alertify.js-0.3.11/themes/alertify.core.css">
 <!-- include a theme, can be included into the core instead of 2 separate files -->
 <link rel="stylesheet" href="{{STATIC_URL}}deps/js/alertify.js-0.3.11/themes/alertify.default.css">
+
+<script>
+    /*
+    $('.reportingUnitsDropdown').change(function(){
+        map.removeLayer(counties)
+        map.removeLayer(jepson_ecoregions)
+        map.removeLayer(blm_field_offices)
+        map.removeLayer(huc5_watersheds)
+        map.removeLayer(usfs_national_forests)
+        map.removeLayer(onekm)
+        map.removeLayer(results_poly)
+        if (this.value=="onekm"){
+            map.addLayer(study_area_boundary)
+            $("#selectionInstructionsPanel").html("Use the shape selection tools to define a custom search area.");
+        }
+        else{
+            $("#selectionInstructionsPanel").html("Click on the map to select a single " + this.value + " or use the shape selection tools to select multiple " + this.value + ".");
+            map.removeLayer(study_area_boundary)
+            map.addLayer(eval(this.value))
+        }
+        reporting_units=this.value
+    });
+    */
+
+</script>
 
 </html>
