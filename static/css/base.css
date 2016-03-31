@@ -1032,14 +1032,14 @@ ul#mainNav a {
 #searchButton {
     cursor: pointer;
     position: absolute;
-    top:20px;
+    top:23px;
     width: 310px;
     float: right;
     left: 57px;
     padding: 2px;
     font-size: 20px;
     border-radius: 10px;
-    height:80px
+    height:74px
 }
 
 #searchIcon {
@@ -1138,19 +1138,14 @@ ul#mainNav a {
 
 }
 
-/*
-#selectionInstructions{
-    max-width:210px;
-    font-weight:normal;
-    color:#a19683;
-}
-*/
 #selectionInstructions{
     height:200px;
     max-width:400px;
-    font-size:.9em;
+    font-size:.85em;
     font-weight:normal;
     color:#a19683;
+    margin-left:25px;
+    margin-right:15px;
 }
 
 .leaflet-control-layers-expanded{

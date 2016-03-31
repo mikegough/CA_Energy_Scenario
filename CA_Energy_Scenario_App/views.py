@@ -160,15 +160,6 @@ def index(request):
         if statsFields:
 
             for field in statsFields.split(','):
-                #Non area weighted selection
-                #for stat in PostgresStatsToRetrieve:
-                    #selectList+= stat+"(" + field + ")" + "as " + field + "_"+ stat + ","
-                    #Area weighted selection. Would be preferable to get the sum of the shape area once, but would require
-                    #a new selection using all the search conditions below.
-                    #Extra time for AWA calculation is negligible (2.01mins vs 1.997mins for all watersheds).
-                    #No need to store sum(shape_area) in a separate variable to avoid recalculating for each field....
-                    #Time difference is negligible. 2.007133 mins for all watersheds vs 2.001333 mins with hard coded sum(shape_area).
-                    #example: select sum(c4prec1530 * shape_area)/sum(shape_area) as c4prec1530_avg from table;
                     selectList+= "sum(" + field + " * shape_area)/sum(shape_area)" + " as " + field + "_" + "avg" + ","
 
         #Aggregates. Count, Unique CSV from categorical fields, Outline of selected features.
@@ -224,6 +215,7 @@ def index(request):
                return render(request, template+'.html', errorHandler(reporting_units, template, initial_lat, initial_lon, 1,0))
                #cursor.execute(selectStatement)
 
+        print selectStatement
         ################################# STORE COLUMN, VALUE PAIRS IN A DICT ##########################################
 
         resultsDict={}
