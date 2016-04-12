@@ -182,103 +182,105 @@
 
                     <p>
                     <div class="toolTitle" style="width:400px; height:30px;">2. Define Your Search Criteria
-
                         <div id="step2Indicator" class="stepIndicator" style="float:right; height:15px; width:15px; background-color:#00C600; border-radius:100px;display:none"></div>
                     </div>
-                    <br>
-                    <ul class="tabs" data-persist="true">
-                        <!--<li><a href="#view1" onclick="activateMapForDefault();">2. Define Search Criteria</a></li>-->
-                        <li><a href="#view1">General Requirements</a></li>
-                        <li><a href="#view2">Environmental Settings</a></li>
+
+                    <div style="background-color:white">
+                        <br>
+                        <ul class="tabs" data-persist="true">
+                            <!--<li><a href="#view1" onclick="activateMapForDefault();">2. Define Search Criteria</a></li>-->
+                            <li><a href="#view1">General Requirements</a></li>
+                            <li><a href="#view2">Environmental Settings</a></li>
+                            <!--
+                            <li ><a href="#view3"><img src="{{STATIC_URL}}img/info.png"><span style="font-size:.95em"> About</span></a></li>
+                            -->
+                            <!--
+                            <li><a href="#view2">Search Area</a></li>
+                            <li><a href="#view4" onclick="activateMapForClimateForecast()" >Near-Term Forecast</a></li>
+                            -->
+                        </ul>
+
                         <!--
-                        <li ><a href="#view3"><img src="{{STATIC_URL}}img/info.png"><span style="font-size:.95em"> About</span></a></li>
+                        <div style="line-height:25px; background-color:#E2E2E2; padding-left:5px"> <h3>General Requirements</h3></div>
                         -->
-                        <!--
-                        <li><a href="#view2">Search Area</a></li>
-                        <li><a href="#view4" onclick="activateMapForClimateForecast()" >Near-Term Forecast</a></li>
-                        -->
-                    </ul>
-
-                    <!--
-                    <div style="line-height:25px; background-color:#E2E2E2; padding-left:5px"> <h3>General Requirements</h3></div>
-                    -->
 
 
-                    <div id="view1">
+                        <div id="view1">
 
 
-                        <table border="1" id="general_table1">
-                         <tr>
-                             <td><b>Energy Source</b></td>
-                             <td>
-                                 <select name="energy_source" style="width:161">
-                                     <option value="solar">Solar</option>
-                                     <option value="wind">Wind</option>
-                                     <option value="geothermal">Geothermal</option>
-                                 </select>
-                             </td>
-                         </tr>
-                         <tr>
-                            <td colpan="1">
-                             <p>
-                                 <label for="amount_solar"><span class="imageOverlayLink" title="Click to Map" onclick='swapImageOverlay(&quot;solar&quot;);swapLegend(&quot;solar&quot;,&quot;solar&quot;,&quot;EEMSmodel&quot;)'>Minimum Solar Resource Potential</span>
-                                 </label>
-                             </td>
-                             <td>
-                                     <input type="text" id="amount_solar_label" readonly style="border:0; color:#f6931f; font-weight:bold; left:5px">
-                                     <img class="map_icon" style="top:-5px" title="Click to Map" onclick='swapImageOverlay(&quot;solar&quot;);swapLegend(&quot;solar&quot;,&quot;solar&quot;,&quot;EEMSmodel&quot;)' src="{{STATIC_URL}}img/map_icon.png">
-                                 <!-- <input type="text" id="amount_ti" readonly style="border:0; color:#f6931f; font-weight:bold;"> -->
-                             </p>
+                            <table border="1" id="general_table1">
+                             <tr>
+                                 <td><b>Energy Source</b></td>
+                                 <td>
+                                     <select name="energy_source" style="width:161">
+                                         <option value="solar">Solar</option>
+                                         <option value="wind">Wind</option>
+                                         <option value="geothermal">Geothermal</option>
+                                     </select>
+                                 </td>
+                             </tr>
+                             <tr>
+                                <td colpan="1">
+                                 <p>
+                                     <label for="amount_solar"><span class="imageOverlayLink" title="Click to Map" onclick='swapImageOverlay(&quot;solar&quot;);swapLegend(&quot;solar&quot;,&quot;solar&quot;,&quot;EEMSmodel&quot;)'>Minimum Solar Resource Potential</span>
+                                     </label>
+                                 </td>
+                                 <td>
+                                         <input type="text" id="amount_solar_label" readonly style="border:0; color:#f6931f; font-weight:bold; left:5px">
+                                         <img class="map_icon" style="top:-5px" title="Click to Map" onclick='swapImageOverlay(&quot;solar&quot;);swapLegend(&quot;solar&quot;,&quot;solar&quot;,&quot;EEMSmodel&quot;)' src="{{STATIC_URL}}img/map_icon.png">
+                                     <!-- <input type="text" id="amount_ti" readonly style="border:0; color:#f6931f; font-weight:bold;"> -->
+                                 </p>
 
-                             <div id="slider-range-max_solar"></div>
-                             </td>
-                         </tr>
-                         <tr>
-                            <td><b>Megawatt Target &nbsp</b></td>
-                            <td><input size="5" name="mw_target" value="0" type="text"> Megawatts </td>
-                         </tr>
-                          <tr>
-                            <td style="white-space:nowrap; width:180px"><b>Minimum Area Needed</b></td><td><input size="7" id="min_area" name="min_area" value="0" type="text">
-                              <select name="min_area_units" id="min_area_units">
-                                  <option value="acres" selected>Acres</option>
-                                  <option value="hectares">Hectares</option>
-                                  <option value="square_km">Square km</option>
-                                  <option value="square_mi">Square miles</option>
-                                  <option value="square_meters">Square meters</option>
-                                  <option value="square_feet">Square feet</option>
-                              </select>
-                            </td>
-                          </tr>
-                         <tr>
-                             <td><b>Minimum Parcel Size</b></td><td><input size="7" name="min_parcel_size" value="0" type="text"> <select><option>Acres</option><option>Hectares</option><option>Square km</option><option>Square miles<option>Square meters</option><option>Square feet</option></select></td>
-                         </tr>
-                         <tr>
-                            <td><b>Distance to Existing Transmission &nbsp</b></td><td><input size="7" name="distance_to_transmission" value="0" type="text"> <select><option>Miles</option><option>Yards</option><option>Feet</option><option>Km</option><option>Meters</option></select></td>
-                         </tr>
-                            <tr>
-                                <td>
-
-                                <span class="imageOverlayLink" title="Click to Map" onclick='swapImageOverlay(&quot;ownership&quot;);swapLegend(&quot;ownership&quot;,&quot;ownership&quot;,&quot;EEMSmodel&quot;)'>Land Ownership Designations to Search</span>
-
+                                 <div id="slider-range-max_solar"></div>
+                                 </td>
+                             </tr>
+                             <tr>
+                                <td><b>Megawatt Target &nbsp</b></td>
+                                <td><input size="5" name="mw_target" value="0" type="text"> Megawatts </td>
+                             </tr>
+                              <tr>
+                                <td style="white-space:nowrap; width:180px"><b>Minimum Area Needed</b></td><td><input size="7" id="min_area" name="min_area" value="0" type="text">
+                                  <select name="min_area_units" id="min_area_units">
+                                      <option value="acres" selected>Acres</option>
+                                      <option value="hectares">Hectares</option>
+                                      <option value="square_km">Square km</option>
+                                      <option value="square_mi">Square miles</option>
+                                      <option value="square_meters">Square meters</option>
+                                      <option value="square_feet">Square feet</option>
+                                  </select>
                                 </td>
+                              </tr>
+                             <tr>
+                                 <td><b>Minimum Parcel Size</b></td><td><input size="7" name="min_parcel_size" value="0" type="text"> <select><option>Acres</option><option>Hectares</option><option>Square km</option><option>Square miles<option>Square meters</option><option>Square feet</option></select></td>
+                             </tr>
+                             <tr>
+                                <td><b>Distance to Existing Transmission &nbsp</b></td><td><input size="7" name="distance_to_transmission" value="0" type="text"> <select><option>Miles</option><option>Yards</option><option>Feet</option><option>Km</option><option>Meters</option></select></td>
+                             </tr>
+                                <tr>
+                                    <td>
 
-                                <td>
-                                    <img class="map_icon" style="right:0px; top:0px" title="Click to Map" onclick='swapImageOverlay(&quot;ownership&quot;);swapLegend(&quot;ownership&quot;,&quot;ownership&quot;,&quot;EEMSmodel&quot;)' src="{{STATIC_URL}}img/map_icon.png">
+                                    <span class="imageOverlayLink" title="Click to Map" onclick='swapImageOverlay(&quot;ownership&quot;);swapLegend(&quot;ownership&quot;,&quot;ownership&quot;,&quot;EEMSmodel&quot;)'>Land Ownership Designations to Search</span>
 
-                                 <input name="ownership" class="ownership" value="Private" checked type="checkbox">Private Land</input><br>
-                                 <input name="" class="parent" value="Public Land" checked type="checkbox">Public Land</input><br>
-                                     <input name="ownership" class="ownership child" value="USFS" type="checkbox" checked style="margin-left:10px">USFS</input><br>
-                                     <input name="ownership" class="ownership child" value="BLM" style="margin-left:10px" checked type="checkbox">BLM</input><br>
-                                     <input name="ownership" class="ownership child" value="State Land" style="margin-left:10px" checked type="checkbox">State</input><br>
-                                     <input name="ownership" class="ownership child" value="Other" style="margin-left:10px" checked type="checkbox">Other</input><br>
-                                 <input name="ownership" class="ownership" value="Military" checked type="checkbox">Military</input><br>
+                                    </td>
 
-                                </td>
-                            </tr>
+                                    <td>
+                                        <img class="map_icon" style="right:0px; top:0px" title="Click to Map" onclick='swapImageOverlay(&quot;ownership&quot;);swapLegend(&quot;ownership&quot;,&quot;ownership&quot;,&quot;EEMSmodel&quot;)' src="{{STATIC_URL}}img/map_icon.png">
 
-                        </table>
+                                     <input name="ownership" class="ownership" value="Private" checked type="checkbox">Private Land</input><br>
+                                     <input name="" class="parent" value="Public Land" checked type="checkbox">Public Land</input><br>
+                                         <input name="ownership" class="ownership child" value="USFS" type="checkbox" checked style="margin-left:10px">USFS</input><br>
+                                         <input name="ownership" class="ownership child" value="BLM" style="margin-left:10px" checked type="checkbox">BLM</input><br>
+                                         <input name="ownership" class="ownership child" value="State Land" style="margin-left:10px" checked type="checkbox">State</input><br>
+                                         <input name="ownership" class="ownership child" value="Other" style="margin-left:10px" checked type="checkbox">Other</input><br>
+                                     <input name="ownership" class="ownership" value="Military" checked type="checkbox">Military</input><br>
 
-                    </div>
+                                    </td>
+                                </tr>
+
+                            </table>
+                        </div>
+
+                        </div>
                     <div id="view2">
 
                             <input id="enable_environment_settings_checkbox" type="checkbox">Enable</input>
