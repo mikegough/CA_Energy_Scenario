@@ -10,116 +10,6 @@ body{
     height:100%;
 }
 
-#version {
-    float:left;
-    margin-left: 5px;
-    position:absolute;
-    z-index:999999;
-    color:#626262;
-}
-
-.wait {
-    border: 0px solid gray;
-    display:none;
-    float:left;
-    position:absolute;
-    left:0px;
-    width:30%;
-    height:75%;
-    z-index:9999999;
-    text-align:center;
-    margin-left:auto;
-    margin-right:auto;
-}
-
-.stop{
-    cursor: pointer;
-
-}
-
-.my-text {
-    border: 1px solid #CCC;
-    padding: 10px;
-    border-radius: 4px;
-}
-
-.my-button {
-    box-shadow: 0 0 15px #2B72D5;
-    border-radius: 4px;
-    color: #FFF;
-    font-weight: bold;
-    padding: 6px 15px;
-    text-decoration: none;
-    text-shadow: 1px 1px 0 rgba(0,0,0,.5);
-    box-shadow: inset 0 1px 0 0 rgba(255,255,255,.5);
-    background-image: -webkit-linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,0));
-    background-image:    -moz-linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,0));
-    background-image:     -ms-linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,0));
-    background-image:      -o-linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,0));
-    background-image:         linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,0));
-}
-.my-button:hover,
-.my-button:focus {
-    outline: none;
-    background-image: -webkit-linear-gradient(top, rgba(0,0,0,.1), rgba(0,0,0,0));
-    background-image:    -moz-linear-gradient(top, rgba(0,0,0,.1), rgba(0,0,0,0));
-    background-image:     -ms-linear-gradient(top, rgba(0,0,0,.1), rgba(0,0,0,0));
-    background-image:      -o-linear-gradient(top, rgba(0,0,0,.1), rgba(0,0,0,0));
-    background-image:         linear-gradient(top, rgba(0,0,0,.1), rgba(0,0,0,0));
-}
-
-.my-button:focus {
-    /*box-shadow: 0 0 15px #2B72D5;*/
-}
-
-.my-button:active {
-    position: relative;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
-}
-
-.my-button-cancel,
-.my-button-cancel:hover,
-.my-button-cancel:focus {
-    background-color: #FE1A00;
-    border: 1px solid #D83526;
-}
-.my-button-ok,
-.my-button-ok:hover,
-.my-button-ok:focus {
-    background-color: #5CB811;
-    border: 1px solid #3B7808;
-}
-
-.loading_contents {
-    position:absolute;
-    display:block;
-    top:50%;
-    top:500px;
-    height:200px;
-    width:100%;
-    margin-top:-25%;
-    text-align:center;
-    margin-right:100px;
-    border:0px solid gray;
-}
-
-#initialization_wait{
-    display:none;
-    width:120px;
-    height:90px;
-    position:relative;
-    top:-106px;
-    border:0px solid black;
-    z-index:9999999;
-    background-color:white;
-    margin-left:auto;
-    margin-right:auto;
-    text-align:center;
-}
-
-#initialization_loader_image{
-    margin-top:23px;
-}
 
 #header {
 	position: relative;
@@ -187,14 +77,13 @@ body{
     font-style:italic;
 }
 
-#version{
-	color: gray;
-	z-index: 9999;
-	font-size: 13px;
-	margin-left: auto;
-	margin-right: auto;
-	text-align: center;
-	width: 100%;
+#version {
+    float:left;
+    position:absolute;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    width: 100%;
 }
 
 #leftImage {
@@ -233,6 +122,106 @@ body{
     width: -webkit-calc(100% - 481px);
     width: calc(100% - 481px);
 }
+
+.my-text {
+    border: 1px solid #CCC;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.my-button {
+    box-shadow: 0 0 15px #2B72D5;
+    border-radius: 4px;
+    color: #FFF;
+    font-weight: bold;
+    padding: 6px 15px;
+    text-decoration: none;
+    text-shadow: 1px 1px 0 rgba(0,0,0,.5);
+    box-shadow: inset 0 1px 0 0 rgba(255,255,255,.5);
+    background-image: -webkit-linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,0));
+    background-image:    -moz-linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,0));
+    background-image:     -ms-linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,0));
+    background-image:      -o-linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,0));
+    background-image:         linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,0));
+}
+.my-button:hover,
+.my-button:focus {
+    outline: none;
+    background-image: -webkit-linear-gradient(top, rgba(0,0,0,.1), rgba(0,0,0,0));
+    background-image:    -moz-linear-gradient(top, rgba(0,0,0,.1), rgba(0,0,0,0));
+    background-image:     -ms-linear-gradient(top, rgba(0,0,0,.1), rgba(0,0,0,0));
+    background-image:      -o-linear-gradient(top, rgba(0,0,0,.1), rgba(0,0,0,0));
+    background-image:         linear-gradient(top, rgba(0,0,0,.1), rgba(0,0,0,0));
+}
+
+.my-button:focus {
+    /*box-shadow: 0 0 15px #2B72D5;*/
+}
+
+.my-button:active {
+    position: relative;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
+}
+
+.my-button-cancel,
+.my-button-cancel:hover,
+.my-button-cancel:focus {
+    background-color: #FE1A00;
+    border: 1px solid #D83526;
+}
+.my-button-ok,
+.my-button-ok:hover,
+.my-button-ok:focus {
+    background-color: #5CB811;
+    border: 1px solid #3B7808;
+}
+
+.wait {
+    border: 0px solid gray;
+    display:none;
+    float:left;
+    position:absolute;
+    left:0px;
+    width:30%;
+    height:75%;
+    z-index:9999999;
+    text-align:center;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.stop{
+    cursor: pointer;
+
+}
+
+.loading_contents {
+    position:absolute;
+    display:block;
+    top:50%;
+    top:500px;
+    height:200px;
+    width:100%;
+    margin-top:-25%;
+    text-align:center;
+    margin-right:100px;
+    border:0px solid gray;
+}
+
+#initialization_wait{
+    display:none;
+    width:120px;
+    height:90px;
+    position:relative;
+    top:-106px;
+    border:0px solid black;
+    z-index:9999999;
+    background-color:white;
+    margin-left:auto;
+    margin-right:auto;
+    text-align:center;
+}
+
 
 .imageOverlayLink {
     font-weight:bold
@@ -519,42 +508,6 @@ ul.tabs {
     margin-left:20px;
     padding-right:20px;
     overflow-y:auto;
-}
-
-#startDiv{
-    margin-top:5px;
-    margin-bottom:8px;
-    border-radius:50px;
-    cursor:pointer;
-    position:relative;
-    top:5px;
-    display:inline-block;
-    height:28px;
-    width:28px;
-    background:url('../img/start.png');
-    background-size:25px;
-    background-repeat:no-repeat;
-
-}
-
-#stopDiv{
-    margin-top:5px;
-    margin-bottom:8px;
-    border-radius:50px;
-    cursor:pointer;
-    position:relative;
-    top:5px;
-    display:inline-block;
-    height:28px;
-    width:28px;
-    background:url('../img/stop.png');
-    background-size:25px;
-    background-repeat:no-repeat;
-
-}
-
-#stopDiv:focus{
-    outline:0;
 }
 
 #DataBasinLinkBox{
@@ -852,16 +805,6 @@ div.callout {
     font-weight:bold;
     color:#F8981D;
     text-align:center;
-}
-
-#gears{
-    width:100%;
-    position:absolute;
-    vertical-align: bottom;
-    margin-left:auto;
-    margin-right:auto;
-    text-align:center;
-    bottom:12px;
 }
 
 #mask{ /* create mask */

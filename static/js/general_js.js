@@ -4,27 +4,6 @@
 
      $('#selectionInstructions').html("Click in the map to select a single " + reporting_units_label_singular + " or use the drawing tools to select multiple " + reporting_units_label_plural + ".");
 
-
-    //Prepare Near Term Forecast
-
-    //Initialize Selected Climate Division
-    selectedClimateDivision='94'
-    //Initialize Selected Time Frame
-    selectedNearTermClimatePeriod=1
-
-    acquireNearTermClimate();
-    createDynamicMonthlyRadioButtons()
-    generateNearTermClimateResults(selectedNearTermClimatePeriod,selectedClimateDivision)
-
-    //Check the top radio buttons
-     $('.neartermclimateform').each(function(){
-        $('input[type=radio]', this).get(0).checked = true;
-    });
-
-     $('#nearTermMapForm').each(function(){
-         $('input[type=radio]', this).get(0).checked = true;
-     });
-
     $(document).ajaxStart(function(){
         $("#view1").css("opacity", ".1");
         $("#view2").css("opacity", ".1");
