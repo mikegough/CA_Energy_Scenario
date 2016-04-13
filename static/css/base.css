@@ -172,8 +172,12 @@ body{
 .my-button-ok,
 .my-button-ok:hover,
 .my-button-ok:focus {
+    /*
     background-color: #5CB811;
     border: 1px solid #3B7808;
+    */
+	background-color: #2F508C;
+	border: 1px solid #223966;
 }
 
 .wait {
@@ -350,6 +354,14 @@ ul.tabs {
 
 #general_table1 input,select{
     background-color:#DEEBEF;
+}
+
+#sliderBarHeader {
+	width: 363px;
+	background-color: #EDEDED;
+	padding: 4px;
+	border-radius: 4px;
+	font-weight: bold;
 }
 
 #sliderTable td{
