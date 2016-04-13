@@ -1,6 +1,7 @@
 html {
     height:100%;
 }
+
 body{
     margin:0px;
     overflow-x:hidden;
@@ -41,6 +42,7 @@ body{
     padding: 10px;
     border-radius: 4px;
 }
+
 .my-button {
     box-shadow: 0 0 15px #2B72D5;
     border-radius: 4px;
@@ -65,9 +67,11 @@ body{
     background-image:      -o-linear-gradient(top, rgba(0,0,0,.1), rgba(0,0,0,0));
     background-image:         linear-gradient(top, rgba(0,0,0,.1), rgba(0,0,0,0));
 }
+
 .my-button:focus {
     /*box-shadow: 0 0 15px #2B72D5;*/
 }
+
 .my-button:active {
     position: relative;
     box-shadow: inset 0 2px 4px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
@@ -120,14 +124,14 @@ body{
 #header {
 	position: relative;
 	display: block;
-	/* height: 10% min-height:80px; */
 	height: 99px;
 	width: 100%;
-	/* background-color: #CAC2B7; */
+	/* background-color: #CAC2B7;
 	background-color: #444444;
 	background-color: #B5A699;
 	background-color: #527696;
 	background-color: #294562;
+	*/
 	background-color: #2F508C;
 	border-bottom: 3px solid #223966;
 	text-align: center;
@@ -152,7 +156,6 @@ body{
 	font-family: Verdana,Geneva,sans-serif;
 	/* font-family: Book Antiqua,Palatino,Palatino Linotype,Palatino LT STD,Georgia,serif; */
 	font-variant: small-caps;
-	letter-spacing: px;
 	text-shadow: 1px 1px 2px #142441;
 	/* font-family: garamound; */
 	left: -115px;
@@ -173,7 +176,6 @@ body{
 
 #sub_title {
 	font-size: 23px;
-	font-style: normal;
 	color: wheat;
 	text-align: center;
 	letter-spacing: 2px;
@@ -258,21 +260,11 @@ div.tabcontents {
 	background-color: #FFF;
 }
 
-/*
-ul.tabs li a{
-    border-right: 1px solid #444444;
-    border-left: 1px solid #444444;
-    padding-left:10px;
-    padding-right:10px;
-    font-size:14px;
-}
-
-*/
-
 ul.tabs {
     border-bottom: 1px solid #AAAAAA;
     margin-bottom: 10px;
 }
+
 .select_container{
     position:relative;
     height:18px;
@@ -291,139 +283,6 @@ ul.tabs {
     padding-left:10px;
 }
 
-.styled-select select {
-   white-space: nowrap;
-   background: transparent;
-   color:#282828;
-   font:.85em Verdana;
-   padding: 5px;
-   border: 0;
-   height: 30px;
-   -webkit-appearance: none;
-}
-
-.styled-select {
-   overflow:hidden;
-   white-space: nowrap;
-   float:left;
-   height: 30px;
-   overflow: hidden;
-   background: url('../img/down_arrow_select4.png') no-repeat right white;
-   border: 1px solid #ccc;
-}
-
-#ss1{
-    border-top-left-radius: 4px;
-    border-bottom-left-radius: 4px;
-    border-right: 0px solid #ccc;
-    width: 166px;
-}
-
-#ss1 select{
-    width: 286px;
-}
-
-#ss2{
-    width: 82px;
-    border-right: 0px solid #ccc;
-}
-
-#ss2 select{
-    width: 102px;
-
-}
-
-#ss3{
-    border-top-right-radius: 4px;
-    border-bottom-right-radius: 4px;
-    width: 105px;
-}
-
-#ss3 select{
-    width: 122px;
-}
-
-#variable_selection_form {
-    /*width:42%;*/
-}
-
-#statistic_selection_form {
-    /*
-    width:20%;
-    */
-}
-
-#season_selection_form {
-    /*
-    width:27%;
-    */
-}
-
-#point_chart{
-    position:relative;
-    margin-top:0px;
-}
-
-#point_chart_description{
-    margin-left:40px;
-    margin-right:20px;
-    color:#606060;
-    font: 9pt Lucida Grande,Lucida Sans Unicode,Arial,Helvetica,sans-serif
-}
-
-div#point_chart_description a,a:visited{
-    color:#0054A8;
-    text-decoration:none;
-    cursor:pointer;
-}
-
-div#box_plot_description a,a:visited{
-    color:#0054A8;
-    text-decoration:none;
-    cursor:pointer;
-}
-div#point_chart_description a:hover, div#box_plot_description a:hover{
-    text-decoration:underline;
-}
-
-
-#box_plot_description{
-    margin-left:40px;
-    margin-right:20px;
-    color:#606060;
-    font: 9pt Lucida Grande,Lucida Sans Unicode,Arial,Helvetica,sans-serif
-}
-
-
-#column_chart{
-    /*
-    height:39%;
-    position:relative;
-    max-height:340px;
-    width:100%;
-    max-width:477px;
-    margin-top:9%;
-    margin-left:auto;
-    margin-right:auto;
-    */
-}
-
-#time_period_translation {
-    text-align:right;
-    padding-right:10px;
-    margin-bottom:5px;
-    font-family: 'Lucida Grande', 'Lucida Sans Unicode', Arial,Helvetica,sans-serif;
-    color: #606060;
-    cursor: default;
-    font-size: 11px;
-    font-weight: normal;
-    fill: #606060;
-}
-
-#highChartsXaxisText{
-    text-align:right;
-}
-
 .MessiDiv{
 }
 
@@ -435,12 +294,6 @@ div#point_chart_description a:hover, div#box_plot_description a:hover{
 .messi-content {
     height:95% !important;
 }
-
-.modelDiagram{
-    height:95%;
-    overflow:auto;
-}
-
 
 .bottom_spacing{
     height:100px;
@@ -456,7 +309,6 @@ div#point_chart_description a:hover, div#box_plot_description a:hover{
     background:url('../img/info_rotate5.png');
     background-size:20px;
     background-repeat:no-repeat;
-
 }
 
 .info_icon:hover{
@@ -503,10 +355,8 @@ div#point_chart_description a:hover, div#box_plot_description a:hover{
 }
 
 #general_table1 td{
-    padding-left:10px;
     vertical-align:middle;
     padding:8px;
-
 }
 
 #general_table1 input,select{
@@ -656,7 +506,6 @@ div#point_chart_description a:hover, div#box_plot_description a:hover{
 
 }
 
-
 #view2{
     overflow-y:auto;
     margin-top:10px;
@@ -670,37 +519,6 @@ div#point_chart_description a:hover, div#box_plot_description a:hover{
     margin-left:20px;
     padding-right:20px;
     overflow-y:auto;
-}
-
-#view4{
-    height:90%;
-    margin-top:20px;
-    margin-left:20px;
-    padding-right:20px;
-    overflow-y:auto;
-
-}
-
-#selectedFeaturesTable {
-    width:96%;
-}
-
-#selectedFeaturesTable th {
-    cursor:default !important;/info
-}
-
-#selectedFeaturesTable tr td {
-    cursor:default !important;
-    background-color:white !important;
-}
-
-#selectedFeaturesTable td:first-child { width: 120px ;}
-
-.mediaButton{
-    width:30px;
-    margin-top:0px;
-    margin-left:1px;
-
 }
 
 #startDiv{
@@ -738,190 +556,6 @@ div#point_chart_description a:hover, div#box_plot_description a:hover{
 #stopDiv:focus{
     outline:0;
 }
-
-#dynamicDataTableDiv{
-    width:96%;
-}
-
-#dynamicEEMSDataTableDiv{
-    width:96%;
-}
-
-.dynamicDataTable {
-    width:100%;
-    border-collapse:collapse;
-}
-
-.dynamicDataTable tr:hover {
-    background-color:#D7D7D7;
-}
-
-.dynamicDataTable th,td {
-    cursor:pointer;
-    padding-top: 2px;
-    padding-bottom: 2px;
-    padding-left: 5px;
-    padding-right: 5px;
-}
-
-.dynamicDataTable td {
-    vertical-align:top;
-}
-
-.dynamicDataTable th{
-    height:30px;
-    background-color:#444444;
-    color:#F8981D;
-    font: 12px verdana;
-    font-weight:bold;
-    text-align:left;
-}
-
-.dynamicDataTable tr{
-    border-collapse: collapse;
-    border: solid black 1px !important;
-}
-
-.dynamicDataTable td{
-    font: 11px verdana;
-    border: solid black 1px !important;
-}
-
-.dynamicDataTable td:first-child { width: 90px ;}
-
-tr.active td {
-   background-color: #00FFFF;
-}
-
-.selectedFeaturesHeader{
-    font: 13px verdana;
-    font-weight:bold
-}
-
-
-#sources {
-    font-size:10px;
-}
-
-#climateDivision{
-    /*
-      background-color: #00FFFF;
-      border:2px solid #444444;
-      border-radius:50px;
-      padding:5px;
-      */
-}
-
-.dynamicNearTermClimateTable {
-    width:100%;
-    border-collapse:collapse;
-    table-layout:fixed;
-    border:4px solid black !important;
-}
-.nearTermEmptyRow {
-    background-color:white !important;
-    height:25px !important;
-}
-
-.dynamicNearTermClimateTable tr:hover {
-    /*background-color:#D7D7D7;*/
-}
-
-.dynamicNearTermClimateTable th td {
-    cursor:default !important;
-    border:1px solid black !important;
-    padding-top: 2px;
-    padding-bottom: 2px;
-}
-
-.dynamicNearTermClimateTable td {
-    cursor:default !important;
-    vertical-align:middle;
-    height:37px;
-    min-height:25px;
-    color:#515151;
-}
-
-.dynamicNearTermClimateTable th:first-child {
-    width:150px;
-    min-width:150px !important;
-}
-
-.dynamicNearTermClimateTable tr:first-child {
-    height:48px;
-}
-
-.dynamicNearTermClimateTable tr:nth-child(2) {
-    height:48px;
-}
-
-.dynamicNearTermClimateTable td:first-child {
-    width:83px !important;
-    min-width:83px !important;
-    max-width:83px !important;
-    background-color:#444444;
-    color:#F8981D;
-    font-weight:bold;
-    padding-left:5px;
-}
-
-.dynamicNearTermClimateTable td:nth-child(2){
-    width:70px;
-    max-width:70px;
-    text-align:center;
-}
-
-.dynamicNearTermClimateTable td:nth-child(3){
-    width:60px;
-    min-width:60px;
-    text-align:center;
-}
-
-.dynamicNearTermClimateTable td:nth-child(4){
-    width:100px;
-    min-width:100px;
-}
-
-.dynamicNearTermClimateTable tr:last-child{
-}
-
-
-.dynamicNearTermClimateTable th{
-    height:30px;
-    background-color:#444444;
-    color:#F8981D;
-    font: 13px verdana;
-    font-weight:bold;
-    text-align:center;
-}
-
-.dynamicNearTermClimateTable tr{
-    border-collapse: collapse;
-}
-
-.dynamicNearTermClimateTable tr:nth-child(2){
-    font-weight:bold;
-}
-
-.dynamicNearTermClimateTable td{
-    font: 12px verdana;
-    border: solid #272727 1px !important;
-}
-
-table tr td.changeTD{
-    color:black;
-    font-size:15px;
-    font-weight:bold;
-}
-
-#nearTermChangeTable tr{
-    height:20px !important;
-}
-
-#nearTermDetailsTable tr{
-    height:20px !important;
-}
-
 
 #DataBasinLinkBox{
     position: absolute;
@@ -1341,181 +975,6 @@ background:#595959;
   cursor: hand !important;
 }
 
-/* Thermometer column and text */
- .thermometer {
-    /*margin:10px 0 0 1px;
-    */
-    white-space:nowrap;
-    margin-top:25px;
-    margin-left:18px;
-    width:22px;
-    height:150px;
-    display:block;
-    font:bold 14px/152px helvetica, arial, sans-serif;
-    text-indent: 36px;
-    /*background: -webkit-linear-gradient(top, #fff 0%, #fff 50%, #db3f02 50%, #db3f02 100%);*/
-    border-radius:22px 22px 0 0;
-    border:5px solid #4a1c03;
-    border-bottom:none;
-    position:relative;
-    box-shadow:inset 0 0 0 4px #fff;
-    color:#4a1c03;
-    background-color:white;
-}
-/* Thermometer Bulb */
- .thermometer::before {
-    content:' ';
-    width:44px;
-    height:44px;
-    display:block;
-    position:absolute;
-    top:142px;
-    left:-16px;
-    z-index:-1;
-    /* Place the bulb under the column */
-    background:#db3f02;
-    border-radius:44px;
-    border:5px solid #4a1c03;
-    box-shadow:inset 0 0 0 4px #fff;
-}
-/* This piece here connects the column with the bulb */
-#thermometerAfter{
-    /* z-index:-2; */
-    z-index:3;
-    content:' ';
-    width:14px;
-    height:100px;
-    max-height:145px !important;
-    /*
-    bottom:60px;
-    */
-    bottom:2px;
-    display:block;
-    position:absolute;
-    left:4px;
-    background:#db3f02;
-}
-
-#thermometerText{
-    font-size:20px;
-    white-space:nowrap;
-    float:left;
-    position:relative;
-    top:50px;
-    width:80px;
-    left:-15px;
-    z-index:5;
-}
-
-/* Thermometer column and text */
-.rainGauge{
-    /*margin:10px 0 0 1px;
-    */
-    left:20px;
-    background-color:white;
-    white-space:nowrap;
-    margin-top:32px;
-    margin-left:40px;
-    margin-bottom:6px;
-    width:22px;
-    /*
-    height:160px;
-    */
-    height:140px;
-    display:block;
-    font:bold 14px/152px helvetica, arial, sans-serif;
-    text-indent: 36px;
-    /*background: -webkit-linear-gradient(top, #fff 0%, #fff 50%, #db3f02 50%, #db3f02 100%);*/
-    /*border-radius:22px 22px 0 0;*/
-    border:5px solid #4a1c03;
-    border-bottom:4px solid white;
-    position:relative;
-    box-shadow:inset 0 0 0 4px #fff;
-    color:#4a1c03;
-}
-
- .rainGauge::before {
-    /* rain Gauge Base */
-     /* Place the base under the column */
-    content:' ';
-    width:46px;
-    height:42px;
-    display:block;
-    position:absolute;
-    top:134px;
-    left:-16px;
-    z-index:-1;
-    background:#0000FF;
-    border-radius:44px;
-    border-bottom-left-radius:2px;
-    border-bottom-right-radius:2px;
-    border:4px solid #4a1c03;
-    box-shadow:inset 0 0 0 4px #fff;
-}
-
-
-  /* Required for Down Triangle */
-  .triangleTop:before, .triangleTop:after {
-    content: "";
-    position: absolute;
-    width: 20;
-    height: 15;
-    border-style: solid;
-    border-color: transparent;
-    border-bottom: 0;
-  }
-
-  /* Stroke */
-  .triangleTop:before {
-    z-index:-1;
-    top: -13px;
-    left: -21px;
-
-    /* If 1px darken stroke slightly */
-    border-top-color: #4A1C03;
-    border-width: 22px;
-  }
-
-  /* Fill */
-  .triangleTop:after {
-    z-index:3;
-    top: -8px;
-    left: -9px;
-    border-top-color: white;
-    border-width: 10px;
-
-  }
-
-#rainGaugeAfter{
-    /* The blue bar */
-    z-index:3;
-    content:'';
-    width:14px;
-    height:100px;
-    max-height:149px !important;
-    bottom:-1px;
-    display:block;
-    position:absolute;
-    left:4px;
-    background:#0000FF;
-}
-
-#rainGaugeText{
-    font-size:20px;
-    white-space:nowrap;
-    float:left;
-    position:relative;
-    top:50px;
-    width:80px;
-    left:25px;
-    z-index:5;
-}
-
-.nearTermClimateForm {
-    float:left;
-    width:200px;
-    margin-bottom:0px;
-}
 #DataBasinRedirect{
     position:absolute;
     float:left;
@@ -1617,9 +1076,6 @@ background:#595959;
     background:rgba(0, 0, 0, 0.6) none repeat scroll 0% 0%;
     opacity:.8;
 }
-
-
-
 
 .footnote{
     padding-left:20px;

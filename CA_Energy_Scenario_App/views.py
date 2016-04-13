@@ -121,8 +121,8 @@ def index(request):
     totalArea=1
 
     #California
-    initial_lat=37.229722
-    initial_lon=-121.509444
+    #initial_lat=37.229722
+    #initial_lon=-121.509444
 
     #DRECP
     initial_lat=34.8
@@ -340,7 +340,7 @@ def errorHandler(reporting_units, template, initial_lat, initial_lon, error, sel
              'WKT_SelectedPolys': WKT,
              'initial_lat': initial_lat,
              'initial_lon': initial_lon,
-             'resultsJSON': resultsJSON,
+             'resultsJSON': '',
              'count': 0,
              'error': error,
              'selectionWarning':selectionWarning,

@@ -90,20 +90,19 @@
 
 </head>
 
-<body onload="acquireNearTermClimate();">
+<body>
 
 <div id="header">
     <div id="title">
             Renewable Energy<span style="color:white"></span><span id="energyLine"><!-- <img id="sunImage" src="{{STATIC_URL}}img/super_nova.png">--> </span><br>
+
             <span id="sub_title">Infrastructure Siting Assistant</span>
     </div>
     <div style="float:left; z-index:-99"><img id="leftImage" src="{{STATIC_URL}}img/power_l2.png"></div>
     <!--
     <div style="float:left; z-index:-100"><img id="backgroundImage" src="{{STATIC_URL}}img/ca_city_large.png"></div>
     -->
-    <!--
-    <div id="version">BETA 0.16</div>
-    -->
+    <!-- <span >BETA 0.16</span>-->
     <div style="float:right; z-index:-99"><img id="rightImage" src="{{STATIC_URL}}img/solar_r.png"></div>
 </div>
 
@@ -128,20 +127,6 @@
     <script src="{{STATIC_URL}}Leaflet/my_leaflet/leaflet_map.js"></script>
 
     <div id="tab_container">
-
-        {% comment %}
-
-        <ul class="tabs" data-persist="true">
-            <!--<li><a href="#view1" onclick="activateMapForDefault();">2. Define Search Criteria</a></li>-->
-            <li><a href="#view1">3. Define Search Criteria</a></li>
-            <li ><a href="#view3"><img src="{{STATIC_URL}}img/info.png"><span style="font-size:.95em"> About</span></a></li>
-            <!--
-            <li><a href="#view2">Search Area</a></li>
-            <li><a href="#view4" onclick="activateMapForClimateForecast()" >Near-Term Forecast</a></li>
-            -->
-        </ul>
-        {% endcomment %}
-
 
         <div class="tabcontents">
 
@@ -178,6 +163,7 @@
                     </div>
 
                     <p>
+
                     <div class="toolTitle" style="width:400px; height:30px;">2. Define Your Search Criteria
                         <div id="step2Indicator" class="stepIndicator" style="float:right; height:15px; width:15px; background-color:#00C600; border-radius:100px;display:none"></div>
                     </div>
@@ -185,25 +171,11 @@
                     <div style="background-color:white">
                         <br>
                         <ul class="tabs" data-persist="true">
-                            <!--<li><a href="#view1" onclick="activateMapForDefault();">2. Define Search Criteria</a></li>-->
                             <li><a href="#view1">General Requirements</a></li>
                             <li><a href="#view2">Environmental Settings</a></li>
-                            <!--
-                            <li ><a href="#view3"><img src="{{STATIC_URL}}img/info.png"><span style="font-size:.95em"> About</span></a></li>
-                            -->
-                            <!--
-                            <li><a href="#view2">Search Area</a></li>
-                            <li><a href="#view4" onclick="activateMapForClimateForecast()" >Near-Term Forecast</a></li>
-                            -->
                         </ul>
 
-                        <!--
-                        <div style="line-height:25px; background-color:#E2E2E2; padding-left:5px"> <h3>General Requirements</h3></div>
-                        -->
-
-
                         <div id="view1">
-
 
                             <table border="1" id="general_table1">
                              <tr>
@@ -277,19 +249,18 @@
                             </table>
                         </div>
 
-                        </div>
+                    </div>
+
                     <div id="view2">
 
                             <input id="enable_environment_settings_checkbox" type="checkbox">Enable</input>
                             <p>
-                            Adjust the slider bars below to set the <b>maximum allowable values </b>for each environmental setting. Any areas that have a value greater than the specified value will be eliminated from the search results.
+                            Adjust the slider bars below to set the maximum allowable values for each environmental setting. <!-- Any areas that have a value greater than the specified value will be eliminated from the search results.-->
                             <p> Move the sliders to the <span class="arrows">&larr;</span> left for a more constrained search (avoiding potentially environmentally sensitive areas).
                             <p> Move the sliders to the <span class="arrows">&rarr;</span> right for a more relaxed search (potentially including more environmentally sensitive areas).
-                            <!--
                             <p>
-                                <b>Avoid places with values greater than...</b>
+                                <b>Avoid areas with values greater than...</b>
                             </p>
-                            -->
 
                         <p>
                          <table id="sliderTable">
@@ -348,24 +319,20 @@
 
                              </td>
                          </tr>
-                         -->
-                        <!--
-                <tr>
-                    <td>
-                        <p>
-                            <label for="amount_chat"><span class="imageOverlayLink" title="Click to Map" onclick='swapImageOverlay(&quot;chat&quot;);swapLegend(&quot;chat&quot;,&quot;chat&quot;,&quot;EEMSmodel&quot;)'>Western Gov CHAT Score:</span></label>
-                            <input type="text" id="amount_chat_label" readonly style="border:0; color:#f6931f; font-weight:bold;">
-                        </p>
+                         <tr>
+                            <td>
+                                <p>
+                                    <label for="amount_chat"><span class="imageOverlayLink" title="Click to Map" onclick='swapImageOverlay(&quot;chat&quot;);swapLegend(&quot;chat&quot;,&quot;chat&quot;,&quot;EEMSmodel&quot;)'>Western Gov CHAT Score:</span></label>
+                                    <input type="text" id="amount_chat_label" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                                </p>
 
-                        <div class="slider_bars" id="slider-range-max_chat"></div>
+                                <div class="slider_bars" id="slider-range-max_chat"></div>
 
                              </td>
                              <td>
                                  <img class="map_icon" title="Click to Map" onclick='swapImageOverlay(&quot;chat&quot;);swapLegend(&quot;chat&quot;,&quot;chat&quot;,&quot;EEMSmodel&quot;)' src="{{STATIC_URL}}img/map_icon.png">
                              </td>
                          </tr>
-                        -->
-                         <!--
                          <tr>
                              <td>
                                  <p>
@@ -388,8 +355,6 @@
                     </div>
 
                 </form>
-
-
 
             </div>
 
