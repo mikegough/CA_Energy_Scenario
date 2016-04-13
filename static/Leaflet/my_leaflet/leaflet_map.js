@@ -11,21 +11,6 @@ var map = L.map("map", {
 //SCALE BAR
 L.control.scale({maxWidth:200}).addTo(map);
 
-//BEGIN TEXT UPPER LEFT ("Selection Tools")
-/*
-var toolTitle = L.Control.extend({
-    options: {position: 'topleft'},
-
-    onAdd: function (map) {
-        this._div = L.DomUtil.create('div', 'toolTitle');
-        this._div.innerHTML = "1. Select Reporting Units";
-        return this._div;
-    }
-});
- map.addControl(new toolTitle());
-*/
-
-
 //DYNAMIC LEGEND
 var dynamic_legend = L.control({position: 'bottomright'});
 
@@ -37,7 +22,6 @@ dynamic_legend.onAdd = function (map) {
 };
 dynamic_legend.addTo(map)
 
-var climate_PNG_overlay=""
 
 //Swap legend on data point click
 function swapLegend(layerToAddName, layerToAdd, climateVariable) {
@@ -47,83 +31,28 @@ function swapLegend(layerToAddName, layerToAdd, climateVariable) {
 
     } else {
 
-            //dbid=Data_Basin_ID_Dict[layerToAddName]
+        legendTitle=window[layerToAddName].legendTitle
+        legendImage=window[layerToAddName].legendPNG
+        legendHeight=window[layerToAddName].legendHeight
+        dbid=window[layerToAddName].dataBasinID
 
-            if (climateVariable=='EEMSmodel'){
+        document.getElementsByClassName('info')[0].innerHTML=
+        '<div id="DataBasinRedirect"> <a target="_blank" href="http://databasin.org/datasets/' + dbid + '"><img class="DataBasinRedirectImg" title="Click to view or download this dataset on Data Basin" src="'+static_url+'img/dataBasinRedirect.png"></a></div>' +
+        '<div id="LegendHeader">' + legendTitle+ '</div>' +
+        '<img style="float:left" height="' + legendHeight + '" src="'+static_url+'Leaflet/my_leaflet/legends/' + legendImage + '.png">'+
+        '<div class="legendLabels">'
 
-                legendTitle=window[layerToAddName].legendTitle
-                legendImage=window[layerToAddName].legendPNG
-                legendHeight=window[layerToAddName].legendHeight
-                dbid=window[layerToAddName].dataBasinID
-
-            } else {
-
-                //Legend Title
-                modelName=layerToAddName.replace(/c2.*/,'CanESM2').replace(/c4.*/,'CCSM4').replace(/m5.*/,'MIROC5').replace(/ee.*/,'Ensemble').replace(/pm.*/,'PRISM')
-                timePeriod=layerToAddName.replace(/.*t0.*/,'1971-2000').replace(/.*t1.*/,'2016-2045').replace(/.*t2.*/,'2046-2075')
-                season=layerToAddName.replace(/.*s0.*/,'Annual').replace(/.*s1.*/,'Jan-Feb-Mar').replace(/.*s2.*/,'Apr-May-Jun').replace(/.*s3.*/,'Jul-Aug-Sep').replace(/.*s4.*/,'Oct-Nov-Dec')
-
-                //Create Climate Variable Label
-                if (layerToAddName.indexOf('tma') != -1  ){
-                   var climateVariableLabel='Max Temp'
-
-                } else if (layerToAddName.indexOf('tmi') != -1  ){
-                    var climateVariableLabel='Min Temp'
-
-                } else if (layerToAddName.indexOf('pre') != -1  ){
-                    var climateVariableLabel='Precipitation'
-
-                } else if (layerToAddName.indexOf('ari') != -1  ){
-                    var climateVariableLabel='Aridity'
-
-                } else if (layerToAddName.indexOf('pet') != -1  ){
-                    var climateVariableLabel='PET'
-                }
-
-                //Create Statistic Label
-                if (layerToAddName.match(/(tmaa|tmia|prea|aria|peta)/)){
-                    var statisticLabel='Anomaly'
-
-                } else if (layerToAddName.match(/(tmad|tmid|pred|arid|petd)/)){
-                    var statisticLabel='Change'
-
-                } else {
-                    var statisticLabel='Average'
-                }
-
-                legendTitle=climateVariableLabel+"<br>"+ statisticLabel + "<br>" + season + "<br>" + timePeriod + "<br>(" + modelName + ")"
-
-                //Determine which png to use in the legend.
-                if (climateVariableLabel.indexOf('Temp') !== -1) {
-                   legendImage='Prediction'
-
-                } else if (climateVariableLabel=="Precipitation") {
-                    legendImage='Brown_to_blue_green_diverging_bright'
-
-                } else if (climateVariableLabel=="Aridity") {
-                    legendImage='Brown_to_blue_green_diverging_bright_inverted'
-
-                } else if (climateVariableLabel=="PET") {
-                    legendImage='Red_to_green_diverging_bright'
-                }
-
-            }
-
-            document.getElementsByClassName('info')[0].innerHTML=
-            '<div id="DataBasinRedirect"> <a target="_blank" href="http://databasin.org/datasets/' + dbid + '"><img class="DataBasinRedirectImg" title="Click to view or download this dataset on Data Basin" src="'+static_url+'img/dataBasinRedirect.png"></a></div>' +
-            '<div id="LegendHeader">' + legendTitle+ '</div>' +
-            '<img style="float:left" height="' + legendHeight + '" src="'+static_url+'Leaflet/my_leaflet/legends/' + legendImage + '.png">'+
-            '<div class="legendLabels">'
-
-            for (i in window[layerToAddName].legendLabels) {
-                $(".legendLabels").append(window[layerToAddName].legendLabels[i] + "<br>");
-            }
+        for (i in window[layerToAddName].legendLabels) {
+            $(".legendLabels").append(window[layerToAddName].legendLabels[i] + "<br>");
+        }
 
 
         }
 }
 
 overlay_bounds = [[32.6339585982195,-118.643362495493], [37.302775947927, -114.130781641769 ]];
+
+var climate_PNG_overlay=""
 
 if (climate_PNG_overlay != '') {
     climate_PNG_overlay_url=static_url+'Leaflet/myPNG/climate/TrimmedPNG/' + climate_PNG_overlay
@@ -166,14 +95,6 @@ function swapImageOverlay(layerName) {
         //For keeping table row selected
         climate_PNG_overlay.name=layerName
 
-        // allLayers is not used in this app. If image overlays can come from a different source (e.g., bar chart.)
-        // define allLayers as a list of those layers to be removed when this function is called.
-        /*
-        var arrayLength = allLayers.length;
-        for (var i = 0; i < arrayLength; i++) {
-                map.removeLayer(allLayers[i])
-        }
-        */
 }
 
 // CREATE LAYERS FROM TopoJSON
@@ -317,8 +238,6 @@ map.on('baselayerchange', function (event) {
         $("#selectionInstructions").html("Click in the map to select a single " + reporting_units_label_singular + " or use the drawing tools to select multiple " + reporting_units_label_plural + ".");
     }
 
-
-
 });
 
 var defaultStyle = {
@@ -373,12 +292,6 @@ function create_post(newWKT) {
         // handle a successful response
         success : function(json) {
 
-            //json is what gets returned from the HTTP Response
-            //console.log(json); // log the returned json to the console
-            //console.log("success");
-            //console.log(response.resultsJSON)
-            //resultsJSON=JSON.parse(response.resultsJSON)
-
             response=JSON.parse(json)
 
             //Selection Area
@@ -411,21 +324,6 @@ function create_post(newWKT) {
             results_poly.bringToFront()
 
             layerControl.addOverlay(results_poly, "Search Results <div id='resultsSquare'></div>");
-
-            /*
-             $(document).ajaxStart(function(){
-                $("#view1").css("opacity", ".1");
-                $("#view2").css("opacity", ".1");
-                $(".wait").css("display", "block");
-            });
-
-            $(document).ajaxComplete(function(){
-                $("#view1").css("opacity", "1");
-                $("#view2").css("opacity", "1");
-                $(".wait").css("display", "none");
-                $('#areaWarning').hide()
-            });
-            */
 
             if (typeof selectedFeature != 'undefined') {
                 counties.resetStyle(selectedFeature)
@@ -592,20 +490,6 @@ function resetHighlight(e) {
         //info2.update();
 	}
 
-	//Put the state bondaries layer back on top after mouse out event.
-    /*
-	if (!L.Browser.ie && !L.Browser.opera) {
-		boundariesjson.bringToFront();
-	}
-    counties.eachLayer(function(l){counties.resetStyle(l);});
-    jepson_ecoregions.eachLayer(function(l){jepson_ecoregions.resetStyle(l);});
-    blm_field_offices.eachLayer(function(l){blm_field_offices.resetStyle(l);});
-    huc5_watersheds.eachLayer(function(l){huc5_watersheds.resetStyle(l);});
-    usfs_national_forests.eachLayer(function(l){usfs_national_forests.resetStyle(l);});
-    near_term_climate_divisions.eachLayer(function(l){near_term_climate_divisions.resetStyle(l);});
-    //info2.update('');
-    */
-
     if (typeof response!= 'undefined' && reporting_units != "onekm") {
         $('.info2').html("<b><span style='color:#5083B0'>Current Search Area: "+response['categoricalValues']+"</span>")
     }
@@ -614,12 +498,6 @@ function resetHighlight(e) {
     }
 
     results_poly.bringToFront()
-
-    /*
-    if (typeof selection_area_poly != 'undefined'){
-        selection_area_poly.bringToFront()
-    }
-    */
 
 }
 
@@ -684,28 +562,6 @@ map.on('draw:created', function (e) {
         huc5_watersheds.resetStyle(selectedFeature)
     }
 
-    //Show Loading Bars on Draw
-    /*
-    $(document).ajaxStart(function(){
-        $("#initialization_wait").css("display", "block");
-    });
-   */
-
-    /*
-    $(document).ajaxStart(function(){
-        $("#view1").css("opacity", ".1");
-        $("#view2").css("opacity", ".1");
-        $(".wait").css("display", "block");
-    });
-
-    $(document).ajaxComplete(function(){
-        $("#view1").css("opacity", "1");
-        $("#view2").css("opacity", "1");
-        $(".wait").css("display", "none");
-        map.removeLayer(layer)
-    });
-    */
-
     //map.removeLayer(layer)
     if(map.hasLayer(results_poly)){
         map.removeLayer(results_poly)
@@ -733,21 +589,6 @@ map.on('draw:created', function (e) {
         create_post(user_wkt,reporting_units)
     }
 
-    //Don't show on Select Features
-    /*
-    $(document).ajaxStart(function(){
-        $("#view1").css("opacity", "1");
-        $("#view2").css("opacity", "1");
-        $(".wait").css("display", "none");
-    });
-    $(document).ajaxComplete(function(){
-        $("#view1").css("opacity", "1");
-        $("#view2").css("opacity", "1");
-        $(".wait").css("display", "none");
-        map.removeLayer(layer)
-    });
-    */
-
 })
 
 /********************************* BEGIN MAP CONTROLS -- Right Hand Side **********************************************/
@@ -768,8 +609,6 @@ document.onmousemove = function(e) {
     if (climate_PNG_overlay_url != '') {
         climate_PNG_overlay.setOpacity(fillOpacityLevel);
     }
-    // Adjust opacity on climateDivisions.
-    near_term_climate_divisions.setStyle({fillOpacity: fillOpacityLevel});
 };
 
 handle.onmousedown = function(e) {
@@ -787,26 +626,6 @@ document.onmouseup = function(e) {
 L.control.zoom({
     position:'topright'
 }).addTo(map);
-
-
-//BEGIN TEXT UPPER LEFT ("Selection Tools")
-
-
-/*
-var toolTitle = L.Control.extend({
-    options: {position: 'topleft'},
-
-    onAdd: function (map) {
-        this._div = L.DomUtil.create('div', 'toolTitle2');
-        this._div.innerHTML = "2. Define Search Area<br><div class='info2Subtitle'><div id='selectionInstructions'> Click on the map to select a single " + reporting_units_label_singular + " or use the tools below to select multiple " + reporting_units_label_plural + ".</div></div>";
-        return this._div;
-    },
-});
- map.addControl(new toolTitle());
-*/
-
-
-//END TEXT UPPER LEFT
 
 //BEGIN LEAFLET.DRAW
 drawnItems = L.featureGroup().addTo(map);
@@ -865,235 +684,3 @@ info2.addTo(map);
 // END TEXT BOTTOM LEFT
 
 /********************************* END MAP CONTROLS -- Right Hand Side **********************************************/
-
-/**************************************  Near-Term Forecast *********************************************************/
-
-var near_term_climate_divisions= L.geoJson(null, {
-
-    onEachFeature:passClimateDivisionID,
-
-});
-
-//var near_term_climate_divisions_layer= omnivore.topojson(static_url+'Leaflet/myJSON/Climate_Divisions_CA_Clip.json', null, near_term_climate_divisions)
-var near_term_climate_divisions_layer= omnivore.topojson(static_url+'Leaflet/myJSON/Climate_Divisions_USA.json', null, near_term_climate_divisions)
-
-function passClimateDivisionID(feature, layer) {
-    layer.on({
-        click: function (e) { generateNearTermClimateResults(selectedNearTermClimatePeriod, feature.properties.NAME); selectClimateDivision(e); },
-        mouseover: highlightClimateDivision,
-        mouseout: resetClimateDivision
-    });
-}
-
-function highlightClimateDivision(e) {
-    var layer = e.target;
-    climateDivisionHover=layer.feature.properties.NAME
-    document.getElementsByClassName('info2')[0].innerHTML='<span style="font-weight:bold; color: #5083B0;">Click to select Climate Division ' + climateDivisionHover+ '</span>'
-}
-
-function resetClimateDivision(e) {
-    document.getElementsByClassName('info2')[0].innerHTML='<span style="font-weight:bold; color: #5083B0;">Currently Selected: Climate Division ' + selectedClimateDivision + '</span>'
-}
-
-
-function selectClimateDivision(e) {
-
-
-    //set all polygon border back to the default.
-    near_term_climate_divisions.setStyle({color:'#444444', weight:2})
-
-    clickedPolygon = e.target;
-    document.getElementsByClassName('info2')[0].innerHTML='<span style="font-weight:bold; color: #5083B0;">Currently Selected: Climate Division ' + selectedClimateDivision + '</span>'
-    selectedClimateDivision=clickedPolygon.feature.properties.NAME
-
-    clickedPolygon.setStyle({color :'#00FFFF', weight:5})
-
-    if (!L.Browser.ie && !L.Browser.opera) {
-        clickedPolygon.bringToFront();
-    }
-}
-
-function activateMapForClimateForecast(){
-
-
-    if ( typeof fillOpacityLevel == 'undefined') {
-        fillOpacityLevel=.85
-    }
-
-    $('.leaflet-control-layers').hide()
-    $('.leaflet-draw').hide()
-    $('.toolTitle2').hide()
-    $('.toolTitle').html('Select a Climate Division')
-    $('.leaflet-bottom').show()
-    $('.ui-opacity').show()
-    $('.leaflet-control-layers:nth-child(1)').show()
-
-    map.setView([37.229722,-121.509444],6);
-
-    generateNearTermClimateResults(selectedNearTermClimatePeriod,selectedClimateDivision)
-
-    map.removeLayer(counties)
-    map.removeLayer(jepson_ecoregions)
-    map.removeLayer(blm_field_offices)
-    map.removeLayer(huc5_watersheds)
-    map.removeLayer(usfs_national_forests)
-    map.removeLayer(onekm)
-    map.removeLayer(results_poly)
-    map.removeLayer(study_area_boundary)
-    map.removeLayer(climate_PNG_overlay)
-
-    near_term_climate_divisions.addTo(map)
-    near_term_climate_divisions.bringToFront()
-
-    updateNearTermForecastLegend()
-    updateClimateDivisionSymbology()
-
-    document.getElementsByClassName('info2')[0].innerHTML='<span style="font-weight:bold; color: #5083B0;">Currently Selected: Climate Division ' + selectedClimateDivision + '</span>'
-}
-
-function updateNearTermForecastLegend(){
-
-    if (typeof selectedNearTermVariableToMap=='undefined' ||  selectedNearTermVariableToMap=='temp'){
-       legendTitle="Temperature Change <br> (Forecast - Historical)"
-       units='&deg; F'
-       color_6='#D62F27'
-       color_5='#F56C42'
-       color_4='#FCAE60'
-       color_3='#FFE291'
-       color_2='#FFFFBF'
-       color_1='#DADADA'
-       color_0='#4575B5'
-    } else if (selectedNearTermVariableToMap=='precip'){
-       legendTitle="Precipitiation Change <br> (Forecast - Historical)"
-       units=' in.'
-       color_6='#002673'
-       color_5='#08519c'
-       color_4='#3182bd'
-       color_3='#6baed6'
-       color_2='#bdd7e7'
-       color_1='#DADADA'
-       color_0='#654321'
-    }
-
-    label_6='> 1' + units
-    label_5='>.75' + units
-    label_4='>.50' + units
-    label_3='>.25' + units
-    label_2='> 0' + units
-    label_1='No Change'
-    label_0='Decrease'
-
-    legendImage=''
-
-    document.getElementsByClassName('info')[0].innerHTML=
-
-        '<div id="LegendHeader">' + legendTitle+ '</div>' +
-            '<table class="legendTable" border="0">' +
-            '<td class="symbologyTd" style="background-color:' + color_6 + '"></td><td style="vertical-align:top">'+label_6+'</td></tr>' +
-            '<td class="symbologyTd" style="background-color:' + color_5 + '"></td><td>'+label_5+'</td></tr>' +
-            '<td class="symbologyTd" style="background-color:' + color_4 + '"></td><td>'+label_4+'</td></tr>' +
-            '<td class="symbologyTd" style="background-color:' + color_3 + '" ></td><td style="vertical-align:middle">'+label_3+'</td></tr>' +
-            '<td class="symbologyTd" style="background-color:' + color_2 + '"></td><td>'+label_2+'</td></tr>' +
-            '<td class="symbologyTd" style="background-color:' + color_1 + '"></td><td>'+label_1+'</td></tr>' +
-            '<td class="symbologyTd" style="background-color:' + color_0 + '"></td><td style="vertical-align:bottom">'+label_0+'</td></tr>' +
-            '</tr></table>';
-}
-
-function activateMapForDefault(){
-
-    if (climate_PNG_overlay_url != ''){
-
-        climate_PNG_overlay.addTo(map)
-        climate_PNG_overlay.bringToBack()
-        $('.ui-opacity').show()
-
-    } else {
-
-        $('.ui-opacity').hide()
-    }
-
-    $('.leaflet-control-layers').show()
-    $('.leaflet-draw').show()
-    $('.toolTitle2').show()
-    $('.toolTitle').html('1. Define Search Area')
-
-    map.setView(latlng,zoomLevel);
-
-    map.removeLayer(near_term_climate_divisions)
-    map.addLayer(study_area_boundary)
-    if (typeof remember_reporting_units == 'undefined') {
-        map.addLayer(counties)
-    }
-    else {
-        map.addLayer(remember_reporting_units)
-    }
-    if (typeof results_poly != 'undefined') {
-        map.addLayer(results_poly)
-    }
-    //map.addLayer(results_poly)
-    document.getElementsByClassName('info2')[0].innerHTML=''
-    document.getElementsByClassName('info')[0].innerHTML=''
-
-}
-
-function updateClimateDivisionSymbology(){
-
-    selectedNearTermVariableToMap = $('input[name=nearTermMapVariable]:checked').val();
-
-    map.removeLayer(near_term_climate_divisions)
-
-
-    near_term_climate_divisions= L.geoJson(null, {
-        style: function(feature) {
-
-            if (feature.properties.NAME == selectedClimateDivision){
-                if (selectedNearTermVariableToMap == 'temp'){
-                    return { fillColor: getNearTermColor(allTempDeltaDict[feature.properties.NAME][selectedNearTermClimatePeriod-1]), weight:5, color: '#00FFFF',  dashArray: 0, fillOpacity: fillOpacityLevel}
-                }
-                else if (selectedNearTermVariableToMap == 'precip') {
-                    return { fillColor: getNearTermColor(allPrecipDeltaDict[feature.properties.NAME][selectedNearTermClimatePeriod-1]), weight:5, color: '#00FFFF',  dashArray: 0, fillOpacity: fillOpacityLevel}
-                }
-            } else{
-                if (selectedNearTermVariableToMap == 'temp'){
-                    return { fillColor: getNearTermColor(allTempDeltaDict[feature.properties.NAME][selectedNearTermClimatePeriod-1]), weight:2, color: '#444444', dashArray: 0, fillOpacity: fillOpacityLevel }
-                }
-                else if (selectedNearTermVariableToMap == 'precip') {
-                    return { fillColor: getNearTermColor(allPrecipDeltaDict[feature.properties.NAME][selectedNearTermClimatePeriod-1]), weight:2, color: '#444444', dashArray: 0, fillOpacity: fillOpacityLevel}
-                }
-            }
-        },
-        onEachFeature:passClimateDivisionID,
-
-    });
-
-    //near_term_climate_divisions_layer= omnivore.topojson(static_url+'Leaflet/myJSON/Climate_Divisions_CA_Clip.json', null, near_term_climate_divisions)
-    near_term_climate_divisions_layer= omnivore.topojson(static_url+'Leaflet/myJSON/Climate_Divisions_USA.json', null, near_term_climate_divisions)
-    map.addLayer(near_term_climate_divisions)
-}
-
-function getNearTermColor(d) {
-
-    if (selectedNearTermVariableToMap=='temp'){
-
-    return d > 1  ? '#D62F27' :
-        d > 0.75  ? '#F56C42' :
-        d > 0.5   ? '#FCAE60' :
-        d > 0.25  ? '#FFE291' :
-        d > 0     ? '#FFFFBF' :
-        d == 0    ? '#DADADA' :
-                     '#4575B5';
-    } else {
-
-    return d > 1  ? '#002673' :
-        d > 0.75  ? '#08519c' :
-        d > 0.5   ? '#3182BD' :
-        d > 0.25  ? '#6BAED6' :
-        d > 0     ? '#BDD7E7' :
-        d == 0    ? '#DADADA' :
-                     '#654321';
-    }
-
-}
-
-
-//************************************ End Near-Term Forecast ********************************************************//
