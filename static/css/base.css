@@ -117,56 +117,73 @@ body{
     margin-top:23px;
 }
 
-#header{
-    position:relative;
-    display:block;
-    /*height:10%
-    min-height:80px;
-    */
-    height:115px;
-    width:101%;
-    /*background-color:#CAC2B7;*/
-    background-color:#444444;
-    background-color:#B5A699;
-    background-color:#527696;
-    background-color:#294562;
-    background-color:black;
-    border-bottom:2px solid #444444;
-    text-align:center;
-    margin-left:auto;
-    margin-right:auto;
-    background-size:100%;
-    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#0d2f42+1,12425b+10,1b6186+29,1b6186+100 */
-    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#6d0019+0,8f0222+56,a90329+100 */
+#header {
+	position: relative;
+	display: block;
+	/* height: 10% min-height:80px; */
+	height: 99px;
+	width: 100%;
+	/* background-color: #CAC2B7; */
+	background-color: #444444;
+	background-color: #B5A699;
+	background-color: #527696;
+	background-color: #294562;
+	background-color: #2F508C;
+	border-bottom: 3px solid #223966;
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+	background-size: 100%;
+	border-top: 3px solid #1B2E52;
+	border-right: 20px solid #496BAD;
 }
 
-#title{
+#title {
+	position: absolute;
+	top: 7px;
+	width: 100%;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	color: #C2DAF0;
+	font-size: 42px;
+	z-index: 99999;
+	font-weight: bold;
+	font-family: Verdana,Geneva,sans-serif;
+	/* font-family: Book Antiqua,Palatino,Palatino Linotype,Palatino LT STD,Georgia,serif; */
+	font-variant: small-caps;
+	letter-spacing: px;
+	text-shadow: 1px 1px 2px #142441;
+	/* font-family: garamound; */
+	left: -115px;
+}
+
+#energyLine {
     position:absolute;
-    top:18px;
-    width:100%;
-    margin-left:auto;
-    margin-right:auto;
-    text-align: center;
-    color:#F8981D;
-    font-size:35px;
-    z-index:99999;
-    font-weight:bold;
-    font-family: Verdana,Geneva,sans-serif;
-    font-family: Book Antiqua,Palatino,Palatino Linotype,Palatino LT STD,Georgia,serif;
-    font-variant:small-caps;
-    letter-spacing:6px;
-    text-shadow: 1px 1px 2px black;
 }
 
-#sub_title{
-    font-size:24px;
-    font-style:normal;
-    color:wheat;
-    text-align: center;
-    letter-spacing:5px;
-    text-shadow: 1px 1px 0px black;
+#sunImage {
+	position: relative;
+	height: 80px;
+	left: -42px;
+	top: -20px;
+	/* opacity: .9; */
+	z-index: -9;
 }
 
+#sub_title {
+	font-size: 23px;
+	font-style: normal;
+	color: wheat;
+	text-align: center;
+	letter-spacing: 2px;
+	text-shadow: 1px 1px 2px #1E3560;
+	top: -8px;
+	position: relative;
+	left: 200px;
+	font-weight: bold;
+    font-style:italic;
+}
 
 #version{
 	color: gray;
@@ -178,17 +195,18 @@ body{
 	width: 100%;
 }
 
-#leftImage{
-    width:400px;
-    position:absolute;
-    left:0px;
-    top:0px;
+#leftImage {
+    height:100px;
+	position: absolute;
+	left: 0px;
+	top: -1px;
 }
 
 #rightImage{
     position:absolute;
     right:0px;
     top:0px;
+    height:99px;
 }
 #backgroundImage{
     opacity: .5;
@@ -933,7 +951,10 @@ ul#mainNav {
     list-style-type:none;
     border:0px;
 }
+/*Need this */
 }
+
+-->
 ul#mainNav > li {
     float:left;
     display:inline;
@@ -1023,9 +1044,9 @@ ul#mainNav a {
 #searchDiv {
 	position: absolute;
 	left: 16px;
-	bottom: 45px;
+	bottom: 70px;
 	width: 400px;
-    height: 100px;
+	height: 100px;
 	z-index: 2;
 }
 
