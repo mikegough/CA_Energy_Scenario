@@ -121,6 +121,7 @@ body{
     width: -moz-calc(100% - 481px);
     width: -webkit-calc(100% - 481px);
     width: calc(100% - 481px);
+    border-left: 1px solid gray;
 }
 
 .my-text {
@@ -247,8 +248,7 @@ body{
 }
 
 div.tabcontents {
-	border-top: 0px solid #444444;
-	border-bottom: 0px;
+    border:none;
 	padding: 0px;
 	background-color: #FFF;
 }
@@ -317,7 +317,7 @@ ul.tabs {
 
 #mainContainer{
     cursor: default !important;
-    height:92%;
+    height:78%;
     margin-top:10px;
     margin-left:20px;
     padding-right:20px;

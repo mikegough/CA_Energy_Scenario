@@ -356,6 +356,7 @@ function create_post(newWKT) {
         // handle a non-successful response
         error : function(xhr,errmsg,err) {
             $(".wait").css("display", "none");
+            xhr.abort()
 
             //Unless the cancel button has been pushed, throw an error.
             if (errmsg != "abort") {
