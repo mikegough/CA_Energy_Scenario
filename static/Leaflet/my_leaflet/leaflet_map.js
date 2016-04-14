@@ -109,7 +109,7 @@ var study_area_boundary = omnivore.topojson(static_url+'Leaflet/myJSON/DRECP_Bdy
             //For making non clickable and getting rid of the pointer icon.
             dist.setStyle({clickable: false});
         })
-    })//.addTo(map)
+    }).addTo(map)
 
 // Getting rid of the fill opacity above and adding the "on" function below allows the user click anywhere in the map
 // Enable click on user defined (because the study area boundary turns on when the 1km reporting units are selected.)
@@ -170,7 +170,8 @@ var onekm= L.imageOverlay(onekm_url, onekmBounds);
 
 
 //Set Default Reporting Units
-counties_layer.addTo(map)
+//counties_layer.addTo(map)
+onekm.addTo(map)
 
 //Map Layers in layer control. Arrange order here. Uses the grouped layers plugin.
 OpenStreetMap=L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', { attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors' })
@@ -186,12 +187,12 @@ var overlayMaps = {
 
 var groupedOverlays = {
     "Reporting Units": {
+        "User Defined": onekm,
         "Counties": counties,
         //"Jepson Ecoregions": jepson_ecoregions,
         "BLM Field Offices": blm_field_offices,
         "USFS National Forests": usfs_national_forests,
         "HUC5 Watersheds": huc5_watersheds,
-        "User Defined": onekm,
     },
     "Base Maps": {
         'Light Gray Base': lightGray,
@@ -213,9 +214,8 @@ var groupedOverlays = {
 
 //The order here affects the order in the list in the upper left.
 //var reportingUnitLayers = {"Counties": counties, "Jepson Ecoregions": jepson_ecoregions, "USFS National Forests": usfs_national_forests, "BLM Field Offices": blm_field_offices,"HUC5 Watersheds": huc5_watersheds,"User Defined (1km)": onekm};
-var reportingUnitLayers = {"Counties": counties, "BLM Field Offices": blm_field_offices,"HUC5 Watersheds": huc5_watersheds,"User Defined": onekm};
+var reportingUnitLayers = {"User Defined": onekm, "Counties": counties, "BLM Field Offices": blm_field_offices,"HUC5 Watersheds": huc5_watersheds,};
 
-layerControl = L.control.layers(reportingUnitLayers, overlayMaps, {collapsed:false, position:'topleft', width:'300px'} ).addTo(map)
 
 reporting_units = last_reporting_units
 
@@ -232,7 +232,8 @@ map.on('baselayerchange', function (event) {
     if (event.name == "User Defined") { remember_reporting_units=onekm;reporting_units="onekm";reporting_units_label_singular="polygon"; reporting_units_label_plural=" polygons"; map.addLayer(study_area_boundary)}
 
     if (event.name == "User Defined") {
-        $("#selectionInstructions").html("Use the selection tools to define a custom search area.");
+        //$("#selectionInstructions").html("Use the selection tools to define a custom search area.");
+        $('#selectionInstructions').html("Use the drawing tools on the right to define your search area in the map, or search within one of the boundaries listed");
     }
     else {
         $("#selectionInstructions").html("Click in the map to select a single " + reporting_units_label_singular + " or use the drawing tools to select multiple " + reporting_units_label_plural + ".");
@@ -397,6 +398,8 @@ function onEachFeature(feature, layer) {
 function selectFeature(e){
 
     //counties.eachLayer(function(l){counties.resetStyle(l);});
+    $("#step1Indicator").hide()
+    $("#step2Indicator").show()
 
     drawnItems.clearLayers();
 
@@ -404,8 +407,6 @@ function selectFeature(e){
 
     if ( initialTableSelectionPerformed == false) {
 
-        $("#step1Indicator").hide()
-        $("#step2Indicator").show()
 
         if (typeof selectedFeature  != 'undefined'){
             selectedFeature.on='No'
@@ -557,6 +558,9 @@ function toWKT(layer) {
 
 map.on('draw:created', function (e) {
 
+    $("#step1Indicator").hide()
+    $("#step2Indicator").show()
+
     if (typeof selectedFeature != 'undefined') {
         counties.resetStyle(selectedFeature)
         blm_field_offices.resetStyle(selectedFeature)
@@ -683,5 +687,7 @@ info2.update = function (props) {
 // add the info window to the map
 info2.addTo(map);
 // END TEXT BOTTOM LEFT
+
+layerControl = L.control.layers(reportingUnitLayers, overlayMaps, {collapsed:false, position:'topleft', width:'300px'} ).addTo(map)
 
 /********************************* END MAP CONTROLS -- Right Hand Side **********************************************/

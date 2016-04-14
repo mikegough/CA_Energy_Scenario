@@ -66,7 +66,7 @@ def index(request):
 
     else:
         WKT=request.GET.get('user_wkt')
-        reporting_units=request.GET.get('reporting_units', "counties")
+        reporting_units=request.GET.get('reporting_units', "onekm")
 
     ############################################# INPUT PARAMETERS #####################################################
 
