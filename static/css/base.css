@@ -114,23 +114,25 @@ body{
     margin-bottom:20px;
 }
 
-#greenArrow1{
-	height: 46px;
-	position: absolute;
-	left: 442px;
-	z-index:9999;
-	top: 139px;
+#greenArrow1 {
+	height: 70px;
+	position: relative;
+	z-index: 0;
+	float: right;
+	left: 18px;
+	top: 12px;
 }
 
 #greenArrow2 {
-	height: 46px;
-	position: absolute;
-	left: 215px;
-	z-index: 9999;
-	top: 325px;
-	-ms-transform: rotate(7deg);
+	height: 70px;
+	position: relative;
+	z-index: 0;
+	float: right;
+	top: 12px;
+	-ms-transform: rotate(90deg);
 	-webkit-transform: rotate(90deg);
 	transform: rotate(90deg);
+	right: 185;
 }
 
 .leaflet-draw-section {
@@ -747,8 +749,8 @@ ul#mainNav a {
     margin-left:5px;
     padding:10px;
     padding-right:0px;
-    left:-8px;
     display: inline-block
+    position:relative;
 }
 
 .toolTitle {
@@ -761,7 +763,7 @@ ul#mainNav a {
     line-height:32px;
     margin-left:5px;
     padding:10px;
-    left:-8px
+    position:relative;
 
 }
 

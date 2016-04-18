@@ -2,6 +2,8 @@
 /******************************************* On Document Ready *******************************************************/
  $(document).ready(function(){
 
+    study_area_boundary.addTo(map)
+
      //$('#selectionInstructions').html("Click in the map to select a single " + reporting_units_label_singular + " or use the drawing tools to select multiple " + reporting_units_label_plural + ".");
      $('#selectionInstructions').html("Use the drawing tools on the right to define your search area in the map, or search within one of the boundaries listed");
 

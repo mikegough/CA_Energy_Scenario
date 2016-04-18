@@ -146,11 +146,12 @@
             <div id="mainContainer">
                 <form action=javascript:aspatial_query()>
 
+                    <div id="step1Indicator">
+                        <img id="greenArrow1" src="{{STATIC_URL}}img/right3green.png">
+                    </div>
+
                     <div class="toolTitle" style="height:130px;width:400px">
                         1. Define Your Search Area
-                        <div id="step1Indicator">
-                           <img id="greenArrow1" src="{{STATIC_URL}}img/right3green.png">
-                        </div>
                         <!--
                             <form class="reportingUnitsDropdown">
                                 <select class="reportingUnitsDropdown">
@@ -166,10 +167,11 @@
 
                     <p>
 
+                    <div id="step2Indicator" style="display:none">
+                        <img id="greenArrow2" src="{{STATIC_URL}}img/right3green.png">
+                    </div>
+
                     <div class="toolTitle" style="width:400px; height:30px;">2. Define Your Search Criteria
-                        <div id="step2Indicator" style="display:none">
-                             <img id="greenArrow2" src="{{STATIC_URL}}img/right3green.png">
-                        </div>
                     </div>
 
                     <div id="searchCriteriaContainer">

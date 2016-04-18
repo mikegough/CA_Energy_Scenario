@@ -109,7 +109,8 @@ var study_area_boundary = omnivore.topojson(static_url+'Leaflet/myJSON/DRECP_Bdy
             //For making non clickable and getting rid of the pointer icon.
             dist.setStyle({clickable: false});
         })
-    }).addTo(map)
+    })//Had to move addTo(map) to general_js.js and trigger when page document.ready() otherwise, this guy was clickable.
+
 
 // Getting rid of the fill opacity above and adding the "on" function below allows the user click anywhere in the map
 // Enable click on user defined (because the study area boundary turns on when the 1km reporting units are selected.)
@@ -689,5 +690,6 @@ info2.addTo(map);
 // END TEXT BOTTOM LEFT
 
 layerControl = L.control.layers(reportingUnitLayers, overlayMaps, {collapsed:false, position:'topleft', width:'300px'} ).addTo(map)
+
 
 /********************************* END MAP CONTROLS -- Right Hand Side **********************************************/
