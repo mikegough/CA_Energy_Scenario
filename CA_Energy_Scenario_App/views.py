@@ -22,6 +22,17 @@ def index(request):
         reporting_units=request.POST.get('reporting_units')
         solar_slider_value = request.POST.get('solar_slider_value')
         ownership_values = request.POST.get('ownership_values')
+        distance_to_transmission = request.POST.get('distance_to_transmission')
+        print distance_to_transmission
+        if not distance_to_transmission:
+            distance_to_transmission = ' 999999999999999999999999999999'
+
+        distance_to_transmission_units = request.POST.get('distance_to_transmission_units')
+
+        if distance_to_transmission_units == 'miles':
+            distance_conversion_factor=1609.344
+        else:
+            distance_conversion_factor=1000
 
         enable_environment_settings = request.POST.get('enable_environment_settings')
 
@@ -74,7 +85,7 @@ def index(request):
     if not template:
         template='index'
 
-    query_layer="energy_scenario_1km_query_grid"
+    query_layer="energy_scenario_1km_query_grid3"
 
     #statsFields="intactness"
     statsFields=None
@@ -266,7 +277,7 @@ def index(request):
         cursor = connection.cursor()
 
         #initial query. Find suitable polygons
-        query1="create temp table temp1 as SELECT ST_Union(geom) as the_geom from " +  query_layer + " where intactness <=" + ti_slider + "and hi_linkage <=" + cv_slider + " and speciescou <=" + species_count_slider_value + " and ch_rank >=" + chat_slider_value + " and dniann >=" + solar_slider_value  + " and ownership = ANY('" + "{" + ownership_values + "}" + "'::text[]) " + "and ST_Intersects('"+ WKT_SearchArea + "', " + query_layer + ".geom)" + exemptions
+        query1="create temp table temp1 as SELECT ST_Union(geom) as the_geom from " +  query_layer + " where intactness <=" + ti_slider + "and hi_linkage <=" + cv_slider + " and speciescou <=" + species_count_slider_value + " and ch_rank >=" + chat_slider_value + " and dniann >=" + solar_slider_value + " and dist_trans <= " + str(float(distance_to_transmission) * distance_conversion_factor) + " and ownership = ANY('" + "{" + ownership_values + "}" + "'::text[]) " + "and ST_Intersects('"+ WKT_SearchArea + "', " + query_layer + ".geom)" + exemptions
         cursor.execute(query1)
 
         #explode to isolate smaller shapes
@@ -307,8 +318,18 @@ def index(request):
         #The version of PostGIS on Webfaction was returning SRID=4326 in the multipolygon (check the console for last_poly). It was causing Leaflet to Break. t is null. This was the solution.
         WKT_SelectedPolys=WKT_SelectedPolys.replace('SRID=4326;','')
 
+
+        area_query="SELECT ST_Area(ST_GeogFromText("+"'"+WKT_SelectedPolys+"'"+")) as total_area"
+        cursor.execute(area_query)
+        area_meters=cursor.fetchone()[0]
+        area_km=area_meters*1000000.0
+        area_acres=area_meters*0.0002471044
+
+
         if reporting_units=='onekm':
             WKT_SearchArea=WKT
+
+
 
         context={'template': template,
                  'initialize': initialize,
@@ -317,7 +338,7 @@ def index(request):
                  'reporting_units': reporting_units,
                  'featureName': featureName,
                  'featureNamePlural': featureNamePlural,
-                 'totalArea': totalArea,
+                 'totalArea': area_acres,
                  'zoomLevel': zoomLevel, 'count': count,
                  'initial_lat':initial_lat,
                  'initial_lon': initial_lon,
@@ -340,7 +361,8 @@ def errorHandler(reporting_units, template, initial_lat, initial_lon, error, sel
              'WKT_SelectedPolys': WKT,
              'initial_lat': initial_lat,
              'initial_lon': initial_lon,
-             'resultsJSON': '',
+             #Need this Below
+             'resultsJSON': resultsJSON,
              'count': 0,
              'error': error,
              'selectionWarning':selectionWarning,

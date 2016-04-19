@@ -281,6 +281,9 @@ function create_post(newWKT) {
     ownership_values=ownership_array.join(", ");
     //console.log("create post is working!")
 
+    distance_to_transmission=document.getElementById("distance_to_transmission").value
+    distance_to_transmission_units=document.getElementById("distance_to_transmission_units").value
+
     jqXHR=$.ajax({
         url : "", // the endpoint
         //Webfactional
@@ -289,12 +292,14 @@ function create_post(newWKT) {
         //data sent to django view with the post request
         //data : { the_post : $('#post-text').val() },
 
-        data: {wktPOST: newWKT, reporting_units: reporting_units, ti_slider:ti_slider, cv_slider:cv_slider, min_area:min_area, min_area_units:min_area_units, species_count_slider_value: species_count_slider_value, corridor_avoidance_slider_value:corridor_avoidance_slider_value, chat_slider_value:chat_slider_value, cdfw_slider_value:cdfw_slider_value, ownership_values:ownership_values, solar_slider_value:solar_slider_value, enable_environment_settings:enable_environment_settings},
+        data: {wktPOST: newWKT, reporting_units: reporting_units, ti_slider:ti_slider, cv_slider:cv_slider, min_area:min_area, min_area_units:min_area_units, species_count_slider_value: species_count_slider_value, corridor_avoidance_slider_value:corridor_avoidance_slider_value, chat_slider_value:chat_slider_value, cdfw_slider_value:cdfw_slider_value, ownership_values:ownership_values, solar_slider_value:solar_slider_value, enable_environment_settings:enable_environment_settings,  distance_to_transmission:distance_to_transmission, distance_to_transmission_units:distance_to_transmission_units},
 
         // handle a successful response
         success : function(json) {
 
-            response=JSON.parse(json)
+             console.log(json)
+
+             response=JSON.parse(json)
 
             //Selection Area
 
@@ -305,10 +310,13 @@ function create_post(newWKT) {
              selection_area_poly = omnivore.wkt.parse(selection_area)
 
              //Allows for clicking reporting units that are beneath the selected feature(s).
-             selection_area_poly.on('click',function(e){selectFeature(e) })
+             //selection_area_poly.on('click',function(e){selectFeature(e) })
+             selection_area_poly.bindPopup("<b>" + (Number((response['totalArea']).toFixed(1))).toLocaleString() + "</b> acres meeting your criteria <br>were identified in the search area.").addTo(map).addLayer;
+             selection_area_poly.openPopup()
              selection_area_poly.addTo(map)
              selection_area_poly.setStyle(hoverStyle)
              selection_area_poly.bringToFront()
+
 
             //map.removeLayer(selection_area_poly)
 
@@ -320,7 +328,7 @@ function create_post(newWKT) {
             results_poly = omnivore.wkt.parse(last_poly)
 
             //Allows for clicking reporting units that are beneath the selected feature(s).
-            results_poly.on('click',function(e){selectFeature(e) })
+            //results_poly.on('click',function(e){selectFeature(e) })
             results_poly.addTo(map)
             results_poly.setStyle({color:'#00FFFF', weight: 5, dashArray: 0, fillOpacity:.7, opacity:1})
             results_poly.bringToFront()
@@ -358,7 +366,6 @@ function create_post(newWKT) {
         // handle a non-successful response
         error : function(xhr,errmsg,err) {
             $(".wait").css("display", "none");
-            xhr.abort()
 
             //Unless the cancel button has been pushed, throw an error.
             if (errmsg != "abort") {
