@@ -115,24 +115,24 @@ body{
 }
 
 #greenArrow1 {
-	height: 70px;
+	height: 60px;
 	position: relative;
 	z-index: 0;
 	float: right;
-	left: 18px;
-	top: 12px;
+	left: 23px;
+	top: 18px;
 }
 
 #greenArrow2 {
-	height: 70px;
+	height: 60px;
 	position: relative;
-	z-index: 0;
+	z-index: 1;
 	float: right;
-	top: 12px;
+	top: 25px;
 	-ms-transform: rotate(90deg);
 	-webkit-transform: rotate(90deg);
 	transform: rotate(90deg);
-	right: 185;
+	right: 188px;
 }
 
 .leaflet-draw-section {
@@ -401,6 +401,25 @@ ul.tabs {
 	padding: 4px;
 	border-radius: 4px;
 	font-weight: bold;
+	height: 8px;
+}
+
+#pseudoSlider {
+	width: 16px;
+	height: 18px;
+	display: inline-block;
+	cursor: default !important;
+	position: relative;
+	top: 5px;
+	margin-left: 20px;
+	margin-right: 20px;
+}
+
+#sliderRangeUsage {
+	text-align: center;
+	position: relative;
+	top: -12px;
+	letter-spacing: 4px;
 }
 
 #sliderTable td{
@@ -751,6 +770,7 @@ ul#mainNav a {
     padding-right:0px;
     display: inline-block
     position:relative;
+    z-index:1;
 }
 
 .toolTitle {
@@ -764,6 +784,7 @@ ul#mainNav a {
     margin-left:5px;
     padding:10px;
     position:relative;
+    z-index:1;
 
 }
 
@@ -887,7 +908,7 @@ div.callout {
     font-family: Verdana,Geneva,sans-serif;
     font-size:14px;
     color:#595959;
-    width:90%;
+    width:385px;
     height:100px;
     display:none;
     margin-left:1px;

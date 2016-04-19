@@ -48,3 +48,12 @@ solar = {
 
 }
 
+transmission = {
+    legendTitle:"",
+    legendPNG:"transmission",
+    legendHeight:"20px",
+    legendLabels:["Transmission Lines"],
+    dataBasinID:""
+
+}
+
