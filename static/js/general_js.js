@@ -34,7 +34,7 @@
       });
     });
 
-    $("#enable_environment_settings_checkbox").prop('checked',true)
+    $("#enable_environment_settings_checkbox").prop('checked',false)
 
     $("#enable_environment_settings_checkbox").change(function(){
          var $this = $(this);
@@ -55,7 +55,7 @@
 /*************************************************** Slider bars  ****************************************************/
 
 //initialize default values. Change the default labels above as well.
-enable_environment_settings=1
+enable_environment_settings=0
 ti_slider=0
 cv_slider=0
 species_count_slider_value=8
