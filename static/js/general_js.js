@@ -271,7 +271,6 @@ function showInfoPopup(layerToDescribe){
 
 }
 
-
 function aspatial_query(){
 
     $("#view1").css("opacity", ".1");
