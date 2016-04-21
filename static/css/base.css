@@ -545,6 +545,10 @@ ul.tabs {
 
 }
 
+#slider-range-max_solar {
+    width: 162px;
+}
+
 
 .ui-slider-handle{
     cursor:w-resize !important;

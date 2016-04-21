@@ -85,7 +85,7 @@ def index(request):
     if not template:
         template='index'
 
-    query_layer="energy_scenario_1km_query_grid3"
+    query_layer="energy_scenario_1km_query_grid"
 
     #statsFields="intactness"
     statsFields=None
