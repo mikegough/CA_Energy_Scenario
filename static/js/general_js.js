@@ -40,9 +40,9 @@
          var $this = $(this);
          // $this will contain a reference to the checkbox
          if ($this.is(':checked')) {
-             enable_environment_settings=1
+             enable_environment_settings=true
          } else {
-             enable_environment_settings=0
+             enable_environment_settings=false
          }
     });
 
@@ -55,7 +55,7 @@
 /*************************************************** Slider bars  ****************************************************/
 
 //initialize default values. Change the default labels above as well.
-enable_environment_settings=0
+enable_environment_settings=false
 ti_slider=0
 cv_slider=0
 species_count_slider_value=8
