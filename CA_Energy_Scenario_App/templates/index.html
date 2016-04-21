@@ -1,6 +1,6 @@
 <html>
 <head>
-<title>Renewable Energy Generation Scenario Builder</title>
+<title>Renewable Energy ISA</title>
 
 <script>
     initialize=0
@@ -48,11 +48,6 @@
 <!-- Messi -->
 <link rel="stylesheet" href="{{STATIC_URL}}deps/css/messi.css" />
 <script src="{{STATIC_URL}}deps/js/messi.js"></script>
-
-<!-- My Charts -->
-<script src="{{STATIC_URL}}Highcharts/point_chart.js"></script>
-<script src="{{STATIC_URL}}Highcharts/box_plot.js"></script>
-<script src="{{STATIC_URL}}Highcharts/column_chart.js"></script>
 
 <!-- My CSS -->
 <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/base.css">
@@ -141,6 +136,7 @@
                     $(".stop").click(function(){ jqXHR.abort(); });
                     </script>
                 </div>
+                <div id="deactivateButton"> &nbsp </div>
             </div>
 
             <div id="mainContainer">
@@ -276,7 +272,7 @@
                             <p> Move the sliders to the <span class="arrows">&rarr;</span> right for a more relaxed search (potentially including more environmentally sensitive areas).
                             <p>
                                 <div id="sliderBarHeader">
-                                    <div id="sliderRangeUsage">&larr;Include&rarr;<div class="ui-slider-handle ui-state-default ui-corner-all" id="pseudoSlider"></div>&larr;Exclude&rarr;</div>
+                                    <div id="sliderRangeUsage">&larr;Included&rarr;<div class="ui-slider-handle ui-state-default ui-corner-all" id="pseudoSlider"></div>&larr;Excluded&rarr;</div>
                                 </div>
                             </p>
 

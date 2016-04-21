@@ -376,7 +376,6 @@ function create_post(newWKT) {
                     " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
                 console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
             }
-            $("#initialization_wait").css("display", "None");
             $(document).ajaxStart(function(){
                 $("#view1").css("opacity", ".1");
                 $("#view2").css("opacity", ".1");
@@ -596,6 +595,9 @@ map.on('draw:created', function (e) {
     if ((reporting_units == 'onekm') & (e.layerType=='rectangle' || e.layerType=='polygon') & area > 10000000000 ){
         //if (! confirm("Warning: This selection may require a significant amount of processing time. \n\n Click \"Ok\" to proceed with the selection, or \"Cancel\" to cancel the selection." )){drawnItems.clearLayers(); return}
         $('#areaWarning').show()
+    }
+    else {
+        $('#areaWarning').hide()
     }
 
     if  (initialTableSelectionPerformed){

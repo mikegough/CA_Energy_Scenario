@@ -240,32 +240,27 @@ div.leaflet-control-layers:nth-child(2) {
 }
 
 .loading_contents {
-    position:absolute;
-    display:block;
-    top:50%;
-    top:500px;
-    height:200px;
-    width:100%;
-    margin-top:-25%;
-    text-align:center;
-    margin-right:100px;
-    border:0px solid gray;
+	position: fixed;
+	display: block;
+	top: 48%;
+	text-align: center;
+	margin-right: 100px;
+	border: 0px solid gray;
+	width: 460px;
+	bottom: 290px;
+	background-color: white;
+	padding-top: 5px;
+	height: 180px;
 }
 
-#initialization_wait{
-    display:none;
-    width:120px;
-    height:90px;
-    position:relative;
-    top:-106px;
-    border:0px solid black;
-    z-index:9999999;
-    background-color:white;
-    margin-left:auto;
-    margin-right:auto;
-    text-align:center;
+#deactivateButton {
+    cursor:not-allowed;
+	position: fixed;
+	bottom: 45px;
+	background-color: transparent;
+	height: 150px;
+	width: 480px;
 }
-
 
 .imageOverlayLink {
     font-weight:bold
