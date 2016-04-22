@@ -25,7 +25,7 @@ dynamic_legend.addTo(map)
 
 //Swap legend on data point click
 function swapLegend(layerToAddName, layerToAdd, climateVariable) {
-    if ((! map.hasLayer(climate_PNG_overlay) && ! map.hasLayer(layerToAdd)) || layerToAddName == 'single_transparent_pixel') {
+    if ((! map.hasLayer(PNG_overlay) && ! map.hasLayer(layerToAdd)) || layerToAddName == 'single_transparent_pixel') {
 
         document.getElementsByClassName('info legend leaflet-control')[0].innerHTML=''
 
@@ -44,56 +44,55 @@ function swapLegend(layerToAddName, layerToAdd, climateVariable) {
 
         for (i in window[layerToAddName].legendLabels) {
             $(".legendLabels").append(window[layerToAddName].legendLabels[i] + "<br>");
-        }
+            }
 
-
-        }
+    }
 }
 
 overlay_bounds = [[32.6339585982195,-118.643362495493], [37.302775947927, -114.130781641769 ]];
 
-var climate_PNG_overlay=""
+var PNG_overlay=""
 
-if (climate_PNG_overlay != '') {
-    climate_PNG_overlay_url=static_url+'Leaflet/myPNG/climate/TrimmedPNG/' + climate_PNG_overlay
-    climate_PNG_overlay=L.imageOverlay(climate_PNG_overlay_url, overlay_bounds);
-    climate_PNG_overlay.addTo(map)
+if (PNG_overlay != '') {
+    PNG_overlay_url=static_url+'Leaflet/myPNG/climate/TrimmedPNG/' + PNG_overlay
+    PNG_overlay=L.imageOverlay(PNG_overlay_url, overlay_bounds);
+    PNG_overlay.addTo(map)
 
 } else {
-    climate_PNG_overlay_url='';
-    climate_PNG_overlay=L.imageOverlay(climate_PNG_overlay_url, overlay_bounds);
+    PNG_overlay_url='';
+    PNG_overlay=L.imageOverlay(PNG_overlay_url, overlay_bounds);
 }
 
 //Function used by the Climate chart to add PNGs. Obviates the need to manually define each image overlay object.
 function swapImageOverlay(layerName) {
         //Transparency slider
         elements=document.getElementsByClassName('ui-opacity')
-        map.removeLayer(climate_PNG_overlay)
+        map.removeLayer(PNG_overlay)
         //ti
-        if (climate_PNG_overlay_url.search(layerName)> 0){
-            map.removeLayer(climate_PNG_overlay)
-            climate_PNG_overlay_url=""
+        if (PNG_overlay_url.search(layerName)> 0){
+            map.removeLayer(PNG_overlay)
+            PNG_overlay_url=""
             //Transparency slider
             for (var i = 0; i < elements.length; i++) {
                 elements[i].style.display = elements[i].style.display = 'none';
             }
 
         } else {
-                climate_PNG_overlay_url=static_url+'Leaflet/myPNG/climate/TrimmedPNG/' + layerName + '.png';
-                climate_PNG_overlay=L.imageOverlay(climate_PNG_overlay_url, overlay_bounds);
+                PNG_overlay_url=static_url+'Leaflet/myPNG/climate/TrimmedPNG/' + layerName + '.png';
+                PNG_overlay=L.imageOverlay(PNG_overlay_url, overlay_bounds);
 
-                climate_PNG_overlay.addTo(map)
-                climate_PNG_overlay.bringToBack()
+                PNG_overlay.addTo(map)
+                PNG_overlay.bringToBack()
                 elements=document.getElementsByClassName('ui-opacity')
                 //Transparency slider
                 for (var i = 0; i < elements.length; i++) {
                     elements[i].style.display = elements[i].style.display = 'inline';
                 }
-                climate_PNG_overlay.setOpacity(1 - (handle.offsetTop / 200))
+                PNG_overlay.setOpacity(1 - (handle.offsetTop / 200))
 
         }
         //For keeping table row selected
-        climate_PNG_overlay.name=layerName
+        PNG_overlay.name=layerName
 
 }
 
@@ -102,9 +101,7 @@ function swapImageOverlay(layerName) {
 var study_area_boundary = omnivore.topojson(static_url+'Leaflet/myJSON/DRECP_Bdy_20110128.json')
     .on('ready',function(layer){
         this.eachLayer(function(dist){
-            //dist.setStyle({color:'orange', weight:2, fill:'', fillOpacity:.001, opacity:.8 })
             dist.setStyle({color:'orange', weight:2, fillOpacity:0, opacity:.8 })
-            //dist.setStyle(styleBLM Admin Units(dist.toGeoJSON().properties.FMNAME_PC))
             //dist.bindPopup(dist.toGeoJSON().properties.FMNAME_PC);
             //For making non clickable and getting rid of the pointer icon.
             dist.setStyle({clickable: false});
@@ -172,7 +169,7 @@ var onekm= L.imageOverlay(onekm_url, onekmBounds);
 
 //Set Default Reporting Units
 //counties_layer.addTo(map)
-onekm.addTo(map)
+//onekm.addTo(map)
 
 //Map Layers in layer control. Arrange order here. Uses the grouped layers plugin.
 OpenStreetMap=L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', { attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors' })
@@ -204,10 +201,6 @@ var groupedOverlays = {
         'Open Street Map': OpenStreetMap,
     },
     "": {
-        /*
-        "Selected Features": results_poly,
-        */
-        /*"Study Area Boundary": study_area_boundary.addTo(map),*/
         "Study Area Boundary": study_area_boundary,
     }
 
@@ -216,10 +209,6 @@ var groupedOverlays = {
 //The order here affects the order in the list in the upper left.
 //var reportingUnitLayers = {"Counties": counties, "Jepson Ecoregions": jepson_ecoregions, "USFS National Forests": usfs_national_forests, "BLM Field Offices": blm_field_offices,"HUC5 Watersheds": huc5_watersheds,"User Defined (1km)": onekm};
 var reportingUnitLayers = {"User Defined": onekm, "Counties": counties, "BLM Field Offices": blm_field_offices,"HUC5 Watersheds": huc5_watersheds,};
-
-
-reporting_units = last_reporting_units
-
 var options = { exclusiveGroups: ["Reporting Units","Base Maps"]};
 L.control.groupedLayers(overlayMaps, groupedOverlays, options).addTo(map);
 
@@ -252,9 +241,6 @@ var defaultStyle = {
 };
 
 var hoverStyle = {
-    /*
-    color:'#5083B0',
-    */
     color:'#00C600',
     fillColor:'#5083B0',
     fillOpacity:0,
@@ -271,15 +257,14 @@ function create_post(newWKT) {
     $("#step1Indicator").hide()
     $("#step2Indicator").hide()
 
-    initialize=0
     min_area=document.getElementById("min_area").value
     min_area_units=document.getElementById("min_area_units").value
     checkedBoxes = document.querySelectorAll('input[name=ownership]:checked').value;
     ownership_array = $('input:checkbox:checked.ownership').map(function () {
     return this.value;
     }).get();
+
     ownership_values=ownership_array.join(", ");
-    //console.log("create post is working!")
 
     distance_to_transmission=document.getElementById("distance_to_transmission").value
     distance_to_transmission_units=document.getElementById("distance_to_transmission_units").value
@@ -296,8 +281,6 @@ function create_post(newWKT) {
 
         // handle a successful response
         success : function(json) {
-
-             console.log(json)
 
              response=JSON.parse(json)
 
@@ -316,9 +299,6 @@ function create_post(newWKT) {
              selection_area_poly.addTo(map)
              selection_area_poly.setStyle(hoverStyle)
              selection_area_poly.bringToFront()
-
-
-            //map.removeLayer(selection_area_poly)
 
             //Selected (Results) Polygons
             map.removeLayer(results_poly)
@@ -342,7 +322,6 @@ function create_post(newWKT) {
             }
 
             //This is the drawn shape
-
             if (typeof layer != 'undefined' && map.hasLayer(layer)){
                 map.removeLayer(layer)
             }
@@ -376,18 +355,7 @@ function create_post(newWKT) {
                     " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
                 console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
             }
-            $(document).ajaxStart(function(){
-                $("#view1").css("opacity", ".1");
-                $("#view2").css("opacity", ".1");
-                $(".wait").css("display", "block");
-            });
 
-            $(document).ajaxComplete(function(){
-                $("#view1").css("opacity", "1");
-                $("#view2").css("opacity", "1");
-                $(".wait").css("display", "none");
-                $('#areaWarning').hide()
-            });
         }
     });
 }
@@ -412,8 +380,8 @@ function selectFeature(e){
 
     user_wkt="POINT(" + e.latlng.lng + " " + e.latlng.lat + ")";
 
+    //If the user hasn't specified any search critera yet...
     if ( initialTableSelectionPerformed == false) {
-
 
         if (typeof selectedFeature  != 'undefined'){
             selectedFeature.on='No'
@@ -465,9 +433,6 @@ function highlightFeature(e) {
 
     layer.setStyle(hoverStyle);
 
-	//info.update(layer.feature.properties);
-
-
     if (!L.Browser.ie && !L.Browser.opera) {
         layer.bringToFront();
         if (typeof selection_area_poly != 'undefined' && selection_area_poly != '') {
@@ -476,7 +441,6 @@ function highlightFeature(e) {
     }
 
     //this.openPopup();
-    //document.getElementById("test").innerHTML = layer.feature.properties.NAME
     info2.update(layer.feature.properties);
 }
 
@@ -495,8 +459,6 @@ function resetHighlight(e) {
         counties.resetStyle(e.target)
         blm_field_offices.resetStyle(e.target)
         huc5_watersheds.resetStyle(e.target)
-        //geojson.resetStyle(e.target);
-        //info2.update();
 	}
 
     if (typeof response!= 'undefined' && reporting_units != "onekm") {
@@ -541,6 +503,7 @@ function mouseOutTextChangeBack() {
 // BEGIN EXPORT TO WKT
 // Takes user draw shape and converts it to WKT format. This ships to the PostGIS database where it is used in the SBL.
 function toWKT(layer) {
+    console.log(layer)
     var lng, lat, coords = [];
     if (layer instanceof L.Polygon || layer instanceof L.Polyline) {
         var latlngs = layer.getLatLngs();
@@ -557,9 +520,16 @@ function toWKT(layer) {
         } else if (layer instanceof L.Polyline) {
             return "LINESTRING(" + coords.join(",") + ")";
         }
+        else {
+            return "POLYGON((" + coords.join(",") + "," + lng + " " + lat + "))";
+        }
         //} else if (layer instanceof L.Marker) {
     } else if (layer instanceof L.Marker) {
         return "POINT(" + layer.getLatLng().lng + " " + layer.getLatLng().lat + ")";
+
+    //Not Implemented yet
+    } else {
+        return "CIRCLE(" + layer.getLatLng().lng + " " + layer.getLatLng().lat + "," + layer._mRadius + ")";
     }
 }
 
@@ -582,7 +552,7 @@ map.on('draw:created', function (e) {
     var type = e.layerType;
     layer = e.layer;
     drawnItems.addLayer(layer);
-    console.log(toWKT(layer));
+    //console.log(toWKT(layer));
     user_wkt=toWKT(layer);
 
     //Check for area selections that may take a long time. Ask for confirmation.
@@ -621,8 +591,8 @@ document.onmousemove = function(e) {
     fillOpacityLevel=(1 - (handle.offsetTop / 150));
 
     // Adjust opacity on image overlays.
-    if (climate_PNG_overlay_url != '') {
-        climate_PNG_overlay.setOpacity(fillOpacityLevel);
+    if (PNG_overlay_url != '') {
+        PNG_overlay.setOpacity(fillOpacityLevel);
     }
 };
 

@@ -281,10 +281,14 @@ div.leaflet-control-layers:nth-child(2) {
     /*border-left: 2px solid #444444;*/
 }
 
-div.tabcontents {
+div.tabContents {
     border:none;
 	padding: 0px;
 	background-color: #FFF;
+}
+
+.tabs {
+    margin-top: 39px !important;
 }
 
 ul.tabs {
@@ -422,6 +426,10 @@ ul.tabs {
 }
 
 .current_slider_setting{
+    border:0;
+    color:#f6931f;
+    font-weight:bold;
+    max-width:145px;
 }
 
 .map_icon {
@@ -547,7 +555,6 @@ ul.tabs {
 
 .ui-slider-handle{
     cursor:w-resize !important;
-
 }
 
 .ui-widget-header {
@@ -566,7 +573,7 @@ ul.tabs {
 
 #view2{
     overflow-y:auto;
-    margin-top:45px;
+    margin-top:20px;
     margin-bottom:10px;
     margin-left:20px;
 }
