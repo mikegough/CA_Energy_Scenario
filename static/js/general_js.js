@@ -1,24 +1,5 @@
-
 /******************************************* On Document Ready *******************************************************/
  $(document).ready(function(){
-
-    study_area_boundary.addTo(map)
-
-     //$('#selectionInstructions').html("Click in the map to select a single " + reporting_units_label_singular + " or use the drawing tools to select multiple " + reporting_units_label_plural + ".");
-     $('#selectionInstructions').html("Use the drawing tools on the right to define your search area in the map, or search within one of the boundaries listed");
-
-    $(document).ajaxStart(function(){
-        $("#view1").css("opacity", ".1");
-        $("#view2").css("opacity", ".1");
-        $(".wait").css("display", "block");
-    });
-
-    $(document).ajaxComplete(function(){
-        $("#view1").css("opacity", "1");
-        $("#view2").css("opacity", "1");
-        $(".wait").css("display", "none");
-        //map.removeLayer(layer)
-    });
 
     $(function() {
       $(".child").on("click",function() {
@@ -34,8 +15,10 @@
       });
     });
 
+    // Prevents checkbox and variable  from getting out of sync on page reload.
+    // Needs to be in the document.ready() function.
+    enable_environment_settings=false
     $("#enable_environment_settings_checkbox").prop('checked',false)
-
     $("#enable_environment_settings_checkbox").change(function(){
          var $this = $(this);
          // $this will contain a reference to the checkbox
@@ -46,16 +29,38 @@
          }
     });
 
-     $( "#amount_ti_label" ).val("Moderately Low \(0\)");
-     $( "#amount_cv_label" ).val("Moderately Low \(0\)");
-     $( "#amount_species_count").val("8");
+    //Initial labels on sliders.
+    $( "#amount_ti_label" ).val("Moderately Low \(0\)");
+    $( "#amount_cv_label" ).val("Moderately Low \(0\)");
+    $( "#amount_species_count").val("8");
+
+
+     $(document).ajaxStart(function() {
+         $("#view1").css("opacity", ".1");
+         $("#view2").css("opacity", ".1");
+         $(".wait").css("display", "block");
+     });
+
+    //Set the search criteria tabs back to opaque after the AJAX query is completed
+    $(document).ajaxComplete(function(){
+         $("#view1").css("opacity", "1");
+         $("#view2").css("opacity", "1");
+         $(".wait").css("display", "none");
+         $('#areaWarning').hide()
+         //map.removeLayer(layer)
+     });
 
  });
+
+//Required to disable mouse clicking on study area boundary.
+window.onload=function(){
+   study_area_boundary.addTo(map)
+}
+
 
 /*************************************************** Slider bars  ****************************************************/
 
 //initialize default values. Change the default labels above as well.
-enable_environment_settings=false
 ti_slider=0
 cv_slider=0
 species_count_slider_value=8
@@ -190,6 +195,28 @@ $(function() {
      */
 });
 
+function update_slider_label(value){
+    if (value <=-.75){
+        return "Very Low"
+    }
+    else if (value <=-.5){
+        return "Low"
+    }
+    else if (value <=0){
+        return "Moderately Low"
+    }
+    else if (value <=.5){
+        return "Moderately High"
+    }
+    else if (value <=.75){
+        return "High"
+    }
+    else {
+        return "Very High"
+    }
+}
+
+/***************************************** Dataset pop-up info ********************************************************/
 function showInfoPopup(layerToDescribe){
 
     var dbid=Data_Basin_ID_Dict[layerToDescribe]
@@ -267,22 +294,11 @@ function showInfoPopup(layerToDescribe){
 
     }
 
-    new Messi(description, {title: title, center:true, width:'1000px', modal:true, modalOpacity:.4,center: true});
+    new Messi(description, {title: title, center:true, width:'1000px', modal:true, modalOpacity:.4});
 
 }
 
 function aspatial_query(){
-
-    $("#view1").css("opacity", ".1");
-    $("#view2").css("opacity", ".1");
-    $(".wait").css("display", "block");
-
-    $(document).ajaxComplete(function(){
-        $("#view1").css("opacity", "1");
-        $("#view2").css("opacity", "1");
-        $(".wait").css("display", "none");
-        //map.removeLayer(layer)
-    });
 
     //Search entire area if the user hasn't clicked in the map yet.
     if (typeof user_wkt == 'undefined' ) { user_wkt="POLYGON((-118.85009765625 32.58384932565662,-118.85009765625 37.31775185163688,-114.071044921875 37.31775185163688,-114.071044921875 32.58384932565662,-118.85009765625 32.58384932565662))"}
@@ -292,26 +308,4 @@ function aspatial_query(){
     create_post(user_wkt,reporting_units)
 
 }
-
-function update_slider_label(value){
-    if (value <=-.75){
-        return "Very Low"
-    }
-    else if (value <=-.5){
-        return "Low"
-    }
-    else if (value <=0){
-        return "Moderately Low"
-    }
-    else if (value <=.5){
-        return "Moderately High"
-    }
-    else if (value <=.75){
-        return "High"
-    }
-    else {
-        return "Very High"
-    }
-}
-
 

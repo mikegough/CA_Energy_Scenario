@@ -3,11 +3,8 @@
 <title>Renewable Energy ISA</title>
 
 <script>
-    initialize=0
     initialTableSelectionPerformed=false
     var static_url="{{STATIC_URL}}"
-    reporting_units_label_singular="county"
-    reporting_units_label_plural="counties"
 </script>
 
 <!-- A Dictionary containing Image Overlay Name to Data Basin ID Lookup for the Data Basin link-->
@@ -60,11 +57,8 @@
 <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
-
 <script>
 
-    showChartOnMapSelect="PointChart"
-    var initialize={{initialize}}
     var template="{{template}}"
     var count="{{count}}"
     var center_lat={{initial_lat}}
@@ -72,14 +66,8 @@
     var zoomLevel={{zoomLevel}}
     var last_poly="{{WKT_SelectedPolys}}"
     var selection_area_poly="{{WKT_SearchArea}}"
-    var last_reporting_units="{{reporting_units}}"
+    var reporting_units="{{reporting_units}}"
     var selectedChartVariable="{{selectedChartVariable}}"
-    columnChartColors="{{columnChartColors}}"
-
-    //For searches performed without a reporting unit selected
-    if (typeof user_wkt == 'undefined' ) {
-        user_wkt="POLYGON((-118.85 32.58,-118.850 37.317,-114.071 37.31,-114.07 32.58, -118.85 32.58))"
-    }
 
 </script>
 
@@ -89,15 +77,10 @@
 
 <div id="header">
     <div id="title">
-            Renewable Energy<span style="color:white"></span><span id="energyLine"><!-- <img id="sunImage" src="{{STATIC_URL}}img/super_nova.png">--> </span><br>
-
+            Renewable Energy<br>
             <span id="sub_title">Infrastructure Siting Assistant</span>
     </div>
     <div style="float:left; z-index:-99"><img id="leftImage" src="{{STATIC_URL}}img/power_l2.png"></div>
-    <!--
-    <div style="float:left; z-index:-100"><img id="backgroundImage" src="{{STATIC_URL}}img/ca_city_large.png"></div>
-    -->
-    <!-- <span >BETA 0.16</span>-->
     <div style="float:right; z-index:-99"><img id="rightImage" src="{{STATIC_URL}}img/solar_r.png"></div>
 </div>
 
@@ -123,7 +106,7 @@
 
     <div id="tab_container">
 
-        <div class="tabcontents">
+        <div class="tabContents">
 
             <div class="wait">
                 <div class="loading_contents">
@@ -148,80 +131,66 @@
 
                     <div class="toolTitle" style="height:130px;width:400px">
                         1. Define Your Search Area
-                        <!--
-                            <form class="reportingUnitsDropdown">
-                                <select class="reportingUnitsDropdown">
-                                    <option value="counties"> Counties</option>
-                                    <option value="blm_field_offices"> BLM Field Offices</option>
-                                    <option value="huc5_watersheds"> HUC5 Watersheds
-                                    <option value="onekm"> User Defined
-                                </select>
-                            </form>
-                          -->
-                        <div id="selectionInstructions"></div>
+                        <div id="selectionInstructions">Use the drawing tools on the right to define your search area in the map, or search within one of the boundaries listed</div>
                     </div>
-
                     <p>
-
                     <div id="step2Indicator" style="display:none">
                         <img id="greenArrow2" src="{{STATIC_URL}}img/right3green.png">
                     </div>
 
-                    <div class="toolTitle" style="width:400px; height:30px;">2. Define Your Search Criteria
+                    <div class="toolTitle" style="height:30px;width:400px;">
+                        2. Define Your Search Criteria
                     </div>
 
-                    <div id="searchCriteriaContainer">
-                        <br>
-                        <ul class="tabs" data-persist="true">
-                            <li><a href="#view1">General Requirements</a></li>
-                            <li><a href="#view2">Environmental Settings</a></li>
-                        </ul>
+                    <ul class="tabs" data-persist="true">
+                        <li><a href="#view1">General Requirements</a></li>
+                        <li><a href="#view2">Environmental Settings</a></li>
+                    </ul>
 
-                        <div id="view1">
-
+                    <div id="view1">
                             <table border="1" id="general_table1">
-                             <tr>
-                                 <td><b>Energy Source</b></td>
-                                 <td colspan="2">
-                                     <select name="energy_source" style="width:161">
-                                         <option value="solar">Solar</option>
-                                         <option value="wind">Wind</option>
-                                         <option value="geothermal">Geothermal</option>
-                                     </select>
-                                 </td>
-                             </tr>
-                             <tr>
-                                <td colpan="1">
-                                 <p>
-                                     <label for="amount_solar"><span class="imageOverlayLink" title="Click to Map" onclick='swapImageOverlay(&quot;solar&quot;);swapLegend(&quot;solar&quot;,&quot;solar&quot;,&quot;EEMSmodel&quot;)'>Minimum Solar Resource Potential</span>
-                                     </label>
-                                 </td>
-                                 <td colspan="2">
-                                         <input type="text" id="amount_solar_label" readonly style="border:0; color:#f6931f; font-weight:bold; left:5px">
-                                         <img class="map_icon" style="top:-5px" title="Click to Map" onclick='swapImageOverlay(&quot;solar&quot;);swapLegend(&quot;solar&quot;,&quot;solar&quot;,&quot;EEMSmodel&quot;)' src="{{STATIC_URL}}img/map_icon.png">
-                                     <!-- <input type="text" id="amount_ti" readonly style="border:0; color:#f6931f; font-weight:bold;"> -->
-                                 </p>
+                                 <tr>
+                                     <td><b>Energy Source</b></td>
+                                     <td colspan="2">
+                                         <select name="energy_source" style="width:161">
+                                             <option value="solar">Solar</option>
+                                             <option value="wind">Wind</option>
+                                             <option value="geothermal">Geothermal</option>
+                                         </select>
+                                     </td>
+                                 </tr>
+                                 <tr>
+                                    <td colpan="1">
+                                     <p>
+                                         <label for="amount_solar"><span class="imageOverlayLink" title="Click to Map" onclick='swapImageOverlay(&quot;solar&quot;);swapLegend(&quot;solar&quot;,&quot;solar&quot;,&quot;EEMSmodel&quot;)'>Minimum Solar Resource Potential</span>
+                                         </label>
+                                     </td>
+                                     <td colspan="2">
+                                             <input type="text" id="amount_solar_label" readonly style="border:0; color:#f6931f; font-weight:bold; left:5px">
+                                             <img class="map_icon" style="top:-5px" title="Click to Map" onclick='swapImageOverlay(&quot;solar&quot;);swapLegend(&quot;solar&quot;,&quot;solar&quot;,&quot;EEMSmodel&quot;)' src="{{STATIC_URL}}img/map_icon.png">
+                                         <!-- <input type="text" id="amount_ti" readonly style="border:0; color:#f6931f; font-weight:bold;"> -->
+                                     </p>
 
-                                 <div id="slider-range-max_solar"></div>
-                                 </td>
-                             </tr>
-                                <!--
-                             <tr>
-                                <td><b>Megawatt Target &nbsp</b></td>
-                                <td colspan="2"><input size="5" name="mw_target" value="0" type="text"> Megawatts </td>
-                             </tr>
-                             -->
-                              <tr>
-                                <td><b>Distance to Existing Transmission &nbsp</b></td>
-                                <td style="border-right:0px"><input size="7" id="distance_to_transmission" value="" type="text"> <select id="distance_to_transmission_units"><option value="miles">Miles</option><option value="km">Km</option></select></td>
-                                <td style="border-left:0px"><img class="map_icon" style="right:0px; top:0px" title="Click to Map" onclick='swapImageOverlay(&quot;transmission&quot;);swapLegend(&quot;transmission&quot;,&quot;transmission&quot;,&quot;EEMSmodel&quot;)' src="{{STATIC_URL}}img/map_icon.png"></td>
-                              </tr>
-                                <!--
-                             <tr>
-                                 <td><b>Minimum Parcel Size</b></td>
-                                 <td colspan="2"><input size="7" name="min_parcel_size" value="0" type="text"> <select><option>Acres</option><option>Hectares</option><option>Square km</option><option>Square miles<option>Square meters</option><option>Square feet</option></select></td>
-                             </tr>
-                             -->
+                                     <div id="slider-range-max_solar"></div>
+                                     </td>
+                                 </tr>
+                                    <!--
+                                 <tr>
+                                    <td><b>Megawatt Target &nbsp</b></td>
+                                    <td colspan="2"><input size="5" name="mw_target" value="0" type="text"> Megawatts </td>
+                                 </tr>
+                                 -->
+                                  <tr>
+                                    <td><b>Distance to Existing Transmission &nbsp</b></td>
+                                    <td style="border-right:0px"><input size="7" id="distance_to_transmission" value="" type="text"> <select id="distance_to_transmission_units"><option value="miles">Miles</option><option value="km">Km</option></select></td>
+                                    <td style="border-left:0px"><img class="map_icon" style="right:0px; top:0px" title="Click to Map" onclick='swapImageOverlay(&quot;transmission&quot;);swapLegend(&quot;transmission&quot;,&quot;transmission&quot;,&quot;EEMSmodel&quot;)' src="{{STATIC_URL}}img/map_icon.png"></td>
+                                  </tr>
+                                    <!--
+                                 <tr>
+                                     <td><b>Minimum Parcel Size</b></td>
+                                     <td colspan="2"><input size="7" name="min_parcel_size" value="0" type="text"> <select><option>Acres</option><option>Hectares</option><option>Square km</option><option>Square miles<option>Square meters</option><option>Square feet</option></select></td>
+                                 </tr>
+                                 -->
                                 <tr>
                                     <td>
 
@@ -257,11 +226,8 @@
                                         </select>
                                     </td>
                                 </tr>
-
                             </table>
                         </div>
-
-                    </div>
 
                     <div id="view2">
 
@@ -282,7 +248,7 @@
                                  <td>
                                      <p>
                                          <label for="amount_ti"><span class="imageOverlayLink" title="Click to Map" onclick='swapImageOverlay(&quot;intactness&quot;);swapLegend(&quot;intactness&quot;,&quot;intactness&quot;,&quot;EEMSmodel&quot;)'>Terrestrial Intactness:</span>
-                                         <input type="text" id="amount_ti_label" class="current_slider_setting" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                                         <input type="text" id="amount_ti_label" class="current_slider_setting" readonly >
                                          </label>
                                          <!-- <input type="text" id="amount_ti" readonly style="border:0; color:#f6931f; font-weight:bold;"> -->
                                      </p>
@@ -296,7 +262,7 @@
                                  <td>
                                      <p>
                                          <label for="amount_cv"><span class="imageOverlayLink" title="Click to Map" onclick='swapImageOverlay(&quot;conservation_values&quot;);swapLegend(&quot;conservation_values&quot;,&quot;conservation_values&quot;,&quot;EEMSmodel&quot;)'>Conservation Value:</span></label>
-                                         <input type="text" id="amount_cv_label" class="current_slider_setting" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                                         <input type="text" id="amount_cv_label" class="current_slider_setting" readonly>
                                          <!--<input type="text" id="amount_cv" readonly style="border:0; color:#f6931f; font-weight:bold;">-->
                                      </p>
 
@@ -311,7 +277,7 @@
                                  <td>
                                      <p>
                                          <label for="amount_species_count"><span class="imageOverlayLink" title="Click to Map" onclick='swapImageOverlay(&quot;species_count&quot;);swapLegend(&quot;species_count&quot;,&quot;species_count&quot;,&quot;EEMSmodel&quot;)'>Number of Covered Species:</label>
-                                         <input type="text" id="amount_species_count" class="current_slider_setting" readonly style="border:0; color:#f6931f; font-weight:bold; width:50px">
+                                         <input type="text" id="amount_species_count" class="current_slider_setting" readonly>
                                      </p>
 
                                      <div class="slider_bars" id="slider-range-max_species_count"></div>
@@ -408,30 +374,5 @@
 <link rel="stylesheet" href="{{STATIC_URL}}deps/js/alertify.js-0.3.11/themes/alertify.core.css">
 <!-- include a theme, can be included into the core instead of 2 separate files -->
 <link rel="stylesheet" href="{{STATIC_URL}}deps/js/alertify.js-0.3.11/themes/alertify.default.css">
-
-<script>
-    /*
-    $('.reportingUnitsDropdown').change(function(){
-        map.removeLayer(counties)
-        map.removeLayer(jepson_ecoregions)
-        map.removeLayer(blm_field_offices)
-        map.removeLayer(huc5_watersheds)
-        map.removeLayer(usfs_national_forests)
-        map.removeLayer(onekm)
-        map.removeLayer(results_poly)
-        if (this.value=="onekm"){
-            map.addLayer(study_area_boundary)
-            $("#selectionInstructionsPanel").html("Use the shape selection tools to define a custom search area.");
-        }
-        else{
-            $("#selectionInstructionsPanel").html("Click on the map to select a single " + this.value + " or use the shape selection tools to select multiple " + this.value + ".");
-            map.removeLayer(study_area_boundary)
-            map.addLayer(eval(this.value))
-        }
-        reporting_units=this.value
-    });
-    */
-
-</script>
 
 </html>

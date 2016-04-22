@@ -14,6 +14,7 @@ def index(request):
     if request.method == 'POST':
         WKT = request.POST.get('wktPOST')
         reporting_units = request.POST.get('reporting_units')
+
         solar_slider_value = request.POST.get('solar_slider_value')
 
         ownership_values = request.POST.get('ownership_values')
@@ -107,12 +108,10 @@ def index(request):
 
     ########################################### INITIALIZATION RESPONSE ################################################
     if not WKT:
-        initialize=1
         WKT="SRID=4326;POINT(-115.7 34.8)"
         context={'template': template,
                  'zoomLevel': zoomLevel,
                  'reporting_units': reporting_units,
-                 'initialize': initialize,
                  'WKT_SelectedPolys': WKT,
                  'initial_lat':initial_lat,
                  'initial_lon': initial_lon,
@@ -122,8 +121,6 @@ def index(request):
     ############################################ BUILD SQL EXPRESSION ##################################################
 
     else:
-        initialize=0
-
         ################################### BUILD SELECT LIST (FIELDS & TABLES) ########################################
         select_list="SELECT "
 
@@ -165,9 +162,9 @@ def index(request):
 
             WKT=WKT.replace('%', ' ')
             WKT="SRID=4326;"+WKT
+            select_statement=select_fields_from_table + " where ST_Intersects('"+ WKT + "', " + reporting_units_table + ".geom)"
 
             operator=None
-            select_statement=select_fields_from_table + " where ST_Intersects('"+ WKT + "', " + reporting_units_table + ".geom)"
 
         ######################################## EXECUTE DATABASE QUERY ################################################
 
@@ -185,7 +182,7 @@ def index(request):
                return render(request, template+'.html', errorHandler(reporting_units, template, initial_lat, initial_lon, 1,0))
                #cursor.execute(select_statement)
 
-        print select_statement
+        # print select_statement
         ################################# STORE COLUMN, VALUE PAIRS IN A DICT ##########################################
 
         results_dict={}
@@ -287,7 +284,6 @@ def index(request):
             WKT_search_area=WKT
 
         context={'template': template,
-                 'initialize': initialize,
                  'WKT_SelectedPolys': WKT_selected_polys,
                  'WKT_SearchArea': WKT_search_area,
                  'reporting_units': reporting_units,
@@ -305,12 +301,12 @@ def index(request):
     else:
         return render(request, template+'.html', context)
 
+
 def errorHandler(reporting_units, template, initial_lat, initial_lon, error, selectionWarning):
     WKT="SRID=4326;POLYGON((-180 0,-180 0,-180 0,-180 0,-180 0))"
     context={'template': template,
              'zoomLevel': 8,
              'reporting_units': reporting_units,
-             'initialize': 0,
              'WKT_SelectedPolys': WKT,
              'initial_lat': initial_lat,
              'initial_lon': initial_lon,
