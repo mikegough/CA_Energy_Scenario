@@ -17,7 +17,6 @@
 
     // Prevents checkbox and variable  from getting out of sync on page reload.
     // Needs to be in the document.ready() function.
-    enable_environment_settings=false
     $("#enable_environment_settings_checkbox").prop('checked',false)
     $("#enable_environment_settings_checkbox").change(function(){
          var $this = $(this);
@@ -61,6 +60,7 @@ window.onload=function(){
 /*************************************************** Slider bars  ****************************************************/
 
 //initialize default values. Change the default labels above as well.
+enable_environment_settings=false
 ti_slider=0
 cv_slider=0
 species_count_slider_value=8

@@ -503,7 +503,6 @@ function mouseOutTextChangeBack() {
 // BEGIN EXPORT TO WKT
 // Takes user draw shape and converts it to WKT format. This ships to the PostGIS database where it is used in the SBL.
 function toWKT(layer) {
-    console.log(layer)
     var lng, lat, coords = [];
     if (layer instanceof L.Polygon || layer instanceof L.Polyline) {
         var latlngs = layer.getLatLngs();
