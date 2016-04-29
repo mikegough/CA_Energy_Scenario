@@ -283,6 +283,8 @@ def index(request):
         if reporting_units=='onekm':
             WKT_search_area=WKT
 
+        report = generate_report(WKT)
+
         context={'template': template,
                  'WKT_SelectedPolys': WKT_selected_polys,
                  'WKT_SearchArea': WKT_search_area,
@@ -293,6 +295,7 @@ def index(request):
                  'initial_lon': initial_lon,
                  'resultsJSON': results_json,
                  'categoricalValues': features_names,
+                 'report':report,
                  'error': 0,
                  }
 
@@ -318,3 +321,9 @@ def errorHandler(reporting_units, template, initial_lat, initial_lon, error, sel
              'totalArea':0,
              }
     return context
+
+def generate_report(WKT):
+   results = WKT
+   return results
+
+
