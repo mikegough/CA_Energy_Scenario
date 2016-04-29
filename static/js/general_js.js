@@ -309,3 +309,7 @@ function aspatial_query(){
 
 }
 
+function generateReport(){
+    new Messi(report);
+}
+

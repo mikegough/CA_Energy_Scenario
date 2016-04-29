@@ -123,16 +123,6 @@ var counties = L.geoJson(null, {
 
 var counties_layer = omnivore.topojson(static_url+'Leaflet/myJSON/DRECP_Reporting_Units_County_Boundaries_JSON.json', null, counties)
 
-//Jepson Ecoregions
-var jepson_ecoregions = L.geoJson(null, {
-    style: function(feature) {
-        return {color: '#F8981D', weight:2, dashArray: 0, fillOpacity:0, opacity:1 }
-    },
-    onEachFeature: onEachFeature
-});
-
-var jepson_ecoregions_layer = omnivore.topojson(static_url+'Leaflet/myJSON/CA_Reporting_Units_Jepson_Ecoregions_2_simplify.json', null, jepson_ecoregions)
-
 //BLM Field Offices
 var blm_field_offices = L.geoJson(null, {
     style: function(feature) {
@@ -151,15 +141,6 @@ var huc5_watersheds= L.geoJson(null, {
 });
 
 var huc5_watersheds_layer = omnivore.topojson(static_url+'Leaflet/myJSON/DRECP_Reporting_Units_HUC5_Watersheds_1_5_simplify.json', null, huc5_watersheds)
-
-var usfs_national_forests= L.geoJson(null, {
-    style: function(feature) {
-        return {color: '#F8981D', weight:2, dashArray: 0, fillOpacity:0, opacity:1 }
-    },
-    onEachFeature: onEachFeature
-});
-
-var usfs_national_forests_layer = omnivore.topojson(static_url+'Leaflet/myJSON/CA_Reporting_Units_USFS_National_Forests_15_simplify.json', null, usfs_national_forests)
 
 //1km Reporting Units | NOTE: 4KM reporting units, even simplified at 100% in mapshaper, makes the application unusable.
 onekmBounds = [[36, -114], [36, -114]];
@@ -189,7 +170,6 @@ var groupedOverlays = {
         "Counties": counties,
         //"Jepson Ecoregions": jepson_ecoregions,
         "BLM Field Offices": blm_field_offices,
-        "USFS National Forests": usfs_national_forests,
         "HUC5 Watersheds": huc5_watersheds,
     },
     "Base Maps": {
@@ -275,7 +255,6 @@ function create_post(newWKT) {
         //url : "/climate", // the endpoint
         type : "POST", // http method
         //data sent to django view with the post request
-        //data : { the_post : $('#post-text').val() },
 
         data: {wktPOST: newWKT, reporting_units: reporting_units, ti_slider:ti_slider, cv_slider:cv_slider, min_area:min_area, min_area_units:min_area_units, species_count_slider_value: species_count_slider_value, corridor_avoidance_slider_value:corridor_avoidance_slider_value, chat_slider_value:chat_slider_value, cdfw_slider_value:cdfw_slider_value, ownership_values:ownership_values, solar_slider_value:solar_slider_value, enable_environment_settings:enable_environment_settings,  distance_to_transmission:distance_to_transmission, distance_to_transmission_units:distance_to_transmission_units},
 
@@ -283,6 +262,8 @@ function create_post(newWKT) {
         success : function(json) {
 
              response=JSON.parse(json)
+
+             report=response.report
 
             //Selection Area
 
@@ -294,7 +275,10 @@ function create_post(newWKT) {
 
              //Allows for clicking reporting units that are beneath the selected feature(s).
              //selection_area_poly.on('click',function(e){selectFeature(e) })
-             selection_area_poly.bindPopup("<b>" + (Number((response['totalArea']).toFixed(1))).toLocaleString() + "</b> acres meeting your criteria <br>were identified in the search area.").addTo(map).addLayer;
+             selection_area_poly.bindPopup("<b>" + (Number((response['totalArea']).toFixed(1))).toLocaleString() + "</b> acres meeting your criteria <br>were identified in the search area."
+                 + "<div id='generateReportDiv'><a onclick='generateReport()' >Generate Report</div>"
+             ).addTo(map).addLayer;
+
              selection_area_poly.openPopup()
              selection_area_poly.addTo(map)
              selection_area_poly.setStyle(hoverStyle)
@@ -339,6 +323,8 @@ function create_post(newWKT) {
             else {
                 $('.info2').html("")
             }
+
+            $("#generateReport").show()
 
         },
 

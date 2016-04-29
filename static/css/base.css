@@ -1103,6 +1103,10 @@ background:#595959;
     font-size:11px;
 }
 
+#generateReportDiv{
+    cursor:pointer;
+}
+
 #footer a:link {color:#4D79B3; text-decoration:none}      /* unvisited link */
 #footer a:hover {color:#4D79B3; text-decoration:underline}  /* mouse over link */
 #footer a:active {color:#4D79B3;}  /* selected link */
