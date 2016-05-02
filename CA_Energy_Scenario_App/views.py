@@ -283,7 +283,7 @@ def index(request):
         if reporting_units=='onekm':
             WKT_search_area=WKT
 
-        report = generate_report(WKT)
+        report = generate_report(WKT_selected_polys)
 
         context={'template': template,
                  'WKT_SelectedPolys': WKT_selected_polys,
