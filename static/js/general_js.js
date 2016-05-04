@@ -310,6 +310,32 @@ function aspatial_query(){
 }
 
 function generateReport(){
-    new Messi(report);
+    $.get(
+        report_url,
+        {
+            wktPOST: user_wkt,
+            reporting_units: reporting_units,
+            ti_slider: ti_slider,
+            cv_slider: cv_slider,
+            min_area: min_area,
+            min_area_units: min_area_units,
+            species_count_slider_value: species_count_slider_value,
+            corridor_avoidance_slider_value: corridor_avoidance_slider_value,
+            chat_slider_value: chat_slider_value,
+            cdfw_slider_value: cdfw_slider_value,
+            ownership_values: ownership_values,
+            solar_slider_value: solar_slider_value,
+            enable_environment_settings: enable_environment_settings,
+            distance_to_transmission: distance_to_transmission,
+            distance_to_transmission_units: distance_to_transmission_units
+        },
+        function(data, status){
+            if(status == 'success'){
+                var win=window.open('about:blank');
+                win.document.write(data);
+                win.document.close();
+            }
+        }
+    );
 }
 

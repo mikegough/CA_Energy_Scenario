@@ -10,3 +10,4 @@ settings.py
 /static/deps/*
 /static/Leaflet/myPNG/*
 Archive/
+GIS/
