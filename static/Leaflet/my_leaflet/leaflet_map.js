@@ -561,6 +561,12 @@ map.on('draw:created', function (e) {
 
 })
 
+map.on('draw:drawstop', function (e) {
+    var acres=(area*0.0002471044).toFixed(1)
+    layer.bindPopup(acres+" acres" + "<div id='generateReportDiv'><a onclick='generateReport()' >Generate Report</div>")
+    layer.openPopup()
+})
+
 /********************************* BEGIN MAP CONTROLS -- Right Hand Side **********************************************/
 
 //Opacity/transparency slider on image overlays
