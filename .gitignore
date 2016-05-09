@@ -3,6 +3,8 @@ settings.py
 *.pyc
 *.idea
 *.json
+*.png
+!empty_tile.png
 *.swp
 *.js.swp
 /static/tables/*

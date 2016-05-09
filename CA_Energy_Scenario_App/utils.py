@@ -3,10 +3,11 @@ import math
 from collections import deque, namedtuple
 
 import geojson
+import mapnik
 import mercantile
-import six
 from PIL import Image
 from requests_futures.sessions import FuturesSession
+from six import BytesIO
 from shapely import geos, wkt
 
 
@@ -35,7 +36,7 @@ def get_bbox(s):
 class Basemap:
 
     def __init__(self, extent, url, zoom=None, srid=4326, subdomains=['a', 'b', 'c'],
-                 max_output_width=500, max_output_height=0, output_file='map.png'):
+                 max_output_width=500, max_output_height=0, output_file=''):
         """
         :param extent: [xmin, ymin, xmax, ymax]
         :param srid: is not used right now
@@ -49,9 +50,12 @@ class Basemap:
         self.url = url
         self.url_gets_subdomain = url.__contains__('s') and subdomains
         self.subdomains = deque(subdomains)
+
         self.max_output_width = float(max_output_width)
         self.max_output_height = float(max_output_height)
+
         self.output_file = output_file
+
         self.extent = self._set_extent(extent, srid)
         self.zoom = zoom or self._get_zoom()
         self.empty_tile = Image.open(EMPTY_TILE)
@@ -210,11 +214,10 @@ class Basemap:
 
     def stitch(self, sess, resp, pos_in_grid):
         if resp.status_code == 200:
-            f = Image.open(six.BytesIO(resp.content))
+            f = Image.open(BytesIO(resp.content))
         else:
             f = self.empty_tile
         self.map.paste(f, (pos_in_grid[0] * self.tile_height, pos_in_grid[1] * self.tile_width))
-        self.map.save(self.output_file)
 
     def _get_crop_box(self):
         ul = mercantile.bounds(self.grid_corners.ll.x, self.grid_corners.ur.y, self.zoom)
@@ -243,5 +246,18 @@ class Basemap:
     def render(self):
         self.fetch()
         self.crop()
-        self.map.save(self.output_file)
-        self.map.close()
+
+        output_file, output_extension = os.path.splitext(self.output_file)
+        output_extension = output_extension[output_extension.find('.') + 1:] or 'PNG'
+
+        if output_file:
+            self.map.save(output_file + '.' + output_extension)
+            self.map.close()
+            return output_file + '.' + output_extension, self.extent
+        else:
+            output_file = BytesIO()
+            self.map.save(output_file, output_extension)
+            self.map.close()
+            b = output_file.getvalue()
+            output_file.close()
+            return b, self.extent

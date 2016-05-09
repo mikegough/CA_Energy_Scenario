@@ -1,6 +1,7 @@
 import base64
 import json
 from json import encoder  # Used to prevent excessive decimals from being generated when dumping to JSON object
+import logging
 
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -10,6 +11,8 @@ from django.views.decorators.csrf import csrf_exempt  # Potential security hole.
 from django.views.generic import View
 
 from . import utils
+
+logger = logging.getLogger(__name__)
 
 encoder.FLOAT_REPR = lambda o: format(o, '.2f')
 
@@ -175,20 +178,9 @@ def index(request):
         ######################################## EXECUTE DATABASE QUERY ################################################
 
         if operator == "LIKE":
-            try:
-                cursor.execute(select_statement, ['%' + string_or_value + '%'])
-            except:
-                return render(request, template + '.html',
-                              errorHandler(reporting_units, template, initial_lat, initial_lon, 1, 0))
-                # cursor.execute(select_statement,['%' + string_or_value + '%'] )
+            cursor.execute(select_statement, ['%' + string_or_value + '%'])
         else:
-            cursor.execute(select_statement)    # TODO redundant?
-            try:
-                cursor.execute(select_statement)
-            except:
-                return render(request, template + '.html',
-                              errorHandler(reporting_units, template, initial_lat, initial_lon, 1, 0))
-                # cursor.execute(select_statement)
+            cursor.execute(select_statement)
 
         # print select_statement
         ################################# STORE COLUMN, VALUE PAIRS IN A DICT ##########################################
@@ -198,16 +190,12 @@ def index(request):
         # Get field names
         columns = [colName[0] for colName in cursor.description]
 
-        try:
-            for row in cursor:
-                for i in range(len(row)):
-                    if isinstance(row[i], basestring):
-                        results_dict[columns[i]] = row[i].strip()
-                    else:
-                        results_dict[columns[i]] = (float(round(row[i], 2)))
-        except:
-            return render(request, template + '.html',
-                          errorHandler(reporting_units, template, initial_lat, initial_lon, 0, 1))
+        for row in cursor:
+            for i in range(len(row)):
+                if isinstance(row[i], basestring):
+                    results_dict[columns[i]] = row[i].strip()
+                else:
+                    results_dict[columns[i]] = (float(round(row[i], 2)))
 
         # return HttpResponse(results_dict['sum_area'])
 
@@ -268,16 +256,12 @@ def index(request):
         # Get field names
         columns = [colName[0] for colName in cursor.description]
 
-        try:
-            for row in cursor:
-                for i in range(len(row)):
-                    if isinstance(row[i], basestring):
-                        onekmDict[columns[i]] = row[i].strip()
-                    else:
-                        onekmDict[columns[i]] = (float(round(row[i], 2)))
-        except:
-            return render(request, template + '.html',
-                          errorHandler(reporting_units, template, initial_lat, initial_lon, 0, 1))
+        for row in cursor:
+            for i in range(len(row)):
+                if isinstance(row[i], basestring):
+                    onekmDict[columns[i]] = row[i].strip()
+                else:
+                    onekmDict[columns[i]] = (float(round(row[i], 2)))
 
         WKT_selected_polys = onekmDict['outline_of_selected_features']
         # The version of PostGIS on Webfaction was returning SRID=4326 in the multipolygon (check the console for last_poly). It was causing Leaflet to Break. t is null. This was the solution.
@@ -314,6 +298,7 @@ def index(request):
         return render(request, template + '.html', context)
 
 
+"""
 def errorHandler(reporting_units, template, initial_lat, initial_lon, error, selectionWarning):
     WKT = "SRID=4326;POLYGON((-180 0,-180 0,-180 0,-180 0,-180 0))"
     context = {'template': template,
@@ -323,27 +308,24 @@ def errorHandler(reporting_units, template, initial_lat, initial_lon, error, sel
                'initial_lat': initial_lat,
                'initial_lon': initial_lon,
                # Need this Below
-               'resultsJSON': results_json,
+               #'resultsJSON': results_json,
                'count': 0,
                'error': error,
                'selectionWarning': selectionWarning,
                'totalArea': 0,
                }
     return context
+"""
 
 
 class ReportView(View):
     report_template = 'report_template.html'
 
     def get(self, request, *args, **kwargs):
-        map = self.generate_report()
-        return render(request, self.report_template, {'map': map})
+        base_map = self.generate_report()
+        return render(request, self.report_template, {'map': base_map})
 
     def generate_report(self):
         extent = utils.get_bbox(self.request.GET['wktPOST'])
-        utils.Basemap(extent, 'http://{s}.tile.osm.org/{z}/{x}/{y}.png').render()
-        f = open('map.png', 'r')
-        map = f.read()
-        f.close()
-        map = base64.b64encode(map)
-        return map
+        base_map, _ = utils.Basemap(extent, 'http://{s}.tile.osm.org/{z}/{x}/{y}.png').render()
+        return base64.b64encode(base_map)
