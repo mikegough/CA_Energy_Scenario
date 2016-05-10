@@ -4,6 +4,7 @@ settings.py
 *.idea
 *.json
 *.png
+static/style/drecp_bbox
 !empty_tile.png
 *.swp
 *.js.swp
@@ -11,5 +12,6 @@ settings.py
 /static/data/*
 /static/deps/*
 /static/Leaflet/myPNG/*
+tmp/*
 Archive/
 GIS/

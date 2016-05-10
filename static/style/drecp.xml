@@ -1,0 +1,15 @@
+<Map background-image="drecp_basemap.png" srs="+proj=longlat +ellps=WGS84 +datum=WGS84">
+    <Style name="drecp">
+        <Rule>
+            <LineSymbolizer stroke="#f6931f" stroke-width="2"/>
+        </Rule>
+    </Style>
+
+    <Layer name="drecp" srs="+proj=longlat +ellps=WGS84 +datum=WGS84">
+        <StyleName>drecp</StyleName>
+        <Datasource>
+            <Parameter name="type">geojson</Parameter>
+            <Parameter name="file">DRECP_Bdy_20110128.json</Parameter>
+        </Datasource>
+    </Layer>
+</Map>

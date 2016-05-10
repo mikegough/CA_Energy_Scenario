@@ -25,12 +25,25 @@ def wkt_to_geojson(s):
         geom = wkt.loads(s)
     except geos.ReadingError:
         raise Exception('Bad wkt')
-    return geojson.Feature(geometry=geom, properties={}).geometry
+    return geojson.Feature(geometry=geom, properties={})
 
 
 def get_bbox(s):
     p = wkt.loads(s)
     return p.bounds
+
+
+def xy_to_lnglat(x, y):
+    lng = math.degrees(x / 6378137.0)
+    lat = math.degrees(2 * (math.atan(math.pow(math.e, (y / 6378137.0))) - (math.pi * 0.25)))
+    return lng, lat
+
+
+def get_image_size(basemap):
+    f = Image.open(basemap)
+    width, height = f.size
+    f.close()
+    return width, height
 
 
 class Basemap:
@@ -112,7 +125,7 @@ class Basemap:
         """Expand self as necessary to fit dimensions of image (code from Databasin)
         """
 
-        xmin, ymin, xmax, ymax = map(float, extent)
+        xmin, ymin, xmax, ymax = map(lambda c: round(float(c), 9), extent)
 
         x_diff = xmax - xmin
         y_diff = ymax - ymin
@@ -155,10 +168,10 @@ class Basemap:
     def _update_extent(self, resolution):
         x_diff = (resolution * self.max_output_width) - (self.extent.xmax - self.extent.xmin)
         y_diff = (resolution * self.max_output_height) - (self.extent.ymax - self.extent.ymin)
-        new_xmin = self.extent.xmin - (x_diff / 2.0)
-        new_ymin = self.extent.ymin - (y_diff / 2.0)
-        new_xmax = self.extent.xmax + (x_diff / 2.0)
-        new_ymax = self.extent.ymax + (y_diff / 2.0)
+        new_xmin = round(self.extent.xmin - (x_diff / 2.0), 9)
+        new_ymin = round(self.extent.ymin - (y_diff / 2.0), 9)
+        new_xmax = round(self.extent.xmax + (x_diff / 2.0), 9)
+        new_ymax = round(self.extent.ymax + (y_diff / 2.0), 9)
 
         new_xmin, new_xmax = self.bound_xs(new_xmin, new_xmax)
         new_ymin, new_ymax = self.bound_ys(new_ymin, new_ymax)
@@ -261,3 +274,23 @@ class Basemap:
             b = output_file.getvalue()
             output_file.close()
             return b, self.extent
+
+
+class Mapnik:
+
+    def __init__(self, width, height, extent, prop_file, ):
+        self.map = mapnik.Map(width, height)
+        self.map.aspect_fix_mode = mapnik.aspect_fix_mode.RESPECT
+
+        mapnik.load_map(self.map, prop_file)
+
+        box = mapnik.Box2d(*extent)
+        self.map.zoom_to_box(box)
+
+    def render_to_file(self, output_file):
+        mapnik.render_to_file(self.map, output_file)
+
+    def render_to_byte(self):
+        im = mapnik.Image(self.map.width, self.map.height)
+        mapnik.render(self.map, im)
+        return im.tostring('png256')

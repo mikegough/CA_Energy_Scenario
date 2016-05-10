@@ -1,0 +1,15 @@
+<Map background-image="{{ style_path }}/drecp.png" srs="+proj=longlat +ellps=WGS84 +datum=WGS84">
+    <Style name="style">
+        <Rule>
+            <MarkersSymbolizer file="{{ style_path }}/star-red.svg" width="20" height="20"/>
+        </Rule>
+    </Style>
+
+    <Layer name="study_area" srs="+proj=longlat +ellps=WGS84 +datum=WGS84">
+        <StyleName>style</StyleName>
+        <Datasource>
+            <Parameter name="type">geojson</Parameter>
+            <Parameter name="file">thumbnail.json</Parameter>
+        </Datasource>
+    </Layer>
+</Map>

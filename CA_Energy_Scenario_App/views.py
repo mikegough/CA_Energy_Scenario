@@ -2,19 +2,27 @@ import base64
 import json
 from json import encoder  # Used to prevent excessive decimals from being generated when dumping to JSON object
 import logging
+import os
+import uuid
 
+from django.contrib.staticfiles import finders
 from django.http import HttpResponse
-from django.shortcuts import render
 from django.db import connection
+from django.shortcuts import render
+from django.template.loader import render_to_string
 from django.views.decorators.gzip import gzip_page
 from django.views.decorators.csrf import csrf_exempt  # Potential security hole.
 from django.views.generic import View
+
+import geojson
 
 from . import utils
 
 logger = logging.getLogger(__name__)
 
 encoder.FLOAT_REPR = lambda o: format(o, '.2f')
+
+DRECP_EXTENT_INPUT = (-118.643362495192, 32.63395859796315, -114.1307816421658, 37.30277594765283)
 
 
 @gzip_page
@@ -276,7 +284,7 @@ def index(request):
         if reporting_units == 'onekm':
             WKT_search_area = WKT
 
-        #report = generate_report(WKT, WKT_selected_polys)
+        # report = generate_report(WKT, WKT_selected_polys)
 
         context = {'template': template,
                    'WKT_SelectedPolys': WKT_selected_polys,
@@ -288,7 +296,7 @@ def index(request):
                    'initial_lon': initial_lon,
                    'resultsJSON': results_json,
                    'categoricalValues': features_names,
-                   #'report': report,
+                   # 'report': report,
                    'error': 0,
                    }
 
@@ -322,10 +330,108 @@ class ReportView(View):
     report_template = 'report_template.html'
 
     def get(self, request, *args, **kwargs):
-        base_map = self.generate_report()
-        return render(request, self.report_template, {'map': base_map})
+        ctx = self.generate_report()
+        return render(request, self.report_template, ctx)
+
+    def get_cwd(self):
+        """
+        :return: current working directory for the current session
+        """
+        working_dir = self.request.session.get('working_dir')
+
+        if working_dir and os.path.exists(working_dir):
+            return working_dir
+
+        working_dir = os.path.join('tmp', str(uuid.uuid4()))
+
+        if not os.path.exists(working_dir):
+            os.makedirs(working_dir)
+
+        self.request.session['working_dir'] = working_dir
+
+        return working_dir
+
+    def get_basemap(self, extent):
+        if self.request.session.get('original_extent') == extent and self.request.session.get('updated_extent') and \
+                self.request.session.get('basemap'):
+            return self.request.session['basemap'], self.request.session['updated_extent']
+
+        basemap, updated_extent = utils.Basemap(
+            extent, 'http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+            output_file=os.path.join(self.cwd, 'study_area.png')
+        ).render()
+
+        self.request.session['original_extent'] = extent
+        self.request.session['updated_extent'] = updated_extent
+        self.request.session['basemap'] = basemap
+
+        return basemap, updated_extent
 
     def generate_report(self):
-        extent = utils.get_bbox(self.request.GET['wktPOST'])
-        base_map, _ = utils.Basemap(extent, 'http://{s}.tile.osm.org/{z}/{x}/{y}.png').render()
-        return base64.b64encode(base_map)
+        ctx = {}
+
+        self.cwd = self.get_cwd()
+
+        drecp_png, drecp_extent = self.get_drecp()
+
+        selected_wkt = self.request.GET['wktPOST']
+        study_area_bbox = utils.get_bbox(selected_wkt)
+
+        ctx.update(self.get_header(study_area_bbox, drecp_extent))
+
+        basemap, study_area_bbox_updated = self.get_basemap(study_area_bbox)
+
+        selected_geojson = utils.wkt_to_geojson(selected_wkt)
+        json_path = os.path.join(self.cwd, 'selected.json')
+        f = open(json_path, 'w')
+        f.write(geojson.dumps(geojson.FeatureCollection([selected_geojson])))
+        f.close()
+
+        return ctx
+
+    def get_drecp(self):
+        style_path = finders.find('style')
+        drecp_png_path = str(os.path.join(style_path, 'drecp.png'))
+        drecp_bbox_path = str(os.path.join(style_path, 'drecp_bbox'))
+
+        if os.path.exists(drecp_png_path) and os.path.exists(drecp_bbox_path):
+            drecp_bbox = json.loads(open(drecp_bbox_path, 'r').read())
+            return drecp_png_path, drecp_bbox
+
+        basemap, extent_updated = utils.Basemap(
+            DRECP_EXTENT_INPUT,
+            'http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+            max_output_width=300, output_file=os.path.join(style_path, 'drecp_basemap.png')
+        ).render()
+
+        extent_plain = list(extent_updated)
+        extent_plain.pop()  # Basemap class return a namedtuple, which contains srid. Mapnik class only needs a bbox, so srid is removed from extent.
+
+        w, h = utils.get_image_size(basemap)
+
+        utils.Mapnik(w, h, extent_plain, str(os.path.join(style_path, 'drecp.xml'))).render_to_file(drecp_png_path)
+
+        f = open(drecp_bbox_path, 'w')
+        f.write(json.dumps(extent_plain))
+        f.close()
+
+        return os.path.join(style_path, 'drecp.png'), extent_plain
+
+    def get_header(self, study_area_bbox, drecp_bbox):
+        ctx = {}
+
+        study_area_marker = ((study_area_bbox[2] + study_area_bbox[0]) / 2.0,
+                             (study_area_bbox[3] + study_area_bbox[1]) / 2.0)
+        study_area_marker = geojson.Point(study_area_marker)
+        f = open(os.path.join(self.cwd, 'thumbnail.json'), 'w')
+        f.write(geojson.dumps(geojson.FeatureCollection([geojson.Feature(geometry=study_area_marker)])))
+        f.close()
+
+        thumbnail_xml_path = os.path.join(self.cwd, 'thumbnail.xml')
+
+        f = open(thumbnail_xml_path, 'w')
+        f.write(render_to_string('mapnik/thumbnail.xml', {'style_path': finders.find('style')}))
+        f.close()
+
+        t = utils.Mapnik(300, 379, drecp_bbox, thumbnail_xml_path).render_to_byte()
+        return {'header_thumbnail': base64.b64encode(t)}
