@@ -1,69 +1,219 @@
+{% load staticfiles %}
 <html>
 <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
     <style>
         body {
             background: rgb(204, 204, 204);
+            margin: 20px;
         }
 
-        page {
+        .page {
+            width: 21.59cm;
+            height: 27.94cm;
             background: white;
             display: block;
-            margin: 0 auto;
-            margin-bottom: 0.5cm;
+            margin: 0.25cm auto;
+            padding: 20px;
             box-shadow: 0 0 0.5cm rgba(0, 0, 0, 0.5);
         }
 
-        page[size="A4"] {
-            width: 21cm;
-            height: 29.7cm;
+        .row {
+            margin-bottom: 20px;
         }
 
-        page[size="A4"][layout="portrait"] {
-            width: 29.7cm;
-            height: 21cm;
+        .row .row {
+            margin-top: 10px;
         }
 
-        page[size="A3"] {
-            width: 29.7cm;
-            height: 42cm;
+        #ProtectedAreas table thead tr {
+            background-color: #c4bd97;
+            color: #000;
         }
 
-        page[size="A3"][layout="portrait"] {
-            width: 42cm;
-            height: 29.7cm;
+        #ProtectedAreas table tbody tr {
+            background-color: #eeece1;
+            color: #000;
         }
 
-        page[size="A5"] {
-            width: 14.8cm;
-            height: 21cm;
+        #DesignatedCriticalHabitat table thead tr {
+            background-color: #e6b8b7;
+            color: #000;
         }
 
-        page[size="A5"][layout="portrait"] {
-            width: 21cm;
-            height: 14.8cm;
+        #DesignatedCriticalHabitat table tbody tr {
+            background-color: #f2dcdb;
+            color: #000;
         }
 
-        page[size="Letter"] {
-            width: 27.94cm;
-            height: 21.59cm;
-        }
-
-        page[size="Letter"][layout="portrait"] {
-            width: 21.59cm;
-            height: 27.94cm;
+        .pageBreakAfter {
+            page-break-after: always;
         }
 
         @media print {
-            body, page {
-                margin: 0;
+            body, .page {
                 box-shadow: 0;
             }
         }
     </style>
 </head>
 <body>
-    <page size="Letter" layout="portrait">
-        <img src="data:image/png;base64,{{ header_thumbnail }}" />
-    </page>
+<div class="page">
+    <div class="container-fluid">
+        <div class="row"></div>
+        <div class="row">
+            <div class="col-md-8">
+                <h3>
+                    RETI 2.0 Environmental Profile Report
+                </h3>
+                <h4>
+                    <b>Renewable Energy Transmission Initiative</b>
+                </h4>
+            </div>
+            <div class="col-md-4">
+                <h3>
+                    <img src="data:image/png;base64,{{ header_thumbnail }}" width="100" height="120"/>
+                </h3>
+            </div>
+        </div>
+        <div id="ProtectedAreas">
+            <div class="row">
+                <div class="col-md-12">
+                    <h4>
+                        <b>1. Protected Areas (PAD-US CBI Edition version 2.1a, California)</b>
+                    </h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <img src="data:image/png;base64,{{ header_thumbnail }}" width="200" height="125"/>
+                </div>
+                <div class="col-md-offset-1 col-md-6">
+                    <table class="table table-condensed">
+                        <thead>
+                        <tr>
+                            <th>GAP Status</th>
+                            <th></th>
+                            <th>Area (ac)</th>
+                            <th>Percent</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for g in gap %}
+                            <tr>
+                                <td>{{ g.status }}</td>
+                                <td>{{ g.polygons }}</td>
+                                <td>{{ g.area }}</td>
+                                <td>{{ g.percent }}</td>
+                            </tr>
+                        {% endfor %}
+                        <tr>
+                            <td>Total</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <ul class="small list-unstyled">
+                        <li>
+                            <b>GAP Status 1:</b> An area having permanent protection from conversion of natural land
+                            cover
+                            and a
+                            mandated management plan I operation to maintain a natural state within which disturbance
+                            events
+                            are allowed to proceed without interference.
+                        </li>
+                        <li>
+                            <b>GAP Status 2:</b> An area having permanent protection from conversion of natural land
+                            cover
+                            and a
+                            mandated management plan in operation to maintain a primarily natural state, but which may
+                            receive uses or management practices that degrade the quality of existing natural
+                            communities.
+                        </li>
+                        <li>
+                            <b>GAP Status 3:</b> An area having permanent protection from conversion of natural land
+                            cover
+                            for the
+                            majority of area. Subject to extractive uses.
+                        </li>
+                        <li>
+                            <b>GAP Status 4:</b> No known public/private institutional mandates/legally recognized
+                            easements.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="TerrestrialLandscapeIntactness">
+            <div class="row">
+                <div class="col-md-12">
+                    <h4>
+                        <b>2. Terrestrial Landscape Intactness</b>
+                    </h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <img src="data:image/png;base64,{{ header_thumbnail }}" width="200" height="125"/>
+                </div>
+                <div class="col-md-offset-1 col-md-4">
+                    <img src="data:image/png;base64,{{ header_thumbnail }}" width="200" height="125"/>
+                </div>
+            </div>
+        </div>
+        <div id="DesignatedCriticalHabitat">
+            <div class="row">
+                <div class="col-md-12">
+                    <h4>
+                        <b>3. Designated Critical Habitat (USFWS)</b>
+                    </h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <img src="data:image/png;base64,{{ header_thumbnail }}" width="200" height="125"/>
+                </div>
+                <div class="col-md-offset-2 col-md-8">
+                    <table class="table table-condensed">
+                        <thead>
+                        <tr>
+                            <th>Species</th>
+                            <th>Polys or Lines</th>
+                            <th>Area (ac)</th>
+                            <th>Length (mi)</th>
+                            <th>Percent or Region</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for h in dch %}
+                            <tr>
+                                <td>{{ h.species }}</td>
+                                <td>{{ h.geom }}</td>
+                                <td>{{ h.area }}</td>
+                                <td>{{ h.length }}</td>
+                                <td>{{ h.percent }}</td>
+                            </tr>
+                        {% endfor %}
+                        <tr>
+                            <td colspan="5"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="pageBreakAfter"></div>
 </body>
 </html>

@@ -1,5 +1,5 @@
-import os
 import math
+import os
 from collections import deque, namedtuple
 
 import geojson
@@ -7,9 +7,8 @@ import mapnik
 import mercantile
 from PIL import Image
 from requests_futures.sessions import FuturesSession
-from six import BytesIO
 from shapely import geos, wkt
-
+from six import BytesIO
 
 MAX_TILES = 100
 EMPTY_TILE = os.path.join(os.path.dirname(__file__), 'empty_tile.png')
@@ -49,7 +48,7 @@ def get_image_size(basemap):
 class Basemap:
 
     def __init__(self, extent, url, zoom=None, srid=4326, subdomains=['a', 'b', 'c'],
-                 max_output_width=500, max_output_height=0, output_file=''):
+                 width=500, height=None, h_error_ratio=1.22, output_file=''):
         """
         :param extent: [xmin, ymin, xmax, ymax]
         :param srid: is not used right now
@@ -58,14 +57,19 @@ class Basemap:
             subdomains (if relevant). e.g.: http://{s}.tile.osm.org/{z}/{x}/{y}.png
         :param subdomains: a list of subdomains.
             see: https://github.com/Leaflet/Leaflet/blob/master/src/layer/tile/TileLayer.js#L24
-        :param max_output_width:
+        :param width:
+        :param height:
+        :param h_error_ratio: fixes height for DCREP area
         """
         self.url = url
         self.url_gets_subdomain = url.__contains__('s') and subdomains
         self.subdomains = deque(subdomains)
 
-        self.max_output_width = float(max_output_width)
-        self.max_output_height = float(max_output_height)
+        self.width = float(width)
+        if height:
+            self.height = float(height) / h_error_ratio
+        else:
+            self.height = 0.0
 
         self.output_file = output_file
 
@@ -131,11 +135,13 @@ class Basemap:
         y_diff = ymax - ymin
         extent_aspect_ratio = 1 if x_diff == 0 else y_diff / x_diff
 
-        if self.max_output_height:
-            img_aspect_ratio = self.max_output_height / self.max_output_width
+        self.width_for_given_extent = self.width
+
+        if self.height:
+            img_aspect_ratio = self.height / self.width
         else:
             img_aspect_ratio = extent_aspect_ratio
-            self.max_output_height = img_aspect_ratio * self.max_output_width
+            self.height = img_aspect_ratio * self.width
 
         if img_aspect_ratio > extent_aspect_ratio:
             # img is taller than extent
@@ -156,7 +162,7 @@ class Basemap:
     def _get_resolution(self):
         x_diff = self.extent.xmax - self.extent.xmin
         y_diff = self.extent.ymax - self.extent.ymin
-        return math.sqrt((x_diff * y_diff) / (self.max_output_width * self.max_output_height))
+        return math.sqrt((x_diff * y_diff) / (self.width * self.height))
 
     def _get_zoom(self):
         resolution = self._get_resolution()
@@ -166,8 +172,8 @@ class Basemap:
         return z
 
     def _update_extent(self, resolution):
-        x_diff = (resolution * self.max_output_width) - (self.extent.xmax - self.extent.xmin)
-        y_diff = (resolution * self.max_output_height) - (self.extent.ymax - self.extent.ymin)
+        x_diff = (resolution * self.width) - (self.extent.xmax - self.extent.xmin)
+        y_diff = (resolution * self.height) - (self.extent.ymax - self.extent.ymin)
         new_xmin = round(self.extent.xmin - (x_diff / 2.0), 9)
         new_ymin = round(self.extent.ymin - (y_diff / 2.0), 9)
         new_xmax = round(self.extent.xmax + (x_diff / 2.0), 9)
@@ -192,15 +198,7 @@ class Basemap:
         self.grid_corners = self._grid_corners()
         self.grid_size = self._grid_size()
 
-    def _fix_zoom(self):
-        # FIXME
-        x = self.grid_corners.ll.x
-        y = self.grid_corners.ur.y
-        z = 0.5 * (-((x**2 + y**2 - 2 * x * y + 400) ** 0.5) + x + y)
-        self.zoom = math.floor(math.log(z, 2))
-
     def _init_map(self):
-        #self.tile_width, self.tile_height = img_size
         self.map_height = self.tile_height * self.grid_size.rows
         self.map_width = self.tile_height * self.grid_size.columns
         self.map = Image.new('RGB', [self.map_width, self.map_height])
@@ -245,12 +243,12 @@ class Basemap:
         ex_ul_x, ex_ul_y = mercantile.xy(self.extent.xmin, self.extent.ymax)
         ex_lr_x, ex_lr_y = mercantile.xy(self.extent.xmax, self.extent.ymin)
 
-        return (
-            w_ratio * (ex_ul_x - map_ul_x),
-            h_ratio * (map_ul_y - ex_ul_y),
-            self.map_width - w_ratio * (map_lr_x - ex_lr_x),
-            self.map_height - h_ratio * (ex_lr_y - map_lr_y)
-        )
+        x0 = w_ratio * (ex_ul_x - map_ul_x)
+        y0 = h_ratio * (map_ul_y - ex_ul_y)
+        x1 = self.map_width - w_ratio * (map_lr_x - ex_lr_x)
+        y1 = self.map_height - h_ratio * (ex_lr_y - map_lr_y)
+
+        return x0, y0, x1, y1
 
     def crop(self):
         crop_box = self._get_crop_box()
@@ -260,20 +258,23 @@ class Basemap:
         self.fetch()
         self.crop()
 
+        # FIXME the final height is different from what we want due to projection errors. An error ratio is returned for monkey-patching, but calculations must be fixed.
+        final_height = self.map.height
+
         output_file, output_extension = os.path.splitext(self.output_file)
         output_extension = output_extension[output_extension.find('.') + 1:] or 'PNG'
 
         if output_file:
             self.map.save(output_file + '.' + output_extension)
             self.map.close()
-            return output_file + '.' + output_extension, self.extent
+            return output_file + '.' + output_extension, self.extent, (final_height / self.height)
         else:
             output_file = BytesIO()
             self.map.save(output_file, output_extension)
             self.map.close()
             b = output_file.getvalue()
             output_file.close()
-            return b, self.extent
+            return b, self.extent, (final_height / self.height)
 
 
 class Mapnik:

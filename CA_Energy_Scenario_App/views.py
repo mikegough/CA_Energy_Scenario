@@ -356,10 +356,11 @@ class ReportView(View):
                 self.request.session.get('basemap'):
             return self.request.session['basemap'], self.request.session['updated_extent']
 
-        basemap, updated_extent = utils.Basemap(
+        basemap, updated_extent, h_err_ratio = utils.Basemap(
             extent, 'http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-            output_file=os.path.join(self.cwd, 'study_area.png')
+            width=150, height=95, output_file=os.path.join(self.cwd, 'study_area.png')
         ).render()
+        print(h_err_ratio)
 
         self.request.session['original_extent'] = extent
         self.request.session['updated_extent'] = updated_extent
@@ -398,10 +399,10 @@ class ReportView(View):
             drecp_bbox = json.loads(open(drecp_bbox_path, 'r').read())
             return drecp_png_path, drecp_bbox
 
-        basemap, extent_updated = utils.Basemap(
+        basemap, extent_updated, h_err_ratio = utils.Basemap(
             DRECP_EXTENT_INPUT,
             'http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-            max_output_width=300, output_file=os.path.join(style_path, 'drecp_basemap.png')
+            width=100, height=120, output_file=os.path.join(style_path, 'drecp_basemap.png')
         ).render()
 
         extent_plain = list(extent_updated)
@@ -418,8 +419,6 @@ class ReportView(View):
         return os.path.join(style_path, 'drecp.png'), extent_plain
 
     def get_header(self, study_area_bbox, drecp_bbox):
-        ctx = {}
-
         study_area_marker = ((study_area_bbox[2] + study_area_bbox[0]) / 2.0,
                              (study_area_bbox[3] + study_area_bbox[1]) / 2.0)
         study_area_marker = geojson.Point(study_area_marker)
@@ -433,5 +432,5 @@ class ReportView(View):
         f.write(render_to_string('mapnik/thumbnail.xml', {'style_path': finders.find('style')}))
         f.close()
 
-        t = utils.Mapnik(300, 379, drecp_bbox, thumbnail_xml_path).render_to_byte()
+        t = utils.Mapnik(100, 120, drecp_bbox, thumbnail_xml_path).render_to_byte()
         return {'header_thumbnail': base64.b64encode(t)}
