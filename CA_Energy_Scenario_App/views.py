@@ -22,6 +22,11 @@ logger = logging.getLogger(__name__)
 
 encoder.FLOAT_REPR = lambda o: format(o, '.2f')
 
+TILE_SERVERS = {
+    'imagery': 'http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    'world_topo': 'http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
+    'tli': 'http://54.203.254.247/arcgis/rest/services/Site_Survey_Composite/DRECP_Site_Survey_Composite_Intactness_Class_Dissolve_v2_MS/MapServer/tile/{z}/{y}/{x}'
+}
 DRECP_EXTENT_INPUT = (-118.643362495192, 32.63395859796315, -114.1307816421658, 37.30277594765283)
 
 
@@ -252,6 +257,7 @@ def index(request):
         # corridor_avoidance_slider_value = request.POST.get('corridor_avoidance_slider_value')
         # cdfw_slider_value = request.POST.get('cdfw_slider_value')
     else:
+        query_kwargs = request.POST.copy()
         WKT = request.GET.get('user_wkt')
         reporting_units = request.GET.get('reporting_units', "onekm")
 
@@ -362,14 +368,13 @@ class ReportView(View):
 
         return working_dir
 
-    def get_basemap(self, extent):
+    def get_basemap(self, extent, tile_server=TILE_SERVERS['imagery']):
         if self.request.session.get('original_extent') == extent and self.request.session.get('updated_extent') and \
                 self.request.session.get('basemap'):
             return self.request.session['basemap'], self.request.session['updated_extent']
 
         basemap, updated_extent, h_err_ratio = utils.Basemap(
-            extent, 'http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-            width=150, height=95, output_file=os.path.join(self.cwd, 'study_area.png')
+            extent, tile_server, width=150, height=95, output_file=os.path.join(self.cwd, 'study_area.png')
         ).render()
 
         self.request.session['original_extent'] = extent
@@ -390,7 +395,7 @@ class ReportView(View):
 
         ctx.update(self.get_header(study_area_bbox, drecp_extent))
 
-        basemap, study_area_bbox_updated = self.get_basemap(study_area_bbox)
+        self.get_tli(study_area_bbox)
 
         selected_geojson = utils.wkt_to_geojson(selected_wkt)
         json_path = os.path.join(self.cwd, 'selected.json')
@@ -411,7 +416,7 @@ class ReportView(View):
 
         basemap, extent_updated, h_err_ratio = utils.Basemap(
             DRECP_EXTENT_INPUT,
-            'http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+            TILE_SERVERS['imagery'],
             width=100, height=120, output_file=os.path.join(style_path, 'drecp_basemap.png')
         ).render()
 
@@ -445,8 +450,15 @@ class ReportView(View):
         t = utils.Mapnik(100, 120, drecp_bbox, thumbnail_xml_path).render_to_byte()
         return {'header_thumbnail': base64.b64encode(t)}
 
-    def get_tli(self):
+    def get_tli(self, study_area_bbox):
         """
         :return: context for rendering Terrestrial Landscape Intactness report
         """
+        basemap, updated_extent = self.get_basemap(study_area_bbox)
+
+        tli_layer, _, _ = utils.Basemap(
+            study_area_bbox, TILE_SERVERS['tli'],
+            width=150, height=95, output_file=os.path.join(self.cwd, 'study_area_tli.png')
+        ).render()
+
         q = 'SELECT ST_Union(geom) AS the_geom FROM energy_scenario_1km_query_grid'
